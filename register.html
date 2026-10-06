@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran Akun Baru</title>
+</head>
+<body>
+
+    <h2>Form Pendaftaran Akun</h2>
+
+    <form action="#" method="POST">
+        <div>
+            <label for="nama">Nama Lengkap:</label><br>
+            <input type="text" id="nama" name="nama" required placeholder="Masukkan nama lengkap">
+        </div>
+        <br>
+        <div>
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" required placeholder="contoh@email.com">
+        </div>
+        <br>
+        <div>
+            <label for="password">Kata Sandi:</label><br>
+            <input type="password" id="password" name="password" minlength="6" required placeholder="Minimal 6 karakter">
+        </div>
+        <br>
+        <div>
+            <label for="konfirmasi_password">Konfirmasi Kata Sandi:</label><br>
+            <input type="password" id="konfirmasi_password" name="konfirmasi_password" required placeholder="Ulangi kata sandi">
+        </div>
+        <br>
+        <div>
+            <label>Jenis Kelamin:</label><br>
+            <input type="radio" id="laki" name="jenis_kelamin" value="Laki-laki" required>
+            <label for="laki">Laki-laki</label>
+            <input type="radio" id="perempuan" name="jenis_kelamin" value="Perempuan">
+            <label for="perempuan">Perempuan</label>
+        </div>
+        <br>
+        <div>
+            <input type="checkbox" id="syarat" name="syarat" required>
+            <label for="syarat">Saya menyetujui syarat dan ketentuan</label>
+        </div>
+        <br>
+        <div>
+            <button type="submit">Daftar</button>
+            <button type="reset">Batal</button>
+        </div>
+
+    </form>
+
+</body>
+</html>
