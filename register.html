@@ -1,54 +1,123 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pendaftaran Akun Baru</title>
+    <title>Daftar - Campus EventOS</title>
+    <link rel="stylesheet" href="style_regis.css">
 </head>
+
 <body>
-
-    <h2>Form Pendaftaran Akun</h2>
-
-    <form action="#" method="POST">
+    <header>
         <div>
-            <label for="nama">Nama Lengkap:</label><br>
-            <input type="text" id="nama" name="nama" required placeholder="Masukkan nama lengkap">
-        </div>
-        <br>
-        <div>
-            <label for="email">Email:</label><br>
-            <input type="email" id="email" name="email" required placeholder="contoh@email.com">
-        </div>
-        <br>
-        <div>
-            <label for="password">Kata Sandi:</label><br>
-            <input type="password" id="password" name="password" minlength="6" required placeholder="Minimal 6 karakter">
-        </div>
-        <br>
-        <div>
-            <label for="konfirmasi_password">Konfirmasi Kata Sandi:</label><br>
-            <input type="password" id="konfirmasi_password" name="konfirmasi_password" required placeholder="Ulangi kata sandi">
-        </div>
-        <br>
-        <div>
-            <label>Jenis Kelamin:</label><br>
-            <input type="radio" id="laki" name="jenis_kelamin" value="Laki-laki" required>
-            <label for="laki">Laki-laki</label>
-            <input type="radio" id="perempuan" name="jenis_kelamin" value="Perempuan">
-            <label for="perempuan">Perempuan</label>
-        </div>
-        <br>
-        <div>
-            <input type="checkbox" id="syarat" name="syarat" required>
-            <label for="syarat">Saya menyetujui syarat dan ketentuan</label>
-        </div>
-        <br>
-        <div>
-            <button type="submit">Daftar</button>
-            <button type="reset">Batal</button>
+            <a href="index.html"><strong>Campus EventOS</strong></a>
+            <span>Sistem Manajemen Event</span>
         </div>
 
-    </form>
+        <nav>
+            <a href="index.html">Platform</a>
+            <a href="events.html">Fitur AI</a>
+            <a href="event-detail.html">Komunitas</a>
+        </nav>
+
+        <a href="events.html">Jelajahi Event</a>
+    </header>
+
+    <main>
+        <section>
+            <div>
+                <p>Khusus Organisasi Kampus</p>
+                <h1>Bergabung dengan
+                    <br>Campus EventOS.
+                </h1>
+                <p>Daftarkan organisasi mahasiswamu sekarang dan nikmati kemudahan mengelola kegiatan kampus secara terintegrasi.</p>
+            </div>
+
+            <div>
+                <article>
+                    <h2>Kemudahan Akses</h2>
+                    <p>Buat akun organisasi dan berikan akses ke seluruh anggota tim panitia dengan mudah.</p>
+                </article>
+
+                <article>
+                    <h2>Fitur Lengkap</h2>
+                    <p>Akses fitur pendaftaran, presensi QR code, hingga e-sertifikat langsung setelah mendaftar.</p>
+                </article>
+
+                <article>
+                    <h2>Dukungan AI</h2>
+                    <p>Manfaatkan kecerdasan buatan untuk membantu pembuatan proposal dan analisis kegiatanmu.</p>
+                </article>
+            </div>
+        </section>
+        <section>
+            <div>
+                <h2>Daftar Akun Baru</h2>
+                <p>Lengkapi data di bawah ini untuk membuat akun organisasi.</p>
+                <ul class="form-instructions">
+                    <li>Gunakan email institusi/kampus yang aktif.</li>
+                    <li>Kata sandi minimal terdiri dari 6 karakter.</li>
+                </ul>
+
+                <form id="registerForm" action="#" method="POST">
+                    <div>
+                        <label for="nama">Nama Lengkap / Organisasi <span class="required-star">*</span></label>
+                        <input type="text" id="nama" name="nama" placeholder="Contoh: BEM Fakultas / Nama Ketua" required>
+                        <p id="namaError" class="error-text">Nama wajib diisi.</p>
+                    </div>
+
+                    <div>
+                        <label for="email">Email Institusi <span class="required-star">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="contoh@student.ac.id" required>
+                        <p id="emailError" class="error-text">Email wajib diisi.</p>
+                    </div>
+
+                    <div>
+                        <label for="password">Kata Sandi <span class="required-star">*</span></label>
+                        <input type="password" id="password" name="password" minlength="6" placeholder="Minimal 6 karakter" required>
+                        <p id="passwordError" class="error-text">Kata sandi minimal 6 karakter.</p>
+                    </div>
+
+                    <div>
+                        <label for="konfirmasi_password">Konfirmasi Kata Sandi <span class="required-star">*</span></label>
+                        <input type="password" id="konfirmasi_password" name="konfirmasi_password" placeholder="Ulangi kata sandi" required>
+                        <p id="konfirmasiError" class="error-text">Konfirmasi kata sandi tidak cocok.</p>
+                    </div>
+
+                    <div>
+                        <label>Jenis Kelamin <span class="required-star">*</span></label>
+                        <div class="radio-options">
+                            <label>
+                                <input type="radio" id="laki" name="jenis_kelamin" value="Laki-laki" required> Laki-laki
+                            </label>
+                            <label>
+                                <input type="radio" id="perempuan" name="jenis_kelamin" value="Perempuan"> Perempuan
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>
+                            <input type="checkbox" id="syarat" name="syarat" required> Saya menyetujui syarat dan ketentuan <span class="required-star">*</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" id="registerButton">Daftar Sekarang</button>
+                </form>
+
+                <div>
+                    <p>Sudah memiliki akun?
+                        <a href="login.html">Masuk di sini</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Campus EventOS.</p>
+    </footer>
 
 </body>
 </html>
