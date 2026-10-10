@@ -5,97 +5,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Campus EventOS</title>
+    <link rel="stylesheet" href="stylelogin.css">
 </head>
 
 <body>
-    <header>
-        <div>
-            <a href="index.html"><strong>Campus EventOS</strong></a>
-            <span>Sistem Manajemen Event</span>
+    <header class="header">
+        <div class="logo-group">
+            <a href="index.html" class="brand-logo">Campus EventOS</a>
         </div>
 
-        <nav>
-            <a href="index.html">Platform</a>
-            <a href="events.html">Fitur AI</a>
-            <a href="event-detail.html">Komunitas</a>
+        <nav class="nav-links">
+            <a href="index.html" class="nav-item">Platform</a>
+            <a href="events.html" class="nav-item">Fitur AI</a>
+            <a href="event-detail.html" class="nav-item">Komunitas</a>
         </nav>
 
-        <a href="events.html">Jelajahi Event</a>
+        <a href="events.html" class="btn btn-primary">Jelajahi Event</a>
     </header>
 
-    <main>
-        <section>
+    <main class="main-container">
+        <section class="hero-section">
             <div>
-                <p>Khusus Organisasi Kampus</p>
-                <h1>Satu platform.
-                    <br>Semua kegiatan kampus.
-                </h1>
-                <p>Campus EventOS membantu organisasi mahasiswa merencanakan, menjalankan, dan mengevaluasi acara dengan
-                    lebih terstruktur dan terintegrasi.</p>
+                <h1 class="hero-title">Satu platform.<br>Semua kegiatan kampus.</h1>
+                <p class="hero-desc">Campus EventOS membantu organisasi mahasiswa merencanakan, menjalankan, dan
+                    mengevaluasi acara dengan lebih terstruktur dan terintegrasi.</p>
             </div>
 
-            <div>
-                <article>
-                    <h2>Manajemen Kepanitiaan</h2>
-                    <p>Kelola divisi, delegasikan tugas, dan berkolaborasi antar panitia secara terpusat.</p>
+            <div class="card-list">
+                <article class="card">
+                    <h2 class="card-title">Manajemen Kepanitiaan</h2>
+                    <p class="card-desc">Kelola divisi, delegasikan tugas, dan berkolaborasi antar panitia secara
+                        terpusat.</p>
                 </article>
 
-                <article>
-                    <h2>Absensi dan Sertifikat</h2>
-                    <p>Sistem check-in berbasis QR code dan distribusi e-sertifikat yang terotomatisasi.</p>
+                <article class="card">
+                    <h2 class="card-title">Absensi dan Sertifikat</h2>
+                    <p class="card-desc">Sistem check-in berbasis QR code dan distribusi e-sertifikat yang
+                        terotomatisasi.</p>
                 </article>
 
-                <article>
-                    <h2>Integrasi AI dan Analitik Sponsor</h2>
-                    <p>Manfaatkan fitur AI untuk penyusunan proposal dan analitik data acara guna keperluan laporan
-                        pertanggungjawaban dan evaluasi sponsor.</p>
+                <article class="card">
+                    <h2 class="card-title">Integrasi AI dan Analitik Sponsor</h2>
+                    <p class="card-desc">Manfaatkan fitur AI untuk penyusunan proposal dan analitik data acara guna
+                        keperluan laporan pertanggungjawaban dan evaluasi sponsor.</p>
                 </article>
             </div>
         </section>
 
-        <section>
-            <div>
-                <h2>Masuk ke Akun</h2>
-                <p>Gunakan kredensial kampus Anda untuk melanjutkan.</p>
-                <button type="button">Masuk dengan SSO Kampus</button>
-                <p>Atau masuk manual</p>
+        <section class="auth-section">
+            <div class="auth-card">
+                <h2 class="auth-title">Masuk ke Akun</h2>
+                <p class="auth-subtitle">Gunakan kredensial kampus Anda untuk melanjutkan.</p>
 
-                <form id="loginForm">
-                    <div>
-                        <label for="identifier">Email Institusi atau NIM</label>
-                        <input type="text" id="identifier" name="identifier"
+                <button type="button" class="btn btn-outline btn-full">Masuk dengan SSO Kampus</button>
+
+                <div class="divider">Atau masuk manual</div>
+
+                <form id="loginForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="identifier" class="form-label">Email Institusi atau NIM</label>
+                        <input type="text" id="identifier" name="identifier" class="form-input"
                             placeholder="Contoh: 103022... atau nama@student.ac.id" required>
-                        <p id="identifierError">Email atau NIM wajib diisi.</p>
+                        <p id="identifierError" class="error-msg">Email atau NIM wajib diisi.</p>
                     </div>
 
-                    <div>
-                        <label for="password">Kata Sandi</label>
-                        <input type="password" id="password" name="password" placeholder="Masukkan kata sandi" required>
-                        <p id="passwordError">Kata sandi wajib diisi.</p>
+                    <div class="form-group">
+                        <label for="password" class="form-label">Kata Sandi</label>
+                        <input type="password" id="password" name="password" class="form-input"
+                            placeholder="Masukkan kata sandi" required>
+                        <p id="passwordError" class="error-msg">Kata sandi wajib diisi.</p>
                     </div>
 
-                    <div>
-                        <label>
-                            <input type="checkbox" id="remember" name="remember">Ingat saya
+                    <div class="form-row">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="remember" name="remember" class="form-checkbox">Ingat saya
                         </label>
-                        <a href="forgot-password.html">Lupa kata sandi?</a>
+                        <a href="forgot-password.html" class="link-primary">Lupa kata sandi?</a>
                     </div>
 
-                    <button type="submit" id="loginButton">Masuk</button>
+                    <button type="submit" id="loginButton" class="btn btn-primary btn-full">Masuk</button>
                 </form>
 
-                <div>
+                <div class="auth-footer">
                     <p>Organisasi Anda belum terdaftar?
-                        <a href="register.html">Daftar di sini</a>
+                        <a href="register.html" class="link-primary">Daftar di sini</a>
                     </p>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer>
+    <footer class="footer">
         <p>&copy; 2026 Campus EventOS.</p>
     </footer>
-    
 </body>
+
 </html>
