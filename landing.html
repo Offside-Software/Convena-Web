@@ -50,7 +50,16 @@
             <section class="trust">
                 <h2>Dipercaya oleh Organisasi & Kampus</h2>
             </section>
-                <!-- fitur-unggulan -->
+            <section id="event-section">
+                <hr>
+                <h2>Event Terbaru</h2>
+                <p>Daftar event dimuat dari API tanpa memuat ulang halaman.</p>
+                <div id="event-list" class="event-list" aria-live="polite">
+                    <p class="event-status">Memuat event...</p>
+                </div>
+                <button type="button" id="reloadEvents" class="reload-button">Muat Ulang Event</button>
+            </section>
+            <!-- fitur-unggulan -->
                 <section id="fitur-unggulan">
                     <hr>
                     <h2>Modul Fitur Unggulan</h2>
@@ -130,5 +139,7 @@
 
         <p>&copy; 2026 Convena.</p>
     </footer>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
