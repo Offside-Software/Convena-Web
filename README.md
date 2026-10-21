@@ -18,6 +18,7 @@ Indonesian student organizations, not only as an event-ticketing platform.
 - QR attendance/check-in
 - E-certificates and public certificate verification
 - A focused AI sponsorship/proposal assistant using an external LLM
+- Event location GPS
 
 ### Post-MVP scope
 
