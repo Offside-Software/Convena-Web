@@ -1,0 +1,256 @@
+@theme {
+  --color-mem-yellow: #FFE600;
+  --color-mem-yellow-light: #FFF585;
+  --color-mem-pink: #FF4B91;
+  --color-mem-pink-light: #FF94BE;
+  --color-mem-cyan: #01CDFE;
+  --color-mem-cyan-light: #70E7FF;
+  --color-mem-purple: #845EC2;
+  --color-mem-purple-light: #BD93F9;
+  --color-mem-coral: #FF6F59;
+  --color-mem-mint: #00F5D4;
+  --color-mem-mint-dark: #00C4AA;
+  --color-mem-orange: #FF9671;
+
+  --color-mem-bg: #FAF9F6;
+  --color-mem-surface: #FFFFFF;
+  --color-mem-dark: #121215;
+
+  --font-display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --shadow-mem-sm: 3px 3px 0px #121215;
+  --shadow-mem-md: 5px 5px 0px #121215;
+  --shadow-mem-lg: 8px 8px 0px #121215;
+  --shadow-mem-yellow: 5px 5px 0px #FFE600;
+  --shadow-mem-pink: 5px 5px 0px #FF4B91;
+  --shadow-mem-cyan: 5px 5px 0px #01CDFE;
+}
+
+:root {
+  /* Memphis Vibrant Color Palette */
+  --mem-yellow: #FFE600;
+  --mem-yellow-light: #FFF585;
+  --mem-pink: #FF4B91;
+  --mem-pink-light: #FF94BE;
+  --mem-cyan: #01CDFE;
+  --mem-cyan-light: #70E7FF;
+  --mem-purple: #845EC2;
+  --mem-purple-light: #BD93F9;
+  --mem-coral: #FF6F59;
+  --mem-mint: #00F5D4;
+  --mem-mint-dark: #00C4AA;
+  --mem-orange: #FF9671;
+
+  /* Neutrals & Surfaces */
+  --mem-bg: #FAF9F6;
+  --mem-surface: #FFFFFF;
+  --mem-dark: #121215;
+  --mem-gray-100: #F3F4F6;
+  --mem-gray-200: #E5E7EB;
+  --mem-gray-500: #6B7280;
+  --mem-gray-800: #1F2937;
+
+  /* Borders & Shadows */
+  --mem-border-width: 3px;
+  --mem-border: 3px solid var(--mem-dark);
+  --mem-border-sm: 2px solid var(--mem-dark);
+  --mem-border-thick: 4px solid var(--mem-dark);
+  --mem-radius-sm: 6px;
+  --mem-radius-md: 10px;
+  --mem-radius-lg: 16px;
+  --mem-radius-pill: 9999px;
+
+  /* Hard Drop Shadows */
+  --mem-shadow-sm: 3px 3px 0px var(--mem-dark);
+  --mem-shadow-md: 5px 5px 0px var(--mem-dark);
+  --mem-shadow-lg: 8px 8px 0px var(--mem-dark);
+  --mem-shadow-yellow: 5px 5px 0px var(--mem-yellow);
+  --mem-shadow-pink: 5px 5px 0px var(--mem-pink);
+  --mem-shadow-cyan: 5px 5px 0px var(--mem-cyan);
+
+  /* Typography */
+  --font-display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Transitions */
+  --mem-transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Memphis Background Patterns */
+.memphis-pattern-dots {
+  background-color: var(--mem-bg);
+  background-image: radial-gradient(var(--mem-yellow) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+.memphis-pattern-dots-colored {
+  background-color: var(--mem-bg);
+  background-image:
+    radial-gradient(var(--mem-pink) 2px, transparent 2px),
+    radial-gradient(var(--mem-cyan) 2px, transparent 2px);
+  background-size: 32px 32px;
+  background-position: 0 0, 16px 16px;
+}
+
+.memphis-pattern-grid {
+  background-image:
+    linear-gradient(to right, rgba(18, 18, 21, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(18, 18, 21, 0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.memphis-stripes {
+  background: repeating-linear-gradient(45deg,
+      var(--mem-yellow),
+      var(--mem-yellow) 12px,
+      var(--mem-dark) 12px,
+      var(--mem-dark) 24px);
+}
+
+.memphis-stripes-subtle {
+  background: repeating-linear-gradient(-45deg,
+      transparent,
+      transparent 10px,
+      rgba(18, 18, 21, 0.06) 10px,
+      rgba(18, 18, 21, 0.06) 20px);
+}
+
+/* Card & Container Utility Classes */
+.memphis-card {
+  background: var(--mem-surface);
+  border: var(--mem-border);
+  box-shadow: var(--mem-shadow-md);
+  border-radius: var(--mem-radius-md);
+  transition: var(--mem-transition);
+}
+
+.memphis-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--mem-shadow-lg);
+}
+
+.memphis-box {
+  background: var(--mem-surface);
+  border: var(--mem-border);
+  box-shadow: var(--mem-shadow-md);
+  border-radius: var(--mem-radius-md);
+}
+
+/* Tactile Button Utilities */
+.memphis-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: var(--mem-border);
+  box-shadow: var(--mem-shadow-sm);
+  border-radius: var(--mem-radius-sm);
+  transition: var(--mem-transition);
+  user-select: none;
+}
+
+.memphis-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--mem-shadow-md);
+}
+
+.memphis-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px var(--mem-dark);
+}
+
+.memphis-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: var(--mem-shadow-sm) !important;
+}
+
+/* Badges */
+.memphis-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0.65rem;
+  border: var(--mem-border-sm);
+  box-shadow: 2px 2px 0px var(--mem-dark);
+  border-radius: var(--mem-radius-pill);
+}
+
+/* Tilt accents */
+.memphis-tilt-left {
+  transform: rotate(-2deg);
+}
+
+.memphis-tilt-right {
+  transform: rotate(2deg);
+}
+
+.memphis-tilt-sm-left {
+  transform: rotate(-1deg);
+}
+
+.memphis-tilt-sm-right {
+  transform: rotate(1deg);
+}
+
+/* Floating animations */
+@keyframes memphis-float-slow {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(4deg);
+  }
+}
+
+@keyframes memphis-float-fast {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-6px) rotate(-3deg);
+  }
+}
+
+@keyframes memphis-pulse-scale {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.animate-float-slow {
+  animation: memphis-float-slow 4s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: memphis-float-fast 2.8s ease-in-out infinite;
+}
+
+.animate-pulse-scale {
+  animation: memphis-pulse-scale 3s ease-in-out infinite;
+}
