@@ -1,13 +1,35 @@
-import React, { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { Calendar, CheckCircle, LayoutDashboard, Menu, PlusCircle, X } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Calendar, CheckCircle, LayoutDashboard, LogIn, LogOut, Menu, PlusCircle, X } from 'lucide-react'
 import { Button } from '../common/Button.tsx'
 import { Badge } from '../common/Badge.tsx'
 import { MemphisShape } from '../shapes/MemphisShape.tsx'
+import { authService } from '../../services/auth.service.ts'
+import type { User } from '../../types/user.ts'
 
 export const Navbar: React.FC = () => {
   const location = useLocation()
+  const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [currentUser, setCurrentUser] = useState<User | null>(() => authService.getStoredUser())
+
+  useEffect(() => {
+    const syncAuth = () => {
+      setCurrentUser(authService.getStoredUser())
+    }
+    window.addEventListener('convena-auth-changed', syncAuth)
+    window.addEventListener('storage', syncAuth)
+    return () => {
+      window.removeEventListener('convena-auth-changed', syncAuth)
+      window.removeEventListener('storage', syncAuth)
+    }
+  }, [])
+
+  const handleLogout = () => {
+    authService.logout()
+    setCurrentUser(null)
+    navigate('/login')
+  }
 
   const navLinks = [
     { label: 'Explore Events', path: '/events', icon: <Calendar size={18} /> },
@@ -114,9 +136,11 @@ export const Navbar: React.FC = () => {
               }}
             />
           </div>
-          <div style={{
-            marginRight: "1rem"
-          }}>
+          <div
+            style={{
+              marginRight: '1rem',
+            }}
+          >
             <span
               style={{
                 fontFamily: 'var(--font-display)',
@@ -156,7 +180,7 @@ export const Navbar: React.FC = () => {
                 style={{
                   display: 'inline-flex',
                   alignItems: 'self-start',
-                  height: "100%",
+                  height: '100%',
                   gap: '0.4rem',
                   fontFamily: 'var(--font-display)',
                   fontWeight: 700,
@@ -181,56 +205,87 @@ export const Navbar: React.FC = () => {
         {/* Action CTAs */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <Link to="/events?new=true" style={{ textDecoration: 'none' }} className="hidden md:inline-flex">
-            <Button
-              variant="pink"
-              size="sm"
-              icon={<PlusCircle size={16} />}
-            >
+            <Button variant="pink" size="sm" icon={<PlusCircle size={16} />}>
               Buat Event
             </Button>
           </Link>
 
-          <Link to="/dashboard" style={{ textDecoration: 'none' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                minHeight: "100%",
-                gap: '0.5rem',
-                padding: '4px 8px',
-                border: 'var(--mem-border-sm)',
-                borderRadius: '8px',
-                backgroundColor: 'var(--mem-surface)',
-                boxShadow: '2px 2px 0px var(--mem-dark)',
-                cursor: 'pointer',
-              }}
-            >
-              <img
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=80"
-                alt="Arya"
+          {currentUser ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Link to="/dashboard" style={{ textDecoration: 'none' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    minHeight: '100%',
+                    gap: '0.5rem',
+                    padding: '4px 8px',
+                    border: 'var(--mem-border-sm)',
+                    borderRadius: '8px',
+                    backgroundColor: 'var(--mem-surface)',
+                    boxShadow: '2px 2px 0px var(--mem-dark)',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <img
+                    src={
+                      currentUser.avatarUrl ||
+                      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=80'
+                    }
+                    alt={currentUser.name}
+                    style={{
+                      width: '28px',
+                      height: '28px',
+                      borderRadius: '6px',
+                      border: '1.5px solid var(--mem-dark)',
+                      objectFit: 'cover',
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      fontWeight: 700,
+                      fontSize: '0.8rem',
+                    }}
+                    className="hidden md:inline"
+                  >
+                    {currentUser.name.split(' ')[0]}
+                  </span>
+                  <Badge variant="cyan" style={{ fontSize: '0.65rem', padding: '1px 5px' }}>
+                    {currentUser.role.toUpperCase()}
+                  </Badge>
+                </div>
+              </Link>
+              <button
+                type="button"
+                onClick={handleLogout}
+                title="Keluar / Ganti Akun"
                 style={{
-                  width: '28px',
-                  height: '28px',
-                  borderRadius: '6px',
-                  border: '1.5px solid var(--mem-dark)',
-                  objectFit: 'cover',
+                  padding: '6px 8px',
+                  backgroundColor: 'var(--mem-bg)',
+                  border: 'var(--mem-border-sm)',
+                  borderRadius: '8px',
+                  boxShadow: '2px 2px 0px var(--mem-dark)',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
-              />
-              <span
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontWeight: 700,
-                  fontSize: '0.8rem',
-                }}
-                className="hidden md:inline"
               >
-                HMIF ITB
-              </span>
-              <Badge variant="cyan" style={{ fontSize: '0.65rem', padding: '1px 5px' }}>
-                ADMIN
-              </Badge>
+                <LogOut size={16} />
+              </button>
             </div>
-          </Link>
+          ) : (
+            <Link to="/login" style={{ textDecoration: 'none' }}>
+              <Button
+                variant={location.pathname === '/login' ? 'cyan' : 'yellow'}
+                size="sm"
+                icon={<LogIn size={16} />}
+              >
+                Masuk
+              </Button>
+            </Link>
+          )}
 
           {/* Mobile hamburger button */}
           <button
@@ -290,9 +345,18 @@ export const Navbar: React.FC = () => {
             </Link>
           ))}
           <Link
+            to="/login"
+            onClick={() => setMobileMenuOpen(false)}
+            style={{ textDecoration: 'none' }}
+          >
+            <Button variant="yellow" fullWidth icon={<LogIn size={18} />}>
+              {currentUser ? 'Ganti Akun / Login' : 'Masuk Akun'}
+            </Button>
+          </Link>
+          <Link
             to="/events?new=true"
             onClick={() => setMobileMenuOpen(false)}
-            style={{ textDecoration: 'none', marginTop: '0.5rem' }}
+            style={{ textDecoration: 'none' }}
           >
             <Button variant="pink" fullWidth icon={<PlusCircle size={18} />}>
               Buat Event Baru

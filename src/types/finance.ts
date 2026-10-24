@@ -1,5 +1,12 @@
 export type SpjStatus = 'draft' | 'submitted' | 'verified' | 'rejected'
-export type ExpenseCategory = 'equipment' | 'catering' | 'venue' | 'marketing' | 'speaker_honor' | 'logistics' | 'other'
+export type ExpenseCategory =
+  | 'equipment'
+  | 'catering'
+  | 'venue'
+  | 'marketing'
+  | 'speaker_honor'
+  | 'logistics'
+  | 'other'
 
 export interface ExpenseRecord {
   id: string

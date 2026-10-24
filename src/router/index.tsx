@@ -9,6 +9,7 @@ import { DashboardPage } from '../pages/dashboard/DashboardPage.tsx'
 import { SponsorshipPage } from '../pages/sponsorship/SponsorshipPage.tsx'
 import { FinancesPage } from '../pages/finances/FinancesPage.tsx'
 import { VerifyPage } from '../pages/verify/VerifyPage.tsx'
+import { LoginPage } from '../pages/auth/LoginPage.tsx'
 import { NotFoundPage } from '../pages/not-found/NotFoundPage.tsx'
 
 export const AppRoutes: React.FC = () => {
@@ -17,6 +18,7 @@ export const AppRoutes: React.FC = () => {
       {/* Public Pages with MainLayout */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/events/:id" element={<EventDetailPage />} />
         <Route path="/verify" element={<VerifyPage />} />
