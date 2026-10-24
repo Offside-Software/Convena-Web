@@ -1,13 +1,35 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Calendar, CheckCircle, LayoutDashboard, Menu, PlusCircle, X } from 'lucide-react'
+import { Calendar, CheckCircle, LayoutDashboard, Menu, PlusCircle, X, LogIn, LogOut } from 'lucide-react'
 import { Button } from '../common/Button.tsx'
 import { Badge } from '../common/Badge.tsx'
 import { MemphisShape } from '../shapes/MemphisShape.tsx'
+import { authService } from '../../services/auth.service.ts'
+import type { User } from '../../types/user.ts'
 
 export const Navbar: React.FC = () => {
   const location = useLocation()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(() => authService.isAuthenticated())
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    let isMounted = true
+    if (isLoggedIn) {
+      authService.getCurrentUser().then((u) => {
+        if (!isMounted) return
+        if (u) {
+          setUser(u)
+        } else {
+          setIsLoggedIn(false)
+          setUser(null)
+        }
+      })
+    }
+    return () => {
+      isMounted = false
+    }
+  }, [isLoggedIn])
 
   const navLinks = [
     { label: 'Explore Events', path: '/events', icon: <Calendar size={18} /> },
@@ -130,18 +152,6 @@ export const Navbar: React.FC = () => {
             >
               CONVENA
             </span>
-            <span
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.65rem',
-                fontWeight: 700,
-                color: 'var(--mem-gray-500)',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-              }}
-            >
-              Student Org
-            </span>
           </div>
         </Link>
 
@@ -180,57 +190,56 @@ export const Navbar: React.FC = () => {
 
         {/* Action CTAs */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <Link to="/events?new=true" style={{ textDecoration: 'none' }} className="hidden md:inline-flex">
-            <Button
-              variant="pink"
-              size="sm"
-              icon={<PlusCircle size={16} />}
-            >
-              Buat Event
-            </Button>
-          </Link>
-
-          <Link to="/dashboard" style={{ textDecoration: 'none' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                minHeight: "100%",
-                gap: '0.5rem',
-                padding: '4px 8px',
-                border: 'var(--mem-border-sm)',
-                borderRadius: '8px',
-                backgroundColor: 'var(--mem-surface)',
-                boxShadow: '2px 2px 0px var(--mem-dark)',
-                cursor: 'pointer',
-              }}
-            >
-              <img
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=80"
-                alt="Arya"
-                style={{
-                  width: '28px',
-                  height: '28px',
-                  borderRadius: '6px',
-                  border: '1.5px solid var(--mem-dark)',
-                  objectFit: 'cover',
+          {isLoggedIn ? (
+            <div className="flex items-center gap-2">
+              <Link to="/dashboard" className="no-underline">
+                <div className="flex items-center gap-2 px-2.5 py-1.5 border-2 border-mem-dark rounded-lg bg-white shadow-mem-sm hover:bg-gray-50 transition-all cursor-pointer">
+                  {user?.avatarUrl ? (
+                    <img
+                      src={user.avatarUrl}
+                      alt={user.name}
+                      className="w-7 h-7 rounded-md border border-mem-dark object-cover"
+                    />
+                  ) : (
+                    <div className="w-7 h-7 rounded-md border border-mem-dark bg-mem-yellow flex items-center justify-center font-display font-black text-xs text-mem-dark">
+                      {(user?.name || user?.username || 'U').charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <span className="hidden md:inline font-display font-bold text-xs text-mem-dark max-w-[120px] truncate">
+                    {user?.name || user?.username || 'Pengguna'}
+                  </span>
+                  <Badge variant="cyan" style={{ fontSize: '0.65rem', padding: '1px 5px' }}>
+                    {user?.role ? user.role.toUpperCase() : 'MEMBER'}
+                  </Badge>
+                </div>
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  authService.logout()
+                  setIsLoggedIn(false)
+                  setUser(null)
                 }}
-              />
-              <span
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontWeight: 700,
-                  fontSize: '0.8rem',
-                }}
-                className="hidden md:inline"
+                title="Keluar"
+                className="hidden md:flex p-1.5 bg-mem-bg hover:bg-red-50 border-2 border-mem-dark rounded-md shadow-mem-sm hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0 active:translate-y-0 transition-all cursor-pointer text-mem-dark hover:text-red-600"
               >
-                HMIF ITB
-              </span>
-              <Badge variant="cyan" style={{ fontSize: '0.65rem', padding: '1px 5px' }}>
-                ADMIN
-              </Badge>
+                <LogOut size={16} />
+              </button>
             </div>
-          </Link>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link to="/login" className="no-underline">
+                <Button variant="cyan" size="sm" icon={<LogIn size={15} />}>
+                  Masuk
+                </Button>
+              </Link>
+              <Link to="/register" className="hidden sm:inline-flex no-underline">
+                <Button variant="yellow" size="sm">
+                  Daftar
+                </Button>
+              </Link>
+            </div>
+          )}
 
           {/* Mobile hamburger button */}
           <button
@@ -298,6 +307,43 @@ export const Navbar: React.FC = () => {
               Buat Event Baru
             </Button>
           </Link>
+
+          {!isLoggedIn ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.25rem' }}>
+              <Link
+                to="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{ textDecoration: 'none' }}
+              >
+                <Button variant="cyan" fullWidth icon={<LogIn size={18} />}>
+                  Masuk ke Akun
+                </Button>
+              </Link>
+              <Link
+                to="/register"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{ textDecoration: 'none' }}
+              >
+                <Button variant="yellow" fullWidth>
+                  Daftar Akun Baru
+                </Button>
+              </Link>
+            </div>
+          ) : (
+            <Button
+              variant="outline"
+              fullWidth
+              icon={<LogOut size={18} />}
+              onClick={() => {
+                authService.logout()
+                setIsLoggedIn(false)
+                setMobileMenuOpen(false)
+              }}
+              style={{ marginTop: '0.25rem' }}
+            >
+              Keluar Akun
+            </Button>
+          )}
         </div>
       )}
     </header>
