@@ -65,9 +65,8 @@ export const LoginPage: React.FC = () => {
       <div className="grid grid-cols-2 items-center space-between gap-12  max-w-[1280px] relative z-10 relative z-10">
         {/* Header Badge & Title */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 bg-[#FFE600] border-2 border-[#121215] rounded-full px-4 py-1 font-['Space_Grotesk',sans-serif] font-black text-xs uppercase tracking-wider text-[#121215] shadow-[2px_2px_0px_0px_#121215] mb-3">
-            <ShieldCheck size={15} />
-            <span>PORTAL AUTENTIKASI RESMI</span>
+          <div className="inline-flex items-center gap-2 bg-[#FFE600] border-2 border-[#121215] rounded-full px-4 py-1 font-['Space_Grotesk',sans-serif] font-black text-xs uppercase tracking-wider text-[#121215] rotate-2 shadow-[2px_2px_0px_0px_#121215] mb-3">
+            <span>Selamat Datang</span>
           </div>
           <h1 className="font-['Space_Grotesk',sans-serif] font-black text-3xl sm:text-4xl text-[#121215] tracking-tight mb-2">
             Masuk ke Convena

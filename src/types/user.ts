@@ -1,10 +1,12 @@
 export type UserRole =
+  | 'user'
   | 'admin'
   | 'committee'
   | 'treasurer'
   | 'sponsor'
   | 'attendee'
-  | 'verifier'
+
+export type GlobalRole = 'user' | 'system_admin'
 
 export interface User {
   id: string
@@ -12,7 +14,7 @@ export interface User {
   displayName?: string
   username?: string
   email: string
-  role: UserRole
+  role?: string
   company?: string
   organizationId?: string
   avatarUrl?: string
@@ -37,7 +39,6 @@ export interface RegisterPayload {
   username: string
   email: string
   password: string
-  role?: UserRole
+  role?: string
   company?: string
 }
-
