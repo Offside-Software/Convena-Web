@@ -1,6 +1,6 @@
 import { apiClient } from './api/client.ts'
 import { mockEvents } from '../data/mockData.ts'
-import type { Event, EventFilterParams } from '../types/event.ts'
+import type { Event, EventFilterParams, CreateEventInput, CreateEventResponse } from '../types/event.ts'
 
 export class EventsService {
   async getEvents(params?: EventFilterParams): Promise<Event[]> {
@@ -34,6 +34,44 @@ export class EventsService {
     }
   }
 
+  async getMyEvents(): Promise<Event[]> {
+    try {
+      const res = await apiClient.get<any[]>('/events/my-events')
+      if (Array.isArray(res)) {
+        return res.map((item) => ({
+          id: item.id,
+          title: item.title,
+          slug: item.slug,
+          description: item.description || '',
+          shortDescription: item.shortDescription || '',
+          bannerUrl: item.bannerUrl || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800',
+          category: item.category || 'seminar',
+          status: item.status || 'draft',
+          visibility: item.visibility || 'public',
+          startDate: item.startDate,
+          endDate: item.endDate,
+          location: {
+            type: item.locationType || 'offline',
+            venueName: item.venueName || 'Kampus',
+            city: item.city || 'Indonesia',
+          },
+          organizationId: item.createdBy,
+          organizationName: item.organizationName || 'Ormawa Kampus',
+          university: item.university || 'Perguruan Tinggi',
+          ticketTiers: [],
+          tags: ['Ormawa'],
+          attendeeCount: 0,
+          totalCapacity: 500,
+          myRole: item.myRole,
+          myCustomTitle: item.myCustomTitle,
+        }))
+      }
+      return []
+    } catch {
+      return []
+    }
+  }
+
   async getEventById(id: string): Promise<Event | undefined> {
     try {
       return await apiClient.get<Event>(`/events/${id}`)
@@ -42,34 +80,37 @@ export class EventsService {
     }
   }
 
-  async createEvent(eventData: Partial<Event>): Promise<Event> {
-    try {
-      return await apiClient.post<Event>('/events', eventData)
-    } catch {
-      const newEvent: Event = {
-        id: `evt-${Date.now()}`,
-        title: eventData.title || 'Untitled Event',
-        slug: (eventData.title || 'event').toLowerCase().replace(/\s+/g, '-'),
-        description: eventData.description || '',
-        shortDescription: eventData.shortDescription || '',
-        bannerUrl: eventData.bannerUrl || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800',
-        category: eventData.category || 'seminar',
-        status: 'published',
-        visibility: 'public',
-        startDate: eventData.startDate || new Date().toISOString(),
-        endDate: eventData.endDate || new Date().toISOString(),
-        location: eventData.location || { type: 'offline', venueName: 'Kampus', city: 'Jakarta' },
-        organizationId: 'org-hmif-itb',
-        organizationName: 'HMIF ITB',
-        university: 'Institut Teknologi Bandung',
-        ticketTiers: eventData.ticketTiers || [],
-        tags: eventData.tags || ['StudentEvent'],
-        attendeeCount: 0,
-        totalCapacity: 200,
-        certificateAvailable: true,
-      }
-      mockEvents.unshift(newEvent)
-      return newEvent
+  async createEvent(eventData: CreateEventInput): Promise<Event> {
+    const res = await apiClient.post<CreateEventResponse>('/events', eventData)
+    const evt = res.event
+    return {
+      id: evt.id,
+      title: evt.title,
+      slug: evt.slug,
+      description: evt.description || '',
+      shortDescription: evt.shortDescription || '',
+      bannerUrl: evt.bannerUrl || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800',
+      category: evt.category,
+      status: evt.status || 'draft',
+      visibility: evt.visibility || 'public',
+      startDate: evt.startDate,
+      endDate: evt.endDate,
+      location: {
+        type: eventData.locationType || 'offline',
+        venueName: eventData.venueName || 'Kampus',
+        address: eventData.address,
+        city: eventData.city,
+        onlineUrl: eventData.onlineUrl,
+      },
+      organizationId: evt.organizationId || 'my-org',
+      organizationName: eventData.organizationName || 'Ormawa Kampus',
+      university: eventData.university || 'Perguruan Tinggi',
+      ticketTiers: [],
+      tags: ['Ormawa'],
+      attendeeCount: 0,
+      totalCapacity: 500,
+      myRole: res.role || 'owner',
+      myCustomTitle: 'Event Creator',
     }
   }
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Lock, Mail, ArrowRight, ShieldCheck, Sparkles, Eye, EyeOff, AlertCircle } from 'lucide-react'
+import { Lock, Mail, ArrowRight, Sparkles, Eye, EyeOff, AlertCircle } from 'lucide-react'
 import { authService } from '../../services/auth.service.ts'
 
 export const LoginPage: React.FC = () => {

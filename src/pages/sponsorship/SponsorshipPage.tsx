@@ -105,7 +105,7 @@ export const SponsorshipPage: React.FC = () => {
             setAiContact('Bpk. Andi Wijaya')
           }}
         >
-          Asisten Proposal AI ✨
+          Asisten Proposal AI
         </Button>
       </div>
 
