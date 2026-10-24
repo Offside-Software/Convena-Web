@@ -63,7 +63,7 @@ a {
 }
 
 /* Form Elements */
-input, textarea, select {
+input:not([type="checkbox"]):not([type="radio"]), textarea, select {
   font-family: var(--font-body);
   font-size: 0.95rem;
   color: var(--mem-dark);
@@ -76,10 +76,16 @@ input, textarea, select {
   width: 100%;
 }
 
-input:focus, textarea:focus, select:focus {
+input:not([type="checkbox"]):not([type="radio"]):focus, textarea:focus, select:focus {
   outline: none;
   border-color: var(--mem-pink);
   box-shadow: 3px 3px 0px var(--mem-dark);
+}
+
+input[type="checkbox"], input[type="radio"] {
+  width: auto;
+  padding: 0;
+  box-shadow: none;
 }
 
 input::placeholder, textarea::placeholder {
