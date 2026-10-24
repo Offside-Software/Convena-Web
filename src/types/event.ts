@@ -50,6 +50,31 @@ export interface Event {
   totalCapacity: number
   requiresApproval?: boolean
   certificateAvailable?: boolean
+  myRole?: string
+  myCustomTitle?: string
+}
+
+export interface CreateEventInput {
+  title: string
+  slug?: string
+  description?: string
+  shortDescription?: string
+  bannerUrl?: string
+  category: EventCategory
+  startDate: string
+  endDate: string
+  locationType?: 'offline' | 'online' | 'hybrid'
+  venueName?: string
+  address?: string
+  city?: string
+  onlineUrl?: string
+  organizationName?: string
+  university?: string
+}
+
+export interface CreateEventResponse {
+  event: Event
+  role: string
 }
 
 export interface EventFilterParams {

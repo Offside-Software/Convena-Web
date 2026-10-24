@@ -7,31 +7,136 @@ import {
   Receipt,
   Plus,
   ArrowUpRight,
-  FileCheck
+  FileCheck,
+  Lock,
+  LogIn,
+  UserPlus,
+  ShieldAlert,
+  CalendarCheck
 } from 'lucide-react'
 import { StatCard } from '../../components/domain/StatCard.tsx'
 import { Card } from '../../components/common/Card.tsx'
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
 import { ProgressBar } from '../../components/common/ProgressBar.tsx'
+import { CreateEventModal } from './components/CreateEventModal.tsx'
+import { authService } from '../../services/auth.service.ts'
 import { eventsService } from '../../services/events.service.ts'
 import { financeService } from '../../services/finance.service.ts'
 import { sponsorshipService } from '../../services/sponsorship.service.ts'
 import type { Event } from '../../types/event.ts'
+import type { User } from '../../types/user.ts'
 import type { EventBudgetSummary } from '../../types/finance.ts'
 import type { SponsorLead } from '../../types/sponsorship.ts'
 
 export const DashboardPage: React.FC = () => {
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [authLoading, setAuthLoading] = useState(true)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [events, setEvents] = useState<Event[]>([])
   const [budget, setBudget] = useState<EventBudgetSummary | null>(null)
   const [leads, setLeads] = useState<SponsorLead[]>([])
 
   useEffect(() => {
-    eventsService.getEvents().then(setEvents)
-    financeService.getBudgetSummary('evt-arkavidia-2026').then(setBudget)
-    sponsorshipService.getLeads().then(setLeads)
+    let isMounted = true
+
+    authService.getCurrentUser().then((user) => {
+      if (!isMounted) return
+      setCurrentUser(user)
+      setAuthLoading(false)
+
+      if (user) {
+        // Fetch user's real events from database
+        eventsService.getMyEvents().then((myEvents) => {
+          if (!isMounted) return
+          if (myEvents.length > 0) {
+            setEvents(myEvents)
+          } else {
+            // Fallback to public events if user hasn't created one yet
+            eventsService.getEvents().then((allEvts) => {
+              if (isMounted) setEvents(allEvts.slice(0, 3))
+            })
+          }
+        })
+
+        financeService.getBudgetSummary('evt-arkavidia-2026').then((b) => {
+          if (isMounted) setBudget(b)
+        })
+
+        sponsorshipService.getLeads().then((l) => {
+          if (isMounted) setLeads(l)
+        })
+      }
+    })
+
+    return () => {
+      isMounted = false
+    }
   }, [])
 
+  const handleEventCreated = (newEvent: Event) => {
+    setEvents((prev) => [newEvent, ...prev])
+  }
+
+  // 1. Loading State
+  if (authLoading) {
+    return (
+      <div className="py-24 text-center">
+        <div className="w-12 h-12 border-4 border-[#121215] border-t-[#FFE600] rounded-full animate-spin mx-auto mb-4" />
+        <p className="font-['Space_Grotesk',sans-serif] font-bold text-sm text-[#121215]">
+          Memeriksa sesi pengguna...
+        </p>
+      </div>
+    )
+  }
+
+  // 2. Unauthenticated State: Hide entire dashboard and event creation
+  if (!currentUser) {
+    return (
+      <div className="py-12 px-4 max-w-xl mx-auto text-center">
+        <div className="bg-white border-4 border-[#121215] rounded-2xl shadow-[8px_8px_0px_0px_#121215] p-8 md:p-10 relative overflow-hidden">
+          <div className="inline-flex mb-4">
+            <Badge variant="pink" tilt="left" icon={<ShieldAlert size={14} />}>
+              AKSES TERBATAS
+            </Badge>
+          </div>
+
+          <div className="w-16 h-16 bg-[#FFE600] border-3 border-[#121215] rounded-2xl shadow-[4px_4px_0px_0px_#121215] flex items-center justify-center mx-auto mb-5">
+            <Lock size={32} className="text-[#121215]" />
+          </div>
+
+          <h2 className="text-2xl sm:text-3xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] mb-3">
+            Masuk untuk Mengakses Dashboard
+          </h2>
+
+          <p className="text-sm sm:text-base text-gray-600 mb-8 leading-relaxed">
+            Dashboard panitia, pembukuan anggaran SPJ, dan pembuatan event baru hanya dapat diakses setelah Anda masuk ke akun Convena.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-3.5 justify-center">
+            <Link to="/login" className="no-underline">
+              <Button variant="yellow" size="lg" icon={<LogIn size={18} />}>
+                Masuk ke Akun
+              </Button>
+            </Link>
+            <Link to="/register" className="no-underline">
+              <Button variant="cyan" size="lg" icon={<UserPlus size={18} />}>
+                Daftar Akun Baru
+              </Button>
+            </Link>
+          </div>
+
+          <div className="mt-8 pt-4 border-t-2 border-gray-100">
+            <Link to="/" className="text-xs text-gray-500 hover:text-[#121215] underline font-bold">
+              ← Kembali ke Halaman Utama
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // 3. Authenticated Dashboard State
   const totalAttendees = events.reduce((sum, e) => sum + e.attendeeCount, 0)
   const totalSponsorValue = leads
     .filter((l) => l.stage === 'committed' || l.stage === 'paid')
@@ -42,10 +147,13 @@ export const DashboardPage: React.FC = () => {
       {/* Header Bar */}
       <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
         <div>
-          <div className="mb-1.5">
+          <div className="mb-1.5 flex items-center gap-2">
             <Badge variant="cyan" tilt="left">
               ORGANIZER OVERVIEW
             </Badge>
+            <span className="text-xs font-bold text-gray-500">
+              Halo, <span className="text-[#121215]">{currentUser.displayName || currentUser.name}</span>
+            </span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] m-0">
             Dashboard Panitia Ormawa
@@ -56,11 +164,14 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         <div className="flex gap-3">
-          <Link to="/events?new=true" className="no-underline">
-            <Button variant="pink" size="md" icon={<Plus size={18} />}>
-              Event Baru
-            </Button>
-          </Link>
+          <Button
+            variant="pink"
+            size="md"
+            icon={<Plus size={18} />}
+            onClick={() => setIsCreateModalOpen(true)}
+          >
+            Buat Event Baru
+          </Button>
           <Link to="/dashboard/finances" className="no-underline">
             <Button variant="yellow" size="md" icon={<Receipt size={18} />}>
               Catat SPJ
@@ -117,34 +228,64 @@ export const DashboardPage: React.FC = () => {
         {/* Left Column: Active Events Management */}
         <div className="flex flex-col gap-6">
           <Card headerColor="yellow" headerTitle="Event Aktif Kepengurusan">
-            <div className="flex flex-col gap-4">
-              {events.map((evt) => (
-                <div
-                  key={evt.id}
-                  className="flex items-center justify-between p-3.5 border-2 border-[#121215] rounded-xl bg-white shadow-[2px_2px_0px_0px_#121215]"
+            {events.length === 0 ? (
+              <div className="p-8 text-center bg-gray-50/50 rounded-xl border-2 border-dashed border-gray-200">
+                <CalendarCheck size={36} className="text-gray-400 mx-auto mb-2" />
+                <h4 className="font-['Space_Grotesk',sans-serif] font-black text-sm text-[#121215] mb-1">
+                  Belum Ada Event Aktif
+                </h4>
+                <p className="text-xs text-gray-500 mb-4">
+                  Buat event pertama Anda sekarang untuk mulai mengelola tiket, anggaran, dan sponsorship.
+                </p>
+                <Button
+                  variant="pink"
+                  size="sm"
+                  icon={<Plus size={16} />}
+                  onClick={() => setIsCreateModalOpen(true)}
                 >
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={evt.bannerUrl}
-                      alt=""
-                      className="w-12 h-12 rounded-lg border-2 border-[#121215] object-cover"
-                    />
-                    <div>
-                      <div className="font-extrabold text-sm text-[#121215]">{evt.title}</div>
-                      <div className="text-xs text-gray-500 mt-0.5">
-                        {evt.attendeeCount} / {evt.totalCapacity} Tiket Terbit
+                  Buat Event Pertama
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                {events.map((evt) => (
+                  <div
+                    key={evt.id}
+                    className="flex items-center justify-between p-3.5 border-2 border-[#121215] rounded-xl bg-white shadow-[2px_2px_0px_0px_#121215]"
+                  >
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={evt.bannerUrl}
+                        alt=""
+                        className="w-12 h-12 rounded-lg border-2 border-[#121215] object-cover"
+                      />
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-extrabold text-sm text-[#121215]">{evt.title}</span>
+                          {evt.myRole && (
+                            <Badge
+                              variant={evt.myRole === 'owner' ? 'pink' : evt.myRole === 'admin' ? 'yellow' : 'mint'}
+                              className="text-[10px] py-0.5 px-2 capitalize"
+                            >
+                              {evt.myRole}
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-0.5">
+                          {evt.attendeeCount} / {evt.totalCapacity} Tiket Terbit • {evt.category}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <Link to={`/events/${evt.id}`} className="no-underline">
-                    <Button variant="outline" size="sm" icon={<ArrowUpRight size={14} />}>
-                      Kelola
-                    </Button>
-                  </Link>
-                </div>
-              ))}
-            </div>
+                    <Link to={`/events/${evt.id}`} className="no-underline">
+                      <Button variant="outline" size="sm" icon={<ArrowUpRight size={14} />}>
+                        Kelola
+                      </Button>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            )}
           </Card>
 
           {/* Quick Action Tiles */}
@@ -186,7 +327,9 @@ export const DashboardPage: React.FC = () => {
               <div>
                 <div className="mb-5">
                   <div className="flex justify-between text-xs sm:text-sm mb-1">
-                    <span className="font-bold text-[#121215]">Total Pagu: Rp {budget.totalBudgetPlanned.toLocaleString('id-ID')}</span>
+                    <span className="font-bold text-[#121215]">
+                      Total Pagu: Rp {budget.totalBudgetPlanned.toLocaleString('id-ID')}
+                    </span>
                     <span className="text-[#FF4B91] font-black">
                       Rp {budget.totalExpenseRealized.toLocaleString('id-ID')}
                     </span>
@@ -238,6 +381,13 @@ export const DashboardPage: React.FC = () => {
           </Card>
         </div>
       </div>
+
+      {/* Modal: Create Event */}
+      <CreateEventModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onEventCreated={handleEventCreated}
+      />
     </div>
   )
 }

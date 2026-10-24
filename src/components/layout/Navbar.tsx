@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Calendar, CheckCircle, LayoutDashboard, Menu, PlusCircle, X, LogIn, LogOut } from 'lucide-react'
+import { Calendar, CheckCircle, LayoutDashboard, Menu, X, LogIn, LogOut } from 'lucide-react'
 import { Button } from '../common/Button.tsx'
 import { Badge } from '../common/Badge.tsx'
 import { MemphisShape } from '../shapes/MemphisShape.tsx'
@@ -178,9 +178,6 @@ export const Navbar: React.FC = () => {
             onClick={() => setMobileMenuOpen(false)}
             className="no-underline mt-2"
           >
-            <Button variant="pink" fullWidth icon={<PlusCircle size={18} />}>
-              Buat Event Baru
-            </Button>
           </Link>
 
           {!isLoggedIn ? (
