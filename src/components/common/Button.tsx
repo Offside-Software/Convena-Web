@@ -16,95 +16,39 @@ export const Button: React.FC<ButtonProps> = ({
   iconPosition = 'left',
   fullWidth = false,
   className = '',
-  style = {},
+  style,
   disabled,
   ...props
 }) => {
-  const getVariantStyles = (): React.CSSProperties => {
-    switch (variant) {
-      case 'yellow':
-        return {
-          backgroundColor: 'var(--mem-yellow)',
-          color: 'var(--mem-dark)',
-        }
-      case 'pink':
-        return {
-          backgroundColor: 'var(--mem-pink)',
-          color: '#FFFFFF',
-        }
-      case 'cyan':
-        return {
-          backgroundColor: 'var(--mem-cyan)',
-          color: 'var(--mem-dark)',
-        }
-      case 'purple':
-        return {
-          backgroundColor: 'var(--mem-purple)',
-          color: '#FFFFFF',
-        }
-      case 'mint':
-        return {
-          backgroundColor: 'var(--mem-mint)',
-          color: 'var(--mem-dark)',
-        }
-      case 'dark':
-        return {
-          backgroundColor: 'var(--mem-dark)',
-          color: '#FFFFFF',
-          boxShadow: '4px 4px 0px var(--mem-yellow)',
-        }
-      case 'outline':
-        return {
-          backgroundColor: 'transparent',
-          color: 'var(--mem-dark)',
-          border: 'var(--mem-border)',
-        }
-      case 'ghost':
-        return {
-          backgroundColor: 'transparent',
-          color: 'var(--mem-dark)',
-          border: '2px dashed var(--mem-dark)',
-          boxShadow: 'none',
-        }
-    }
+  const variantClasses: Record<string, string> = {
+    yellow: 'bg-[#FFE600] text-[#121215] hover:bg-[#FFF585]',
+    pink: 'bg-[#FF4B91] text-white hover:bg-[#FF94BE]',
+    cyan: 'bg-[#01CDFE] text-[#121215] hover:bg-[#70E7FF]',
+    purple: 'bg-[#845EC2] text-white hover:bg-[#BD93F9]',
+    mint: 'bg-[#00F5D4] text-[#121215] hover:bg-[#70E7FF]',
+    dark: 'bg-[#121215] text-white shadow-[4px_4px_0px_0px_#FFE600]',
+    outline: 'bg-transparent text-[#121215] border-2 border-[#121215]',
+    ghost: 'bg-transparent text-[#121215] border-2 border-dashed border-[#121215] shadow-none',
   }
 
-  const getSizeStyles = (): React.CSSProperties => {
-    switch (size) {
-      case 'sm':
-        return {
-          padding: '0.35rem 0.75rem',
-          fontSize: '0.825rem',
-        }
-      case 'lg':
-        return {
-          padding: '0.9rem 1.75rem',
-          fontSize: '1.1rem',
-        }
-      case 'md':
-      default:
-        return {
-          padding: '0.6rem 1.25rem',
-          fontSize: '0.95rem',
-        }
-    }
+  const sizeClasses: Record<string, string> = {
+    sm: 'py-1.5 px-3 text-xs',
+    md: 'py-2.5 px-5 text-sm',
+    lg: 'py-3.5 px-7 text-base',
   }
 
   return (
     <button
-      className={`memphis-btn ${className}`}
       disabled={disabled}
-      style={{
-        ...getVariantStyles(),
-        ...getSizeStyles(),
-        width: fullWidth ? '100%' : 'auto',
-        ...style,
-      }}
+      style={style}
+      className={`inline-flex items-center justify-center gap-2 font-['Space_Grotesk',sans-serif] font-black uppercase tracking-wider rounded-lg border-2 border-[#121215] shadow-[3px_3px_0px_0px_#121215] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0 active:translate-y-0 active:shadow-[1px_1px_0px_0px_#121215] transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed select-none ${
+        fullWidth ? 'w-full' : 'w-auto'
+      } ${variantClasses[variant] || variantClasses.yellow} ${sizeClasses[size] || sizeClasses.md} ${className}`.trim()}
       {...props}
     >
-      {icon && iconPosition === 'left' && <span style={{ display: 'inline-flex' }}>{icon}</span>}
+      {icon && iconPosition === 'left' && <span className="inline-flex shrink-0">{icon}</span>}
       <span>{children}</span>
-      {icon && iconPosition === 'right' && <span style={{ display: 'inline-flex' }}>{icon}</span>}
+      {icon && iconPosition === 'right' && <span className="inline-flex shrink-0">{icon}</span>}
     </button>
   )
 }

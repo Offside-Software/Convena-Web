@@ -65,12 +65,12 @@ export const SponsorshipPage: React.FC = () => {
     setTimeout(() => setIsCopied(false), 2000)
   }
 
-  const stages: { stage: PipelineStage; title: string; color: string }[] = [
-    { stage: 'prospect', title: 'Target Prospek', color: 'var(--mem-gray-200)' },
-    { stage: 'proposal_sent', title: 'Proposal Terkirim', color: 'var(--mem-cyan-light)' },
-    { stage: 'negotiating', title: 'Negosiasi MOU', color: 'var(--mem-yellow-light)' },
-    { stage: 'committed', title: 'Komitmen Deal', color: 'var(--mem-pink-light)' },
-    { stage: 'paid', title: 'Lunas / Transfer', color: 'var(--mem-mint)' },
+  const stages: { stage: PipelineStage; title: string; colorClass: string }[] = [
+    { stage: 'prospect', title: 'Target Prospek', colorClass: 'bg-gray-200' },
+    { stage: 'proposal_sent', title: 'Proposal Terkirim', colorClass: 'bg-[#70E7FF]' },
+    { stage: 'negotiating', title: 'Negosiasi MOU', colorClass: 'bg-[#FFF585]' },
+    { stage: 'committed', title: 'Komitmen Deal', colorClass: 'bg-[#FF94BE]' },
+    { stage: 'paid', title: 'Lunas / Transfer', colorClass: 'bg-[#00F5D4]' },
   ]
 
   const totalCommitted = leads
@@ -80,22 +80,17 @@ export const SponsorshipPage: React.FC = () => {
   return (
     <div>
       {/* Header */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          marginBottom: '2rem',
-          flexWrap: 'wrap',
-          gap: '1rem',
-        }}
-      >
+      <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
         <div>
-          <Badge variant="pink" tilt="left" style={{ marginBottom: '0.4rem' }}>
-            CRM PIPELINE & MITRA
-          </Badge>
-          <h1 style={{ fontSize: '2.4rem', margin: 0 }}>Sponsorship CRM</h1>
-          <p style={{ color: 'var(--mem-gray-500)', margin: '4px 0 0' }}>
+          <div className="mb-1.5">
+            <Badge variant="pink" tilt="left">
+              CRM PIPELINE & MITRA
+            </Badge>
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] m-0">
+            Sponsorship CRM
+          </h1>
+          <p className="text-gray-500 text-sm sm:text-base mt-1">
             Kelola tahapan penawaran sponsor, kuota paket, dan buat draf penawaran proposal resmi dengan bantuan AI.
           </p>
         </div>
@@ -115,53 +110,33 @@ export const SponsorshipPage: React.FC = () => {
       </div>
 
       {/* Package slots summary */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '1.25rem',
-          marginBottom: '2.5rem',
-        }}
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
         {packages.map((pkg) => (
           <div
             key={pkg.id}
-            className="memphis-box"
-            style={{
-              padding: '1.25rem',
-              backgroundColor: '#FFFFFF',
-              position: 'relative',
-              overflow: 'hidden',
-            }}
+            className="p-5 bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] relative overflow-hidden flex flex-col"
           >
             <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '6px',
-                backgroundColor: pkg.color,
-              }}
+              className={`absolute top-0 left-0 w-full h-1.5 ${
+                pkg.color === '#FFE600'
+                  ? 'bg-[#FFE600]'
+                  : pkg.color === '#01CDFE'
+                    ? 'bg-[#01CDFE]'
+                    : pkg.color === '#FF4B91'
+                      ? 'bg-[#FF4B91]'
+                      : 'bg-[#FFE600]'
+              }`}
             />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <h3 style={{ fontSize: '1.15rem', margin: 0 }}>{pkg.name}</h3>
-              <Badge variant="dark" style={{ fontSize: '0.7rem' }}>
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-lg font-['Space_Grotesk',sans-serif] font-black text-[#121215] m-0">{pkg.name}</h3>
+              <Badge variant="dark" className="text-[11px]">
                 {pkg.slotsFilled} / {pkg.slotLimit} Terisi
               </Badge>
             </div>
-            <div
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontWeight: 900,
-                fontSize: '1.5rem',
-                color: 'var(--mem-dark)',
-                marginBottom: '0.75rem',
-              }}
-            >
+            <div className="font-['Space_Grotesk',sans-serif] font-black text-2xl text-[#121215] mb-3">
               Rp {pkg.price.toLocaleString('id-ID')}
             </div>
-            <ul style={{ paddingLeft: '1.2rem', margin: 0, fontSize: '0.8rem', color: '#4B5563' }}>
+            <ul className="pl-5 m-0 text-xs text-gray-600 space-y-1">
               {pkg.deliverables.slice(0, 3).map((d, i) => (
                 <li key={i}>{d}</li>
               ))}
@@ -171,86 +146,47 @@ export const SponsorshipPage: React.FC = () => {
       </div>
 
       {/* Pipeline Kanban Columns */}
-      <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <Sparkles size={20} style={{ color: 'var(--mem-pink)' }} /> Tahapan Pipeline Sponsorship
-        <span style={{ fontSize: '0.9rem', color: 'var(--mem-gray-500)', fontWeight: 600 }}>
+      <h2 className="text-xl sm:text-2xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] mb-4 flex items-center gap-2 flex-wrap">
+        <Sparkles size={20} className="text-[#FF4B91]" /> Tahapan Pipeline Sponsorship
+        <span className="text-sm text-gray-500 font-semibold">
           (Total Masuk: Rp {totalCommitted.toLocaleString('id-ID')})
         </span>
       </h2>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '1rem',
-          alignItems: 'start',
-        }}
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-start">
         {stages.map((stg) => {
           const stageLeads = leads.filter((l) => l.stage === stg.stage)
           return (
             <div
               key={stg.stage}
-              className="memphis-box"
-              style={{
-                backgroundColor: '#FFFFFF',
-                padding: '0.85rem',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.75rem',
-                minHeight: '380px',
-              }}
+              className="bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] p-3.5 flex flex-col gap-3 min-h-[380px]"
             >
               {/* Column Header */}
               <div
-                style={{
-                  padding: '0.5rem',
-                  backgroundColor: stg.color,
-                  border: '1.5px solid var(--mem-dark)',
-                  borderRadius: '6px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  fontWeight: 800,
-                  fontSize: '0.85rem',
-                }}
+                className={`p-2 border-2 border-[#121215] rounded-lg flex justify-between items-center font-extrabold text-xs ${stg.colorClass} text-[#121215]`}
               >
                 <span>{stg.title}</span>
-                <span style={{ fontFamily: 'var(--font-mono)' }}>{stageLeads.length}</span>
+                <span className="font-mono">{stageLeads.length}</span>
               </div>
 
               {/* Lead Cards */}
               {stageLeads.map((lead) => (
                 <div
                   key={lead.id}
-                  style={{
-                    padding: '0.85rem',
-                    border: '2px solid var(--mem-dark)',
-                    borderRadius: '8px',
-                    backgroundColor: 'var(--mem-bg)',
-                    boxShadow: '2px 2px 0px var(--mem-dark)',
-                  }}
+                  className="p-3.5 border-2 border-[#121215] rounded-lg bg-[#FAF9F6] shadow-[2px_2px_0px_0px_#121215]"
                 >
-                  <div style={{ fontWeight: 800, fontSize: '0.95rem', marginBottom: '0.25rem' }}>
+                  <div className="font-black text-sm text-[#121215] mb-1">
                     {lead.companyName}
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--mem-gray-500)', marginBottom: '0.5rem' }}>
+                  <div className="text-xs text-gray-500 mb-2">
                     {lead.contactPerson}
                   </div>
 
-                  <div
-                    style={{
-                      fontFamily: 'var(--font-display)',
-                      fontWeight: 900,
-                      fontSize: '0.95rem',
-                      color: 'var(--mem-dark)',
-                      marginBottom: '0.5rem',
-                    }}
-                  >
+                  <div className="font-['Space_Grotesk',sans-serif] font-black text-sm text-[#121215] mb-2">
                     Rp {lead.value.toLocaleString('id-ID')}
                   </div>
 
-                  <p style={{ fontSize: '0.75rem', color: '#4B5563', margin: '0 0 0.75rem' }}>
+                  <p className="text-xs text-gray-600 m-0 mb-3 leading-relaxed">
                     {lead.notes}
                   </p>
 
@@ -258,12 +194,7 @@ export const SponsorshipPage: React.FC = () => {
                   <select
                     value={lead.stage}
                     onChange={(e) => handleStageChange(lead.id, e.target.value as PipelineStage)}
-                    style={{
-                      fontSize: '0.75rem',
-                      padding: '3px 6px',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                    }}
+                    className="w-full text-xs py-1 px-2 rounded-md border border-[#121215] bg-white cursor-pointer font-semibold shadow-xs"
                   >
                     <option value="prospect">Pindah: Prospek</option>
                     <option value="proposal_sent">Pindah: Proposal Sent</option>
@@ -297,8 +228,8 @@ export const SponsorshipPage: React.FC = () => {
           </>
         }
       >
-        <div>
-          <p style={{ fontSize: '0.85rem', color: 'var(--mem-gray-500)', marginBottom: '1rem' }}>
+        <div className="space-y-4">
+          <p className="text-xs text-gray-500">
             Generate draf penawaran sponsorship resmi berstandar korporat Indonesia secara otomatis menggunakan LLM.
           </p>
 
@@ -306,15 +237,17 @@ export const SponsorshipPage: React.FC = () => {
             label="Nama Perusahaan Calon Sponsor"
             value={aiCompany}
             onChange={(e) => setAiCompany(e.target.value)}
+            className="!mb-0"
           />
 
           <Input
             label="Nama PIC / Kontak yang Dituju"
             value={aiContact}
             onChange={(e) => setAiContact(e.target.value)}
+            className="!mb-0"
           />
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Select
               label="Kategori Paket Ditawarkan"
               options={[
@@ -324,8 +257,14 @@ export const SponsorshipPage: React.FC = () => {
               ]}
               value={aiPackage}
               onChange={(e) => setAiPackage(e.target.value)}
+              className="!mb-0"
             />
-            <Input label="Nama Kegiatan / Acara" value={aiEvent} onChange={(e) => setAiEvent(e.target.value)} />
+            <Input
+              label="Nama Kegiatan / Acara"
+              value={aiEvent}
+              onChange={(e) => setAiEvent(e.target.value)}
+              className="!mb-0"
+            />
           </div>
 
           <Button
@@ -334,33 +273,21 @@ export const SponsorshipPage: React.FC = () => {
             onClick={handleGenerateAi}
             disabled={isGenerating || !aiCompany || !aiContact}
             icon={<Sparkles size={16} />}
-            style={{ marginBottom: '1.25rem' }}
+            className="mt-2"
           >
             {isGenerating ? 'Menyusun Surat dengan AI...' : 'Buat Draf Surat Penawaran'}
           </Button>
 
           {generatedDraft && (
-            <div>
-              <label
-                style={{
-                  display: 'block',
-                  fontFamily: 'var(--font-display)',
-                  fontWeight: 700,
-                  fontSize: '0.85rem',
-                  marginBottom: '0.35rem',
-                }}
-              >
+            <div className="pt-2">
+              <label className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5">
                 Hasil Draf Surat (Siap Dikirim / Disunting):
               </label>
               <textarea
                 rows={8}
                 value={generatedDraft}
                 onChange={(e) => setGeneratedDraft(e.target.value)}
-                style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.85rem',
-                  lineHeight: 1.6,
-                }}
+                className="w-full p-3 bg-white border-2 border-[#121215] rounded-xl text-xs sm:text-sm font-mono leading-relaxed shadow-[2px_2px_0px_0px_#121215] focus:outline-none focus:border-[#FF4B91] transition-all"
               />
             </div>
           )}

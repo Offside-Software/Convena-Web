@@ -6,7 +6,7 @@ export interface ModalProps {
   onClose: () => void
   title: string
   children: React.ReactNode
-  headerColor?: 'yellow' | 'pink' | 'cyan' | 'purple' | 'mint'
+  headerColor?: 'pink' | 'cyan' | 'purple' | 'mint' | 'yellow'
   footer?: React.ReactNode
   maxWidth?: string
 }
@@ -18,7 +18,7 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   headerColor = 'yellow',
   footer,
-  maxWidth = '540px',
+  maxWidth,
 }) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -27,119 +27,61 @@ export const Modal: React.FC<ModalProps> = ({
       }
     }
     if (isOpen) {
-      document.body.style.overflow = 'hidden'
+      document.body.classList.add('overflow-hidden')
       window.addEventListener('keydown', handleKeyDown)
     }
     return () => {
-      document.body.style.overflow = 'unset'
+      document.body.classList.remove('overflow-hidden')
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [isOpen, onClose])
 
   if (!isOpen) return null
 
-  const getHeaderBg = (): string => {
-    switch (headerColor) {
-      case 'pink':
-        return 'var(--mem-pink)'
-      case 'cyan':
-        return 'var(--mem-cyan)'
-      case 'purple':
-        return 'var(--mem-purple)'
-      case 'mint':
-        return 'var(--mem-mint)'
-      case 'yellow':
-      default:
-        return 'var(--mem-yellow)'
-    }
+  const headerBgClasses: Record<string, string> = {
+    pink: 'bg-[#FF4B91] text-white',
+    cyan: 'bg-[#01CDFE] text-[#121215]',
+    purple: 'bg-[#845EC2] text-white',
+    mint: 'bg-[#00F5D4] text-[#121215]',
+    yellow: 'bg-[#FFE600] text-[#121215]',
   }
-
-  const isLight = headerColor === 'yellow' || headerColor === 'cyan' || headerColor === 'mint'
 
   return (
     <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 9999,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '1rem',
-        backgroundColor: 'rgba(18, 18, 21, 0.65)',
-        backdropFilter: 'blur(3px)',
-      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#121215]/65 backdrop-blur-xs"
       onClick={onClose}
     >
       <div
-        className="memphis-box"
-        style={{
-          width: '100%',
-          maxWidth,
-          backgroundColor: '#FFFFFF',
-          border: 'var(--mem-border-thick)',
-          boxShadow: '8px 8px 0px var(--mem-dark)',
-          overflow: 'hidden',
-          animation: 'memphis-pulse-scale 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-        }}
+        className={`w-full ${maxWidth || 'max-w-[540px]'} bg-white border-4 border-[#121215] shadow-[8px_8px_0px_0px_#121215] rounded-2xl overflow-hidden animate-[memphis-pulse-scale_0.2s_cubic-bezier(0.16,1,0.3,1)]`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
         <div
-          style={{
-            backgroundColor: getHeaderBg(),
-            borderBottom: 'var(--mem-border)',
-            padding: '0.85rem 1.25rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            color: isLight ? 'var(--mem-dark)' : '#FFFFFF',
-          }}
+          className={`border-b-2 border-[#121215] py-3.5 px-5 flex items-center justify-between font-['Space_Grotesk',sans-serif] ${
+            headerBgClasses[headerColor] || headerBgClasses.yellow
+          }`}
         >
-          <h3
-            style={{
-              margin: 0,
-              fontSize: '1.25rem',
-              fontWeight: 800,
-              color: isLight ? 'var(--mem-dark)' : '#FFFFFF',
-            }}
-          >
+          <h3 className="m-0 text-xl font-black">
             {title}
           </h3>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close modal"
-            style={{
-              background: '#FFFFFF',
-              border: '2px solid var(--mem-dark)',
-              boxShadow: '2px 2px 0px var(--mem-dark)',
-              cursor: 'pointer',
-              display: 'inline-flex',
-              padding: '4px',
-              borderRadius: '4px',
-              color: 'var(--mem-dark)',
-            }}
+            className="bg-transparent border-none cursor-pointer flex items-center justify-center p-1 rounded-md text-inherit hover:opacity-75 transition-opacity"
+            aria-label="Tutup Modal"
           >
-            <X size={18} strokeWidth={3} />
+            <X size={20} />
           </button>
         </div>
 
         {/* Modal Body */}
-        <div style={{ padding: '1.5rem', maxHeight: '70vh', overflowY: 'auto' }}>{children}</div>
+        <div className="p-6 max-h-[75vh] overflow-y-auto">
+          {children}
+        </div>
 
-        {/* Modal Footer */}
+        {/* Optional Footer */}
         {footer && (
-          <div
-            style={{
-              padding: '1rem 1.5rem',
-              borderTop: '2px dashed var(--mem-dark)',
-              backgroundColor: 'var(--mem-bg)',
-              display: 'flex',
-              justifyContent: 'flex-end',
-              gap: '0.75rem',
-            }}
-          >
+          <div className="border-t-2 border-[#121215] py-3.5 px-5 flex justify-end gap-3 bg-gray-50">
             {footer}
           </div>
         )}

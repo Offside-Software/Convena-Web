@@ -47,41 +47,32 @@ export const VerifyPage: React.FC = () => {
   }
 
   return (
-    <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '3rem 1.5rem 5rem' }}>
+    <div className="max-w-[1080px] mx-auto py-12 px-4 sm:px-6 pb-20">
       {/* Title Header */}
-      <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-        <div style={{ display: 'inline-flex', marginBottom: '0.75rem' }}>
+      <div className="text-center mb-10">
+        <div className="inline-flex mb-3">
           <Badge variant="cyan" tilt="left" icon={<ShieldCheck size={16} />}>
             PORTAL OTENTIKASI RESMI
           </Badge>
         </div>
-        <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', margin: '0 0 0.5rem' }}>
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] mb-2">
           Verifikasi Keaslian E-Sertifikat
         </h1>
-        <p style={{ color: 'var(--mem-gray-500)', maxWidth: '640px', margin: '0 auto' }}>
+        <p className="text-gray-500 max-w-[640px] mx-auto text-sm sm:text-base leading-relaxed">
           Validasi keabsahan dokumen penghargaan, kepanitiaan, atau kehadiran peserta acara mahasiswa melalui basis data Convena.
         </p>
       </div>
 
       {/* Search Input Box */}
-      <div
-        className="memphis-box"
-        style={{
-          maxWidth: '680px',
-          margin: '0 auto 2.5rem',
-          padding: '1.25rem',
-          backgroundColor: '#FFFFFF',
-          boxShadow: '6px 6px 0px var(--mem-dark)',
-        }}
-      >
-        <form onSubmit={handleVerify} style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <div style={{ flex: '1 1 300px' }}>
+      <div className="max-w-[680px] mx-auto mb-10 p-5 bg-white border-2 border-[#121215] rounded-2xl shadow-[6px_6px_0px_0px_#121215]">
+        <form onSubmit={handleVerify} className="flex gap-2 flex-wrap">
+          <div className="grow basis-[300px]">
             <Input
               placeholder="Masukkan ID Sertifikat (Contoh: CNV-2026-ITB-8821)"
               value={code}
               onChange={(e) => setCode(e.target.value)}
               icon={<Search size={18} />}
-              style={{ margin: 0 }}
+              className="!mb-0"
               required
             />
           </div>
@@ -91,37 +82,19 @@ export const VerifyPage: React.FC = () => {
         </form>
 
         {/* Quick sample fillers */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.85rem', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--mem-gray-500)' }}>Contoh Cepat:</span>
+        <div className="flex items-center gap-2 mt-3.5 flex-wrap text-xs">
+          <span className="font-bold text-gray-500">Contoh Cepat:</span>
           <button
             type="button"
             onClick={() => handleQuickFill('CNV-2026-ITB-8821')}
-            style={{
-              fontSize: '0.75rem',
-              fontFamily: 'var(--font-mono)',
-              padding: '2px 8px',
-              borderRadius: '4px',
-              border: '1px solid var(--mem-dark)',
-              backgroundColor: 'var(--mem-yellow)',
-              cursor: 'pointer',
-              fontWeight: 700,
-            }}
+            className="font-mono py-0.5 px-2 rounded border border-[#121215] bg-[#FFE600] cursor-pointer font-bold hover:brightness-105"
           >
             CNV-2026-ITB-8821 (ITB)
           </button>
           <button
             type="button"
             onClick={() => handleQuickFill('CNV-2026-UI-1042')}
-            style={{
-              fontSize: '0.75rem',
-              fontFamily: 'var(--font-mono)',
-              padding: '2px 8px',
-              borderRadius: '4px',
-              border: '1px solid var(--mem-dark)',
-              backgroundColor: 'var(--mem-cyan)',
-              cursor: 'pointer',
-              fontWeight: 700,
-            }}
+            className="font-mono py-0.5 px-2 rounded border border-[#121215] bg-[#01CDFE] cursor-pointer font-bold hover:brightness-105"
           >
             CNV-2026-UI-1042 (UI)
           </button>
@@ -132,175 +105,88 @@ export const VerifyPage: React.FC = () => {
       {hasSearched && (
         <div>
           {certificate ? (
-            <div
-              className="memphis-box"
-              style={{
-                backgroundColor: '#FFFFFF',
-                border: 'var(--mem-border-thick)',
-                boxShadow: '10px 10px 0px var(--mem-dark)',
-                overflow: 'hidden',
-                position: 'relative',
-              }}
-            >
+            <div className="bg-white border-4 border-[#121215] rounded-2xl shadow-[10px_10px_0px_0px_#121215] overflow-hidden relative">
               {/* Memphis Top Certificate Ribbon */}
-              <div
-                style={{
-                  backgroundColor: 'var(--mem-yellow)',
-                  borderBottom: 'var(--mem-border)',
-                  padding: '0.75rem 1.5rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                  gap: '0.5rem',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <CheckCircle2 size={20} style={{ color: '#008775', fill: '#00F5D4' }} />
-                  <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '0.95rem' }}>
+              <div className="bg-[#FFE600] border-b-2 border-[#121215] py-3 px-6 flex items-center justify-between flex-wrap gap-2 text-[#121215]">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 size={20} className="text-[#008775] fill-[#00F5D4]" />
+                  <span className="font-['Space_Grotesk',sans-serif] font-black text-sm uppercase tracking-wider">
                     SERTIFIKAT RESMI TERVERIFIKASI
                   </span>
                 </div>
-                <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.85rem' }}>
+                <div className="font-mono font-bold text-xs sm:text-sm">
                   ID: {certificate.certificateNumber}
                 </div>
               </div>
 
               {/* Certificate Inner Canvas */}
-              <div
-                style={{
-                  padding: '3rem 2.5rem',
-                  textAlign: 'center',
-                  position: 'relative',
-                  backgroundImage:
-                    'radial-gradient(var(--mem-yellow-light) 1.5px, transparent 1.5px)',
-                  backgroundSize: '20px 20px',
-                }}
-              >
-                <div style={{ position: 'absolute', top: '20px', left: '20px' }}>
-                  <MemphisShape type="cross" size={28} color="var(--mem-pink)" />
+              <div className="py-12 px-6 sm:px-10 text-center relative bg-[radial-gradient(#FFF585_1.5px,transparent_1.5px)] [background-size:20px_20px]">
+                <div className="absolute top-5 left-5 pointer-events-none hidden sm:block">
+                  <MemphisShape type="cross" size={28} color="#FF4B91" />
                 </div>
-                <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
-                  <MemphisShape type="starburst" size={32} color="var(--mem-cyan)" />
+                <div className="absolute top-5 right-5 pointer-events-none hidden sm:block">
+                  <MemphisShape type="starburst" size={32} color="#01CDFE" />
                 </div>
 
                 {/* Institution Heading */}
-                <div style={{ fontSize: '1rem', fontFamily: 'var(--font-display)', fontWeight: 700, color: 'var(--mem-gray-500)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
+                <div className="text-sm font-['Space_Grotesk',sans-serif] font-bold text-gray-500 uppercase tracking-widest mb-2">
                   {certificate.organizationName} • {certificate.university}
                 </div>
 
-                <div
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    fontWeight: 900,
-                    fontSize: 'clamp(1.8rem, 3vw, 2.5rem)',
-                    color: 'var(--mem-dark)',
-                    marginBottom: '1rem',
-                  }}
-                >
+                <div className="font-['Space_Grotesk',sans-serif] font-black text-3xl sm:text-4xl text-[#121215] mb-4">
                   SERTIFIKAT PENGHARGAAN
                 </div>
 
-                <p style={{ fontSize: '1rem', color: '#4B5563', margin: '0 0 1.25rem' }}>
+                <p className="text-sm sm:text-base text-gray-600 mb-5">
                   Diberikan dengan bangga kepada:
                 </p>
 
                 {/* Recipient Name Box */}
-                <div
-                  style={{
-                    display: 'inline-block',
-                    padding: '0.75rem 2.5rem',
-                    backgroundColor: 'var(--mem-yellow)',
-                    border: 'var(--mem-border)',
-                    boxShadow: '4px 4px 0px var(--mem-dark)',
-                    borderRadius: '8px',
-                    fontFamily: 'var(--font-display)',
-                    fontWeight: 900,
-                    fontSize: 'clamp(1.4rem, 2.5vw, 2rem)',
-                    color: 'var(--mem-dark)',
-                    marginBottom: '1.25rem',
-                  }}
-                >
+                <div className="inline-block py-3 px-8 sm:px-10 bg-[#FFE600] border-2 border-[#121215] shadow-[4px_4px_0px_0px_#121215] rounded-xl font-['Space_Grotesk',sans-serif] font-black text-2xl sm:text-3xl text-[#121215] mb-5">
                   {certificate.recipientName}
                 </div>
 
                 {certificate.studentId && (
-                  <div style={{ fontSize: '0.85rem', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--mem-gray-500)', marginBottom: '1.5rem' }}>
+                  <div className="text-xs font-mono font-bold text-gray-500 mb-6">
                     NIM: {certificate.studentId}
                   </div>
                 )}
 
-                <p style={{ fontSize: '1.05rem', maxWidth: '640px', margin: '0 auto 2.5rem', lineHeight: 1.6 }}>
+                <p className="text-base sm:text-lg max-w-[640px] mx-auto mb-10 leading-relaxed text-gray-700">
                   Atas partisipasi dan kontribusi aktifnya sebagai <strong>{certificate.role.toUpperCase()}</strong> dalam kegiatan{' '}
                   <strong>{certificate.eventTitle}</strong> yang diselenggarakan pada tanggal {certificate.issueDate}.
                 </p>
 
                 {/* Signatories Row & QR Watermark */}
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-around',
-                    flexWrap: 'wrap',
-                    gap: '2rem',
-                    borderTop: '2px dashed var(--mem-dark)',
-                    paddingTop: '2rem',
-                  }}
-                >
+                <div className="flex items-center justify-around flex-wrap gap-8 border-t-2 border-dashed border-[#121215] pt-8">
                   {certificate.signatories.map((sig, idx) => (
-                    <div key={idx} style={{ textAlign: 'center', minWidth: '180px' }}>
-                      <div
-                        style={{
-                          height: '40px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: '0.75rem',
-                          color: 'var(--mem-gray-500)',
-                          marginBottom: '4px',
-                        }}
-                      >
+                    <div key={idx} className="text-center min-w-[180px]">
+                      <div className="h-10 flex items-center justify-center font-mono text-xs text-gray-500 mb-1">
                         [Signed Digitally with Key]
                       </div>
-                      <div style={{ fontWeight: 800, fontSize: '0.95rem', borderTop: '1.5px solid var(--mem-dark)', paddingTop: '4px' }}>
+                      <div className="font-black text-sm text-[#121215] border-t-2 border-[#121215] pt-1">
                         {sig.name}
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--mem-gray-500)' }}>{sig.title}</div>
+                      <div className="text-xs text-gray-500">{sig.title}</div>
                     </div>
                   ))}
 
-                  <div style={{ textAlign: 'center' }}>
-                    <div
-                      style={{
-                        padding: '6px',
-                        backgroundColor: '#FFFFFF',
-                        border: '2px solid var(--mem-dark)',
-                        borderRadius: '6px',
-                        display: 'inline-block',
-                      }}
-                    >
+                  <div className="text-center">
+                    <div className="p-1.5 bg-white border-2 border-[#121215] rounded-lg inline-block shadow-[2px_2px_0px_0px_#121215]">
                       <QrCode size={64} />
                     </div>
-                    <div style={{ fontSize: '0.7rem', fontWeight: 700, marginTop: '2px' }}>Otentikasi Convena</div>
+                    <div className="text-[11px] font-bold mt-1 text-gray-600">Otentikasi Convena</div>
                   </div>
                 </div>
               </div>
             </div>
           ) : (
-            <div
-              className="memphis-box"
-              style={{
-                maxWidth: '680px',
-                margin: '0 auto',
-                padding: '3rem 2rem',
-                backgroundColor: '#FFFFFF',
-                textAlign: 'center',
-              }}
-            >
-              <XCircle size={48} style={{ color: 'var(--mem-pink)', margin: '0 auto 1rem' }} />
-              <h3 style={{ margin: '0 0 0.5rem' }}>Sertifikat Tidak Ditemukan</h3>
-              <p style={{ color: 'var(--mem-gray-500)', margin: '0 0 1.5rem' }}>
+            <div className="max-w-[680px] mx-auto py-12 px-8 bg-white border-2 border-[#121215] rounded-2xl shadow-[6px_6px_0px_0px_#121215] text-center">
+              <XCircle size={48} className="text-[#FF4B91] mx-auto mb-4" />
+              <h3 className="text-xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] mb-2">
+                Sertifikat Tidak Ditemukan
+              </h3>
+              <p className="text-sm text-gray-500 mb-6 leading-relaxed">
                 Kode <strong>"{code}"</strong> tidak terdaftar dalam catatan sertifikat resmi ormawa Convena. Mohon periksa kembali ejaan kode Anda.
               </p>
               <Button variant="yellow" onClick={() => handleQuickFill('CNV-2026-ITB-8821')}>

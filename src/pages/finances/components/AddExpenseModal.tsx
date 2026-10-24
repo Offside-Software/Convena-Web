@@ -57,16 +57,17 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         </>
       }
     >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="space-y-4">
         <Input
           label="Nama Transaksi / Pengeluaran"
           placeholder="Contoh: Cetak Spanduk Promosi Kampus"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
+          className="!mb-0"
         />
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Input
             label="Nominal Pengeluaran (Rp)"
             type="number"
@@ -74,6 +75,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             required
+            className="!mb-0"
           />
           <Select
             label="Pos Biaya (RAB)"
@@ -87,6 +89,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             ]}
             value={category}
             onChange={(e) => setCategory(e.target.value as ExpenseCategory)}
+            className="!mb-0"
           />
         </div>
 
@@ -95,18 +98,11 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
           value={division}
           onChange={(e) => setDivision(e.target.value)}
           required
+          className="!mb-0"
         />
 
-        <div style={{ marginBottom: '1rem' }}>
-          <label
-            style={{
-              display: 'block',
-              fontFamily: 'var(--font-display)',
-              fontWeight: 700,
-              fontSize: '0.875rem',
-              marginBottom: '0.35rem',
-            }}
-          >
+        <div>
+          <label className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5">
             Keterangan Nota / Bukti Kuitansi SPJ
           </label>
           <textarea
@@ -114,6 +110,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             placeholder="Nomor nota, nama toko/vendor, dan kelengkapan materai..."
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
+            className="w-full p-3 bg-white border-2 border-[#121215] rounded-xl text-sm font-medium text-[#121215] shadow-[2px_2px_0px_0px_#121215] focus:outline-none focus:border-[#FFE600] transition-all"
           />
         </div>
       </form>

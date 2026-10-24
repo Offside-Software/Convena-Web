@@ -41,19 +41,19 @@ export const EventDetailPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div style={{ textAlign: 'center', padding: '6rem 1rem' }}>
-        <MemphisShape type="starburst" size={60} color="var(--mem-pink)" animate="fast" />
-        <p style={{ marginTop: '1rem', fontWeight: 700 }}>Memuat informasi acara...</p>
+      <div className="text-center py-24 px-4">
+        <MemphisShape type="starburst" size={60} color="#FF4B91" animate="fast" />
+        <p className="mt-4 font-bold text-sm text-[#121215]">Memuat informasi acara...</p>
       </div>
     )
   }
 
   if (!event) {
     return (
-      <div style={{ maxWidth: '600px', margin: '4rem auto', textAlign: 'center', padding: '2rem' }}>
-        <h2>Event Tidak Ditemukan</h2>
-        <p style={{ margin: '1rem 0 2rem' }}>Acara yang Anda cari mungkin telah ditutup atau tautan salah.</p>
-        <Link to="/events" style={{ textDecoration: 'none' }}>
+      <div className="max-w-[600px] my-16 mx-auto text-center p-8 bg-white border-2 border-[#121215] rounded-2xl shadow-[6px_6px_0px_0px_#121215]">
+        <h2 className="text-2xl font-['Space_Grotesk',sans-serif] font-black text-[#121215]">Event Tidak Ditemukan</h2>
+        <p className="my-4 text-sm text-gray-500">Acara yang Anda cari mungkin telah ditutup atau tautan salah.</p>
+        <Link to="/events" className="no-underline">
           <Button variant="yellow">Kembali ke Katalog Event</Button>
         </Link>
       </div>
@@ -75,71 +75,52 @@ export const EventDetailPage: React.FC = () => {
   }
 
   return (
-    <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
+    <div className="max-w-[1280px] mx-auto py-8 px-4 sm:px-6 pb-16">
       {/* Back button */}
       <Link
         to="/events"
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '0.4rem',
-          fontWeight: 700,
-          fontFamily: 'var(--font-display)',
-          fontSize: '0.9rem',
-          marginBottom: '1.5rem',
-          color: 'var(--mem-dark)',
-          textDecoration: 'none',
-        }}
+        className="inline-flex items-center gap-1.5 font-['Space_Grotesk',sans-serif] font-bold text-sm mb-6 text-[#121215] no-underline hover:text-[#FF4B91] transition-colors"
       >
         <ArrowLeft size={16} /> Kembali ke Semua Event
       </Link>
 
       {/* Main Grid */}
-      <div
-        className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_380px] gap-10 items-start"
-      >
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_380px] gap-10 items-start">
         {/* Left Column: Details */}
         <div>
           {/* Banner container */}
-          <div
-            className="memphis-box"
-            style={{
-              overflow: 'hidden',
-              marginBottom: '2rem',
-              backgroundColor: '#FFFFFF',
-            }}
-          >
-            <div style={{ height: '360px', position: 'relative', overflow: 'hidden' }}>
+          <div className="overflow-hidden mb-8 bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215]">
+            <div className="h-[360px] relative overflow-hidden bg-[#FFF585]">
               <img
                 src={event.bannerUrl}
                 alt={event.title}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                className="w-full h-full object-cover"
               />
-              <div style={{ position: 'absolute', top: '15px', left: '15px' }}>
+              <div className="absolute top-4 left-4">
                 <Badge variant="pink" tilt="left">
                   {event.category.toUpperCase()}
                 </Badge>
               </div>
-              <div style={{ position: 'absolute', top: '15px', right: '15px' }}>
+              <div className="absolute top-4 right-4">
                 <Badge variant="yellow">{event.university}</Badge>
               </div>
             </div>
 
-            <div style={{ padding: '1.75rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
-                <span style={{ fontSize: '0.85rem', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--mem-gray-500)' }}>
+            <div className="p-7">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-xs font-mono font-bold text-gray-500">
                   Diselenggarakan oleh:
                 </span>
-                <span style={{ fontWeight: 800, color: 'var(--mem-dark)' }}>{event.organizationName}</span>
-                <CheckCircle size={16} style={{ color: 'var(--mem-cyan)', fill: 'var(--mem-dark)' }} />
+                <span className="font-extrabold text-sm text-[#121215]">{event.organizationName}</span>
+                <CheckCircle size={16} className="text-[#01CDFE] fill-[#121215]" />
               </div>
 
-              <h1 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.75rem)', lineHeight: 1.15, marginBottom: '1.25rem' }}>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-['Space_Grotesk',sans-serif] font-black leading-tight text-[#121215] mb-5">
                 {event.title}
               </h1>
 
               {/* Tag pills */}
-              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+              <div className="flex gap-2 flex-wrap mb-6">
                 {event.tags.map((t) => (
                   <Badge key={t} variant="outline">
                     #{t}
@@ -148,23 +129,12 @@ export const EventDetailPage: React.FC = () => {
               </div>
 
               {/* Quick Info Grid */}
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                  gap: '1rem',
-                  padding: '1.25rem',
-                  backgroundColor: 'var(--mem-bg)',
-                  border: '2px solid var(--mem-dark)',
-                  borderRadius: '8px',
-                  marginBottom: '2rem',
-                }}
-              >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5 bg-[#FAF9F6] border-2 border-[#121215] rounded-xl mb-8">
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--mem-pink)', fontWeight: 700, fontSize: '0.85rem' }}>
+                  <div className="flex items-center gap-1.5 text-[#FF4B91] font-bold text-xs uppercase tracking-wider">
                     <Calendar size={16} /> Waktu & Tanggal
                   </div>
-                  <div style={{ fontWeight: 800, fontSize: '0.95rem', marginTop: '2px' }}>
+                  <div className="font-extrabold text-sm text-[#121215] mt-1">
                     {new Date(event.startDate).toLocaleDateString('id-ID', {
                       weekday: 'long',
                       day: 'numeric',
@@ -175,51 +145,53 @@ export const EventDetailPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--mem-cyan)', fontWeight: 700, fontSize: '0.85rem' }}>
+                  <div className="flex items-center gap-1.5 text-[#01CDFE] font-bold text-xs uppercase tracking-wider">
                     <MapPin size={16} /> Lokasi Acara
                   </div>
-                  <div style={{ fontWeight: 800, fontSize: '0.95rem', marginTop: '2px' }}>
+                  <div className="font-extrabold text-sm text-[#121215] mt-1">
                     {event.location.venueName || 'Online'}
                   </div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--mem-gray-500)' }}>
+                  <div className="text-xs text-gray-500 mt-0.5">
                     {event.location.address || 'Link dikirim via email'}
                   </div>
                 </div>
               </div>
 
               {/* Event Description */}
-              <div style={{ marginBottom: '2.5rem' }}>
-                <h3 style={{ fontSize: '1.35rem', marginBottom: '0.75rem' }}>Tentang Acara Ini</h3>
-                <p style={{ fontSize: '1.05rem', lineHeight: 1.7, color: '#374151', whiteSpace: 'pre-line' }}>
+              <div className="mb-10">
+                <h3 className="text-xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] mb-3">
+                  Tentang Acara Ini
+                </h3>
+                <p className="text-base leading-relaxed text-gray-700 whitespace-pre-line">
                   {event.description}
                 </p>
               </div>
 
               {/* Rundown Schedule Preview */}
-              <div style={{ marginBottom: '2rem' }}>
-                <h3 style={{ fontSize: '1.35rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Clock size={20} style={{ color: 'var(--mem-pink)' }} /> Susunan Acara (Rundown)
+              <div className="mb-8">
+                <h3 className="text-xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] mb-4 flex items-center gap-2">
+                  <Clock size={20} className="text-[#FF4B91]" /> Susunan Acara (Rundown)
                 </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  <div style={{ display: 'flex', gap: '1rem', padding: '0.75rem', border: '1.5px solid var(--mem-dark)', borderRadius: '6px', background: '#FFFFFF' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, color: 'var(--mem-pink)', minWidth: '90px' }}>08:30 - 09:00</span>
+                <div className="flex flex-col gap-3">
+                  <div className="flex gap-4 p-3.5 border-2 border-[#121215] rounded-lg bg-white shadow-[2px_2px_0px_0px_#121215]">
+                    <span className="font-mono font-black text-[#FF4B91] min-w-[90px] text-xs sm:text-sm">08:30 - 09:00</span>
                     <div>
-                      <strong>Registrasi Ulang & Check-in QR</strong>
-                      <p style={{ fontSize: '0.85rem', margin: 0, color: 'var(--mem-gray-500)' }}>Pemeriksaan e-tiket dan pembagian welcome kit peserta.</p>
+                      <strong className="text-sm text-[#121215]">Registrasi Ulang & Check-in QR</strong>
+                      <p className="text-xs m-0 text-gray-500 mt-0.5">Pemeriksaan e-tiket dan pembagian welcome kit peserta.</p>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '1rem', padding: '0.75rem', border: '1.5px solid var(--mem-dark)', borderRadius: '6px', background: '#FFFFFF' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, color: 'var(--mem-cyan)', minWidth: '90px' }}>09:00 - 12:00</span>
+                  <div className="flex gap-4 p-3.5 border-2 border-[#121215] rounded-lg bg-white shadow-[2px_2px_0px_0px_#121215]">
+                    <span className="font-mono font-black text-[#01CDFE] min-w-[90px] text-xs sm:text-sm">09:00 - 12:00</span>
                     <div>
-                      <strong>Opening Ceremony & Sesi Utama</strong>
-                      <p style={{ fontSize: '0.85rem', margin: 0, color: 'var(--mem-gray-500)' }}>Sambutan Rektorat & Pemaparan materi praktis oleh pembicara industri.</p>
+                      <strong className="text-sm text-[#121215]">Opening Ceremony & Sesi Utama</strong>
+                      <p className="text-xs m-0 text-gray-500 mt-0.5">Sambutan Rektorat & Pemaparan materi praktis oleh pembicara industri.</p>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '1rem', padding: '0.75rem', border: '1.5px solid var(--mem-dark)', borderRadius: '6px', background: '#FFFFFF' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, color: 'var(--mem-yellow)', minWidth: '90px' }}>13:00 - 16:30</span>
+                  <div className="flex gap-4 p-3.5 border-2 border-[#121215] rounded-lg bg-white shadow-[2px_2px_0px_0px_#121215]">
+                    <span className="font-mono font-black text-[#FFE600] min-w-[90px] text-xs sm:text-sm">13:00 - 16:30</span>
                     <div>
-                      <strong>Hands-on Workshop & Networking Session</strong>
-                      <p style={{ fontSize: '0.85rem', margin: 0, color: 'var(--mem-gray-500)' }}>Simulasi studi kasus interaktif dan jejaring kemitraan karir.</p>
+                      <strong className="text-sm text-[#121215]">Hands-on Workshop & Networking Session</strong>
+                      <p className="text-xs m-0 text-gray-500 mt-0.5">Simulasi studi kasus interaktif dan jejaring kemitraan karir.</p>
                     </div>
                   </div>
                 </div>
@@ -229,62 +201,38 @@ export const EventDetailPage: React.FC = () => {
         </div>
 
         {/* Right Column: Ticket Booking Card */}
-        <div style={{ position: 'sticky', top: '90px' }}>
+        <div className="sticky top-[90px]">
           <Card headerColor="yellow" headerTitle="Pilihan Kategori Tiket">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div className="flex flex-col gap-4">
               {event.ticketTiers.map((tier) => {
                 const isSelected = selectedTier?.id === tier.id
                 return (
                   <div
                     key={tier.id}
                     onClick={() => tier.isAvailable && setSelectedTier(tier)}
-                    style={{
-                      padding: '1rem',
-                      border: isSelected ? '3px solid var(--mem-dark)' : '2px solid var(--mem-gray-200)',
-                      backgroundColor: isSelected ? 'var(--mem-yellow-light)' : '#FFFFFF',
-                      borderRadius: '8px',
-                      cursor: tier.isAvailable ? 'pointer' : 'not-allowed',
-                      opacity: tier.isAvailable ? 1 : 0.6,
-                      boxShadow: isSelected ? '4px 4px 0px var(--mem-dark)' : 'none',
-                      transition: 'all 0.15s ease',
-                      position: 'relative',
-                    }}
+                    className={`p-4 rounded-xl transition-all relative ${
+                      tier.isAvailable ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'
+                    } ${
+                      isSelected
+                        ? 'border-2 border-[#121215] bg-[#FFF585] shadow-[4px_4px_0px_0px_#121215]'
+                        : 'border-2 border-gray-200 bg-white hover:border-[#121215]'
+                    }`}
                   >
                     {!tier.isAvailable && (
-                      <span
-                        style={{
-                          position: 'absolute',
-                          top: '10px',
-                          right: '10px',
-                          backgroundColor: '#EF4444',
-                          color: '#fff',
-                          fontSize: '0.7rem',
-                          fontWeight: 800,
-                          padding: '2px 6px',
-                          borderRadius: '4px',
-                        }}
-                      >
+                      <span className="absolute top-2.5 right-2.5 bg-red-500 text-white text-[11px] font-black py-0.5 px-1.5 rounded">
                         HABIS
                       </span>
                     )}
 
-                    <div style={{ fontWeight: 800, fontSize: '1rem', marginBottom: '0.25rem' }}>
+                    <div className="font-black text-sm mb-1 text-[#121215]">
                       {tier.name}
                     </div>
 
-                    <div
-                      style={{
-                        fontFamily: 'var(--font-display)',
-                        fontWeight: 900,
-                        fontSize: '1.35rem',
-                        color: 'var(--mem-dark)',
-                        marginBottom: '0.65rem',
-                      }}
-                    >
+                    <div className="font-['Space_Grotesk',sans-serif] font-black text-xl text-[#121215] mb-2">
                       {tier.price === 0 ? 'GRATIS' : `Rp ${tier.price.toLocaleString('id-ID')}`}
                     </div>
 
-                    <ul style={{ paddingLeft: '1.25rem', margin: 0, fontSize: '0.8rem', color: '#4B5563' }}>
+                    <ul className="pl-4 m-0 text-xs text-gray-600 space-y-0.5">
                       {tier.benefits.map((b, i) => (
                         <li key={i}>{b}</li>
                       ))}
@@ -295,8 +243,10 @@ export const EventDetailPage: React.FC = () => {
 
               {/* Registration Form when a tier is selected */}
               {selectedTier ? (
-                <div style={{ borderTop: '2px dashed var(--mem-dark)', paddingTop: '1rem', marginTop: '0.5rem' }}>
-                  <h4 style={{ fontSize: '0.95rem', marginBottom: '0.75rem' }}>Data Pendaftar:</h4>
+                <div className="border-t-2 border-dashed border-[#121215] pt-4 mt-2">
+                  <h4 className="text-sm font-['Space_Grotesk',sans-serif] font-black text-[#121215] mb-3">
+                    Data Pendaftar:
+                  </h4>
                   <Input
                     label="Nama Lengkap"
                     placeholder="Contoh: Muhammad Rizky"
@@ -325,22 +275,13 @@ export const EventDetailPage: React.FC = () => {
                     size="lg"
                     onClick={handleRegister}
                     disabled={!attendeeName || !attendeeEmail}
-                    style={{ marginTop: '0.5rem' }}
+                    className="mt-2"
                   >
                     Konfirmasi Pendaftaran Tiket
                   </Button>
                 </div>
               ) : (
-                <div
-                  style={{
-                    padding: '0.75rem',
-                    backgroundColor: 'var(--mem-bg)',
-                    borderRadius: '6px',
-                    textAlign: 'center',
-                    fontSize: '0.85rem',
-                    fontWeight: 600,
-                  }}
-                >
+                <div className="p-3 bg-[#FAF9F6] rounded-lg text-center text-xs font-bold text-gray-500 border border-dashed border-gray-300">
                   Pilih salah satu kategori tiket di atas untuk mendaftar.
                 </div>
               )}
@@ -361,48 +302,20 @@ export const EventDetailPage: React.FC = () => {
           </Button>
         }
       >
-        <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-          <div
-            className="memphis-box"
-            style={{
-              display: 'inline-block',
-              padding: '1.25rem',
-              backgroundColor: '#FFFFFF',
-              boxShadow: '6px 6px 0px var(--mem-dark)',
-              marginBottom: '1rem',
-            }}
-          >
-            <QrCode size={180} strokeWidth={2.5} style={{ margin: '0 auto', display: 'block' }} />
-            <div
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontWeight: 900,
-                fontSize: '0.85rem',
-                marginTop: '0.75rem',
-                backgroundColor: 'var(--mem-yellow)',
-                padding: '4px',
-                border: '1.5px solid var(--mem-dark)',
-              }}
-            >
+        <div className="text-center py-4">
+          <div className="inline-block p-5 bg-white border-2 border-[#121215] rounded-xl shadow-[6px_6px_0px_0px_#121215] mb-4">
+            <QrCode size={180} strokeWidth={2.5} className="mx-auto block" />
+            <div className="font-mono font-black text-xs mt-3 bg-[#FFE600] py-1 px-2 border-2 border-[#121215] rounded">
               {registrationResult?.registrationId || 'REG-SUCCESS'}
             </div>
           </div>
 
-          <h3 style={{ fontSize: '1.3rem', marginBottom: '0.5rem' }}>{attendeeName}</h3>
-          <p style={{ color: 'var(--mem-gray-500)', fontSize: '0.9rem', marginBottom: '1rem' }}>
+          <h3 className="text-xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] mb-2">{attendeeName}</h3>
+          <p className="text-gray-600 text-xs sm:text-sm mb-4 leading-relaxed">
             Tiket untuk <strong>{event.title}</strong> telah dikonfirmasi dan QR code siap dipindai saat hari-H di pintu masuk.
           </p>
 
-          <div
-            style={{
-              padding: '0.75rem',
-              backgroundColor: 'var(--mem-yellow-light)',
-              border: '2px solid var(--mem-dark)',
-              borderRadius: '8px',
-              fontSize: '0.85rem',
-              textAlign: 'left',
-            }}
-          >
+          <div className="p-4 bg-[#FFF585] border-2 border-[#121215] rounded-xl text-xs text-left space-y-1">
             <div><strong>Kategori Tiket:</strong> {selectedTier?.name}</div>
             <div><strong>Email Konfirmasi:</strong> {attendeeEmail}</div>
             <div><strong>Status E-Certificate:</strong> Berhak klaim setelah presensi QR</div>

@@ -23,63 +23,31 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 }) => {
   const percentage = Math.min(100, Math.max(0, Math.round((value / max) * 100)))
 
-  const getColor = (): string => {
-    switch (color) {
-      case 'pink':
-        return 'var(--mem-pink)'
-      case 'cyan':
-        return 'var(--mem-cyan)'
-      case 'purple':
-        return 'var(--mem-purple)'
-      case 'mint':
-        return 'var(--mem-mint)'
-      case 'yellow':
-      default:
-        return 'var(--mem-yellow)'
-    }
+  const colorClasses: Record<string, string> = {
+    yellow: 'bg-[#FFE600]',
+    pink: 'bg-[#FF4B91]',
+    cyan: 'bg-[#01CDFE]',
+    purple: 'bg-[#845EC2]',
+    mint: 'bg-[#00F5D4]',
   }
 
   return (
-    <div style={{ width: '100%', marginBottom: '0.5rem' }} className={className}>
+    <div className={`w-full mb-2 ${className}`}>
       {(label || showPercentage) && (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            fontSize: '0.825rem',
-            fontFamily: 'var(--font-display)',
-            fontWeight: 700,
-            marginBottom: '0.25rem',
-          }}
-        >
+        <div className="flex justify-between items-center text-xs font-['Space_Grotesk',sans-serif] font-bold mb-1 text-[#121215]">
           {label && <span>{label}</span>}
           {showPercentage && <span>{percentage}%</span>}
         </div>
       )}
       <div
-        style={{
-          width: '100%',
-          height: `${height}px`,
-          backgroundColor: '#FFFFFF',
-          border: 'var(--mem-border-sm)',
-          borderRadius: 'var(--mem-radius-sm)',
-          overflow: 'hidden',
-          boxShadow: '2px 2px 0px var(--mem-dark)',
-          position: 'relative',
-        }}
+        className="w-full h-[18px] bg-white border-2 border-[#121215] rounded-md overflow-hidden shadow-[2px_2px_0px_0px_#121215] relative"
+        style={height !== 18 ? { height: `${height}px` } : undefined}
       >
         <div
-          style={{
-            width: `${percentage}%`,
-            height: '100%',
-            backgroundColor: getColor(),
-            backgroundImage: striped
-              ? `repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(18, 18, 21, 0.15) 8px, rgba(18, 18, 21, 0.15) 16px)`
-              : undefined,
-            transition: 'width 0.4s ease-out',
-            borderRight: percentage > 0 && percentage < 100 ? '2px solid var(--mem-dark)' : undefined,
-          }}
+          className={`h-full transition-all duration-400 ease-out ${colorClasses[color] || colorClasses.yellow} ${
+            striped ? 'bg-[repeating-linear-gradient(45deg,transparent,transparent_8px,rgba(18,18,21,0.15)_8px,rgba(18,18,21,0.15)_16px)]' : ''
+          } ${percentage > 0 && percentage < 100 ? 'border-r-2 border-[#121215]' : ''}`}
+          style={{ width: `${percentage}%` }}
         />
       </div>
     </div>

@@ -45,111 +45,27 @@ export const Navbar: React.FC = () => {
   }
 
   return (
-    <header
-      style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 50,
-        backgroundColor: '#FFFFFF',
-        borderBottom: 'var(--mem-border-thick)',
-        boxShadow: '0 4px 0px rgba(18, 18, 21, 0.1)',
-      }}
-    >
+    <header className="sticky top-0 z-50 bg-white border-b-4 border-[#121215] shadow-[0_4px_0px_rgba(18,18,21,0.1)]">
       {/* Top micro announcement banner */}
-      <div
-        style={{
-          backgroundColor: 'var(--mem-yellow)',
-          borderBottom: '2px solid var(--mem-dark)',
-          padding: '4px 1rem',
-          fontSize: '0.8rem',
-          fontWeight: 700,
-          fontFamily: 'var(--font-display)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '8px',
-          overflow: 'hidden',
-        }}
-      >
-        <span style={{ backgroundColor: 'var(--mem-pink)', color: '#fff', padding: '1px 6px', borderRadius: '4px' }}>
+      <div className="bg-[#FFE600] border-b-2 border-[#121215] py-1 px-4 text-xs font-bold font-['Space_Grotesk',sans-serif] flex items-center justify-center gap-2 overflow-hidden text-[#121215]">
+        <span className="bg-[#FF4B91] text-white py-0.5 px-1.5 rounded text-[11px] font-black">
           NEW
         </span>
         <span>Platform Manajemen Event & Organisasi Mahasiswa Indonesia Terintegrasi</span>
-        <MemphisShape type="cross" size={12} color="var(--mem-dark)" />
+        <MemphisShape type="cross" size={12} color="#121215" />
       </div>
 
-      <div
-        style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '0.75rem 1.5rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
+      <div className="max-w-[1280px] mx-auto py-3 px-4 sm:px-6 flex items-center justify-between">
         {/* Brand Logo */}
-        <Link
-          to="/"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.65rem',
-            textDecoration: 'none',
-          }}
-        >
-          <div
-            style={{
-              width: '42px',
-              height: '42px',
-              backgroundColor: 'var(--mem-pink)',
-              border: 'var(--mem-border)',
-              borderRadius: '8px',
-              boxShadow: '3px 3px 0px var(--mem-dark)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'relative',
-              transform: 'rotate(-3deg)',
-            }}
-          >
-            <span
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontWeight: 900,
-                fontSize: '1.4rem',
-                color: '#FFFFFF',
-              }}
-            >
+        <Link to="/" className="flex items-center gap-2.5 no-underline">
+          <div className="w-[42px] h-[42px] bg-[#FF4B91] border-2 border-[#121215] rounded-lg shadow-[3px_3px_0px_0px_#121215] flex items-center justify-center relative -rotate-3">
+            <span className="font-['Space_Grotesk',sans-serif] font-black text-2xl text-white">
               C
             </span>
-            <div
-              style={{
-                position: 'absolute',
-                top: '-6px',
-                right: '-6px',
-                width: '12px',
-                height: '12px',
-                backgroundColor: 'var(--mem-yellow)',
-                border: '2px solid var(--mem-dark)',
-                borderRadius: '50%',
-              }}
-            />
+            <div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-[#FFE600] border-2 border-[#121215] rounded-full" />
           </div>
-          <div style={{
-            marginRight: "1rem"
-          }}>
-            <span
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontWeight: 900,
-                fontSize: '1.6rem',
-                letterSpacing: '-0.03em',
-                color: 'var(--mem-dark)',
-                display: 'block',
-                lineHeight: 1,
-              }}
-            >
+          <div className="mr-4">
+            <span className="font-['Space_Grotesk',sans-serif] font-black text-2xl tracking-tight text-[#121215] block leading-none">
               CONVENA
             </span>
           </div>
@@ -163,23 +79,11 @@ export const Navbar: React.FC = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'self-start',
-                  height: "100%",
-                  gap: '0.4rem',
-                  fontFamily: 'var(--font-display)',
-                  fontWeight: 700,
-                  fontSize: '0.875rem',
-                  padding: '4px 0.5rem',
-                  borderRadius: '6px',
-                  textDecoration: 'none',
-                  border: active ? '2px solid var(--mem-dark)' : '2px solid transparent',
-                  backgroundColor: active ? 'var(--mem-yellow)' : 'transparent',
-                  boxShadow: active ? '2px 2px 0px var(--mem-dark)' : 'none',
-                  color: 'var(--mem-dark)',
-                  transition: 'all 0.15s ease',
-                }}
+                className={`inline-flex items-center gap-1.5 font-['Space_Grotesk',sans-serif] font-bold text-sm py-1.5 px-3 rounded-md no-underline transition-all ${
+                  active
+                    ? 'border-2 border-[#121215] bg-[#FFE600] shadow-[2px_2px_0px_0px_#121215] text-[#121215]'
+                    : 'border-2 border-transparent text-[#121215] hover:bg-gray-100'
+                }`}
               >
                 {link.icon}
                 <span>{link.label}</span>
@@ -189,26 +93,26 @@ export const Navbar: React.FC = () => {
         </nav>
 
         {/* Action CTAs */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div className="flex items-center gap-3">
           {isLoggedIn ? (
             <div className="flex items-center gap-2">
               <Link to="/dashboard" className="no-underline">
-                <div className="flex items-center gap-2 px-2.5 py-1.5 border-2 border-mem-dark rounded-lg bg-white shadow-mem-sm hover:bg-gray-50 transition-all cursor-pointer">
+                <div className="flex items-center gap-2 px-2.5 py-1.5 border-2 border-[#121215] rounded-lg bg-white shadow-[2px_2px_0px_0px_#121215] hover:bg-gray-50 transition-all cursor-pointer">
                   {user?.avatarUrl ? (
                     <img
                       src={user.avatarUrl}
                       alt={user.name}
-                      className="w-7 h-7 rounded-md border border-mem-dark object-cover"
+                      className="w-7 h-7 rounded-md border border-[#121215] object-cover"
                     />
                   ) : (
-                    <div className="w-7 h-7 rounded-md border border-mem-dark bg-mem-yellow flex items-center justify-center font-display font-black text-xs text-mem-dark">
+                    <div className="w-7 h-7 rounded-md border border-[#121215] bg-[#FFE600] flex items-center justify-center font-['Space_Grotesk',sans-serif] font-black text-xs text-[#121215]">
                       {(user?.name || user?.username || 'U').charAt(0).toUpperCase()}
                     </div>
                   )}
-                  <span className="hidden md:inline font-display font-bold text-xs text-mem-dark max-w-[120px] truncate">
+                  <span className="hidden md:inline font-['Space_Grotesk',sans-serif] font-bold text-xs text-[#121215] max-w-[120px] truncate">
                     {user?.name || user?.username || 'Pengguna'}
                   </span>
-                  <Badge variant="cyan" style={{ fontSize: '0.65rem', padding: '1px 5px' }}>
+                  <Badge variant="cyan">
                     {user?.role ? user.role.toUpperCase() : 'MEMBER'}
                   </Badge>
                 </div>
@@ -221,7 +125,7 @@ export const Navbar: React.FC = () => {
                   setUser(null)
                 }}
                 title="Keluar"
-                className="hidden md:flex p-1.5 bg-mem-bg hover:bg-red-50 border-2 border-mem-dark rounded-md shadow-mem-sm hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0 active:translate-y-0 transition-all cursor-pointer text-mem-dark hover:text-red-600"
+                className="hidden md:flex p-1.5 bg-[#FAF9F6] hover:bg-red-50 border-2 border-[#121215] rounded-md shadow-[2px_2px_0px_0px_#121215] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0 active:translate-y-0 transition-all cursor-pointer text-[#121215] hover:text-red-600"
               >
                 <LogOut size={16} />
               </button>
@@ -246,15 +150,7 @@ export const Navbar: React.FC = () => {
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle navigation menu"
-            style={{
-              padding: '6px',
-              backgroundColor: 'var(--mem-yellow)',
-              border: 'var(--mem-border-sm)',
-              borderRadius: '6px',
-              boxShadow: '2px 2px 0px var(--mem-dark)',
-              cursor: 'pointer',
-            }}
-            className="md:hidden"
+            className="p-1.5 bg-[#FFE600] border-2 border-[#121215] rounded-md shadow-[2px_2px_0px_0px_#121215] cursor-pointer md:hidden text-[#121215]"
           >
             {mobileMenuOpen ? <X size={22} strokeWidth={2.5} /> : <Menu size={22} strokeWidth={2.5} />}
           </button>
@@ -263,36 +159,15 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div
-          style={{
-            backgroundColor: '#FFFFFF',
-            borderTop: 'var(--mem-border)',
-            padding: '1rem 1.5rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.65rem',
-          }}
-        >
+        <div className="bg-white border-t-2 border-[#121215] p-4 sm:p-6 flex flex-col gap-2.5">
           {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
               onClick={() => setMobileMenuOpen(false)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.65rem',
-                fontFamily: 'var(--font-display)',
-                fontWeight: 700,
-                fontSize: '1rem',
-                padding: '0.65rem 1rem',
-                borderRadius: '8px',
-                border: '2px solid var(--mem-dark)',
-                backgroundColor: isActive(link.path) ? 'var(--mem-yellow)' : 'var(--mem-bg)',
-                boxShadow: '3px 3px 0px var(--mem-dark)',
-                color: 'var(--mem-dark)',
-                textDecoration: 'none',
-              }}
+              className={`flex items-center gap-2.5 font-['Space_Grotesk',sans-serif] font-bold text-base py-2.5 px-4 rounded-lg border-2 border-[#121215] shadow-[3px_3px_0px_0px_#121215] no-underline text-[#121215] ${
+                isActive(link.path) ? 'bg-[#FFE600]' : 'bg-[#FAF9F6]'
+              }`}
             >
               {link.icon}
               <span>{link.label}</span>
@@ -301,7 +176,7 @@ export const Navbar: React.FC = () => {
           <Link
             to="/events?new=true"
             onClick={() => setMobileMenuOpen(false)}
-            style={{ textDecoration: 'none', marginTop: '0.5rem' }}
+            className="no-underline mt-2"
           >
             <Button variant="pink" fullWidth icon={<PlusCircle size={18} />}>
               Buat Event Baru
@@ -309,11 +184,11 @@ export const Navbar: React.FC = () => {
           </Link>
 
           {!isLoggedIn ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.25rem' }}>
+            <div className="flex flex-col gap-2 mt-1">
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                style={{ textDecoration: 'none' }}
+                className="no-underline"
               >
                 <Button variant="cyan" fullWidth icon={<LogIn size={18} />}>
                   Masuk ke Akun
@@ -322,7 +197,7 @@ export const Navbar: React.FC = () => {
               <Link
                 to="/register"
                 onClick={() => setMobileMenuOpen(false)}
-                style={{ textDecoration: 'none' }}
+                className="no-underline"
               >
                 <Button variant="yellow" fullWidth>
                   Daftar Akun Baru
@@ -330,19 +205,20 @@ export const Navbar: React.FC = () => {
               </Link>
             </div>
           ) : (
-            <Button
-              variant="outline"
-              fullWidth
-              icon={<LogOut size={18} />}
-              onClick={() => {
-                authService.logout()
-                setIsLoggedIn(false)
-                setMobileMenuOpen(false)
-              }}
-              style={{ marginTop: '0.25rem' }}
-            >
-              Keluar Akun
-            </Button>
+            <div className="mt-1">
+              <Button
+                variant="outline"
+                fullWidth
+                icon={<LogOut size={18} />}
+                onClick={() => {
+                  authService.logout()
+                  setIsLoggedIn(false)
+                  setMobileMenuOpen(false)
+                }}
+              >
+                Keluar Akun
+              </Button>
+            </div>
           )}
         </div>
       )}

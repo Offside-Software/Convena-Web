@@ -18,36 +18,28 @@ export const Select: React.FC<SelectProps> = ({
   error,
   fullWidth = true,
   className = '',
-  style = {},
+  style,
   id,
   ...props
 }) => {
   const selectId = id || (label ? `select-${label.toLowerCase().replace(/\s+/g, '-')}` : undefined)
 
   return (
-    <div style={{ width: fullWidth ? '100%' : 'auto', marginBottom: '1rem' }} className={className}>
+    <div className={`mb-4 ${fullWidth ? 'w-full' : 'w-auto'} ${className}`}>
       {label && (
         <label
           htmlFor={selectId}
-          style={{
-            display: 'block',
-            fontFamily: 'var(--font-display)',
-            fontWeight: 700,
-            fontSize: '0.875rem',
-            marginBottom: '0.35rem',
-            color: 'var(--mem-dark)',
-          }}
+          className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5"
         >
           {label}
         </label>
       )}
       <select
         id={selectId}
-        style={{
-          cursor: 'pointer',
-          appearance: 'auto',
-          ...style,
-        }}
+        style={style}
+        className={`w-full py-2.5 px-3.5 bg-white border-2 rounded-xl text-sm font-medium text-[#121215] cursor-pointer shadow-[2px_2px_0px_0px_#121215] focus:outline-none focus:border-[#01CDFE] focus:shadow-[3px_3px_0px_0px_#01CDFE] transition-all ${
+          error ? 'border-[#FF4B91] shadow-[2px_2px_0px_0px_#FF4B91]' : 'border-[#121215]'
+        }`}
         {...props}
       >
         {options.map((opt) => (
@@ -57,15 +49,7 @@ export const Select: React.FC<SelectProps> = ({
         ))}
       </select>
       {error && (
-        <span
-          style={{
-            display: 'block',
-            color: 'var(--mem-pink)',
-            fontSize: '0.8rem',
-            fontWeight: 700,
-            marginTop: '0.25rem',
-          }}
-        >
+        <span className="block text-[#FF4B91] text-xs font-bold mt-1">
           {error}
         </span>
       )}

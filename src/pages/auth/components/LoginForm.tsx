@@ -60,7 +60,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         ]}
       />
 
-      <div style={{ marginTop: '1.25rem' }}>
+      <div className="mt-5">
         <Button
           type="submit"
           variant="pink"

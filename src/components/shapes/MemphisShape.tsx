@@ -21,10 +21,10 @@ export interface MemphisShapeProps {
 
 export const MemphisShape: React.FC<MemphisShapeProps> = ({
   type,
-  color = 'var(--mem-yellow)',
+  color = '#FFE600',
   size = 40,
   className = '',
-  style = {},
+  style,
   animate = 'none',
 }) => {
   const animationClass =
@@ -40,8 +40,8 @@ export const MemphisShape: React.FC<MemphisShapeProps> = ({
     width: size,
     height: size,
     viewBox: '0 0 100 100',
-    className: `${animationClass} ${className}`.trim(),
-    style: { display: 'inline-block', flexShrink: 0, ...style },
+    className: `inline-block shrink-0 ${animationClass} ${className}`.trim(),
+    style,
   }
 
   switch (type) {
@@ -78,7 +78,7 @@ export const MemphisShape: React.FC<MemphisShapeProps> = ({
           <polygon
             points="50,10 90,85 10,85"
             fill={color}
-            stroke="var(--mem-dark)"
+            stroke="#121215"
             strokeWidth="6"
             strokeLinejoin="round"
           />
@@ -99,7 +99,7 @@ export const MemphisShape: React.FC<MemphisShapeProps> = ({
           <path
             d="M50 0 L58 35 L95 20 L70 50 L95 80 L58 65 L50 100 L42 65 L5 80 L30 50 L5 20 L42 35 Z"
             fill={color}
-            stroke="var(--mem-dark)"
+            stroke="#121215"
             strokeWidth="5"
             strokeLinejoin="round"
           />
@@ -126,7 +126,7 @@ export const MemphisShape: React.FC<MemphisShapeProps> = ({
           <path
             d="M 15,85 L 15,50 A 35,35 0 0,1 85,50 L 85,85 Z"
             fill={color}
-            stroke="var(--mem-dark)"
+            stroke="#121215"
             strokeWidth="6"
           />
         </svg>
@@ -135,10 +135,10 @@ export const MemphisShape: React.FC<MemphisShapeProps> = ({
     case 'circle-dots':
       return (
         <svg {...baseProps}>
-          <circle cx="50" cy="50" r="42" fill={color} stroke="var(--mem-dark)" strokeWidth="6" />
-          <circle cx="35" cy="40" r="5" fill="var(--mem-dark)" />
-          <circle cx="65" cy="40" r="5" fill="var(--mem-dark)" />
-          <circle cx="50" cy="65" r="7" fill="var(--mem-dark)" />
+          <circle cx="50" cy="50" r="42" fill={color} stroke="#121215" strokeWidth="6" />
+          <circle cx="35" cy="40" r="5" fill="#121215" />
+          <circle cx="65" cy="40" r="5" fill="#121215" />
+          <circle cx="50" cy="65" r="7" fill="#121215" />
         </svg>
       )
 

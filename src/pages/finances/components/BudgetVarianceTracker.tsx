@@ -31,7 +31,7 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
     <Card
       headerColor="yellow"
       headerTitle="Alokasi Anggaran (RAB) per Pos Biaya"
-      style={{ marginBottom: '2rem' }}
+      className="mb-8"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {categories.map((cat) => {
@@ -42,17 +42,13 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
           return (
             <div
               key={cat.category}
-              style={{
-                border: '2px solid var(--mem-dark)',
-                borderRadius: '8px',
-                padding: '1rem',
-                backgroundColor: isOver ? '#FFF1F2' : 'var(--mem-bg)',
-                boxShadow: '3px 3px 0px var(--mem-dark)',
-              }}
+              className={`border-2 border-[#121215] rounded-xl p-4 shadow-[3px_3px_0px_0px_#121215] ${
+                isOver ? 'bg-pink-50' : 'bg-[#FAF9F6]'
+              }`}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <strong style={{ fontFamily: 'var(--font-display)', fontSize: '0.95rem' }}>{cat.label}</strong>
-                <Badge variant={isOver ? 'coral' : 'mint'} style={{ fontSize: '0.65rem' }}>
+              <div className="flex justify-between items-center mb-2">
+                <strong className="font-['Space_Grotesk',sans-serif] text-sm text-[#121215]">{cat.label}</strong>
+                <Badge variant={isOver ? 'coral' : 'mint'} className="text-[10px]">
                   {isOver ? 'OVER BUDGET' : 'AMAN'}
                 </Badge>
               </div>
@@ -64,37 +60,30 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
                 height={10}
               />
 
-              <div style={{ fontSize: '0.8rem', marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: 'var(--mem-gray-500)' }}>Pagu RAB:</span>
+              <div className="text-xs mt-2 flex flex-col gap-1">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500">Pagu RAB:</span>
                   {isEditing ? (
-                    <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                    <div className="flex gap-1 items-center">
                       <input
                         type="number"
                         value={newAmount}
                         onChange={(e) => setNewAmount(Number(e.target.value))}
-                        style={{ width: '110px', padding: '2px 6px', fontSize: '0.75rem' }}
+                        className="w-28 py-0.5 px-1.5 text-xs border border-[#121215] rounded"
                       />
-                      <Button variant="mint" size="sm" onClick={() => handleSave(cat.category)} style={{ padding: '2px 8px' }}>
+                      <Button variant="mint" size="sm" onClick={() => handleSave(cat.category)} className="!py-0.5 !px-2">
                         OK
                       </Button>
                     </div>
                   ) : (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <strong style={{ fontFamily: 'var(--font-mono)' }}>
+                    <div className="flex items-center gap-1.5">
+                      <strong className="font-mono text-[#121215]">
                         Rp {cat.plannedAmount.toLocaleString('id-ID')}
                       </strong>
                       <button
                         type="button"
                         onClick={() => handleEditClick(cat)}
-                        style={{
-                          fontSize: '0.7rem',
-                          textDecoration: 'underline',
-                          background: 'none',
-                          border: 'none',
-                          cursor: 'pointer',
-                          fontWeight: 700,
-                        }}
+                        className="text-[11px] underline bg-transparent border-none cursor-pointer font-bold text-gray-700 hover:text-[#121215]"
                       >
                         Ubah
                       </button>
@@ -102,20 +91,17 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
                   )}
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--mem-gray-500)' }}>Terpakai:</span>
-                  <strong style={{ fontFamily: 'var(--font-mono)' }}>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Terpakai:</span>
+                  <strong className="font-mono text-[#121215]">
                     Rp {cat.spentAmount.toLocaleString('id-ID')}
                   </strong>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--mem-gray-500)' }}>Sisa Pos:</span>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Sisa Pos:</span>
                   <strong
-                    style={{
-                      fontFamily: 'var(--font-mono)',
-                      color: isOver ? 'var(--mem-pink)' : '#047857',
-                    }}
+                    className={`font-mono ${isOver ? 'text-[#FF4B91]' : 'text-emerald-700'}`}
                   >
                     Rp {sisa.toLocaleString('id-ID')}
                   </strong>

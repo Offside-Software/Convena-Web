@@ -12,92 +12,49 @@ export const BudgetSummaryCards: React.FC<BudgetSummaryCardsProps> = ({ budget }
       : 0
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-        gap: '1.25rem',
-        marginBottom: '2rem',
-      }}
-    >
-      <div className="memphis-box" style={{ padding: '1.25rem', backgroundColor: '#FFFFFF' }}>
-        <span
-          style={{
-            fontSize: '0.75rem',
-            fontFamily: 'var(--font-mono)',
-            color: 'var(--mem-gray-500)',
-            textTransform: 'uppercase',
-          }}
-        >
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      <div className="p-5 bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215]">
+        <span className="text-xs font-mono text-gray-500 uppercase tracking-wider block">
           Total Pagu Anggaran (RAB)
         </span>
-        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '1.75rem', margin: '4px 0' }}>
+        <div className="font-['Space_Grotesk',sans-serif] font-black text-2xl sm:text-3xl text-[#121215] my-1">
           Rp {budget.totalBudgetPlanned.toLocaleString('id-ID')}
         </div>
-        <span style={{ fontSize: '0.8rem', color: 'var(--mem-gray-500)' }}>Alokasi RAB Disetujui</span>
+        <span className="text-xs text-gray-500">Alokasi RAB Disetujui</span>
       </div>
 
-      <div className="memphis-box" style={{ padding: '1.25rem', backgroundColor: 'var(--mem-pink-light)' }}>
-        <span
-          style={{
-            fontSize: '0.75rem',
-            fontFamily: 'var(--font-mono)',
-            color: 'var(--mem-dark)',
-            textTransform: 'uppercase',
-          }}
-        >
+      <div className="p-5 bg-[#FF94BE] border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215]">
+        <span className="text-xs font-mono text-[#121215] uppercase tracking-wider block font-bold">
           Realisasi Pengeluaran
         </span>
-        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '1.75rem', margin: '4px 0' }}>
+        <div className="font-['Space_Grotesk',sans-serif] font-black text-2xl sm:text-3xl text-[#121215] my-1">
           Rp {budget.totalExpenseRealized.toLocaleString('id-ID')}
         </div>
-        <span style={{ fontSize: '0.8rem', color: 'var(--mem-dark)' }}>
+        <span className="text-xs text-[#121215] font-semibold">
           {usagePercent}% dari total pagu anggaran
         </span>
       </div>
 
-      <div className="memphis-box" style={{ padding: '1.25rem', backgroundColor: 'var(--mem-yellow-light)' }}>
-        <span
-          style={{
-            fontSize: '0.75rem',
-            fontFamily: 'var(--font-mono)',
-            color: 'var(--mem-dark)',
-            textTransform: 'uppercase',
-          }}
-        >
+      <div className="p-5 bg-[#FFF585] border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215]">
+        <span className="text-xs font-mono text-[#121215] uppercase tracking-wider block font-bold">
           Sisa Saldo Anggaran
         </span>
-        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '1.75rem', margin: '4px 0' }}>
+        <div className="font-['Space_Grotesk',sans-serif] font-black text-2xl sm:text-3xl text-[#121215] my-1">
           Rp {budget.remainingBudget.toLocaleString('id-ID')}
         </div>
-        <span style={{ fontSize: '0.8rem', color: 'var(--mem-dark)' }}>
+        <span className="text-xs text-[#121215] font-semibold">
           {budget.remainingBudget >= 0 ? 'Aman terkendali' : 'Melebihi Pagu RAB'}
         </span>
       </div>
 
-      <div className="memphis-box" style={{ padding: '1.25rem', backgroundColor: '#FFFFFF' }}>
-        <span
-          style={{
-            fontSize: '0.75rem',
-            fontFamily: 'var(--font-mono)',
-            color: 'var(--mem-gray-500)',
-            textTransform: 'uppercase',
-          }}
-        >
+      <div className="p-5 bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215]">
+        <span className="text-xs font-mono text-gray-500 uppercase tracking-wider block">
           SPJ Menunggu Verifikasi
         </span>
-        <div
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontWeight: 900,
-            fontSize: '1.75rem',
-            margin: '4px 0',
-            color: 'var(--mem-pink)',
-          }}
-        >
+        <div className="font-['Space_Grotesk',sans-serif] font-black text-2xl sm:text-3xl text-[#FF4B91] my-1">
           {budget.pendingSpjCount} Kuitansi
         </div>
-        <span style={{ fontSize: '0.8rem', color: 'var(--mem-gray-500)' }}>Perlu dicek Bendahara</span>
+        <span className="text-xs text-gray-500">Perlu dicek Bendahara</span>
       </div>
     </div>
   )

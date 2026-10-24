@@ -68,24 +68,17 @@ export const FinancesPage: React.FC = () => {
   return (
     <div>
       {/* Header */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          marginBottom: '2rem',
-          flexWrap: 'wrap',
-          gap: '1rem',
-        }}
-      >
+      <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
         <div>
-          <Badge variant="mint" tilt="left" style={{ marginBottom: '0.4rem' }}>
-            TRANSPARANSI KEUANGAN
-          </Badge>
-          <h1 style={{ fontSize: '2.4rem', margin: 0 }}>
+          <div className="mb-1.5">
+            <Badge variant="mint" tilt="left">
+              TRANSPARANSI KEUANGAN
+            </Badge>
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] m-0">
             Budget, Expense & SPJ Tracking
           </h1>
-          <p style={{ color: 'var(--mem-gray-500)', margin: '4px 0 0' }}>
+          <p className="text-gray-500 text-sm sm:text-base mt-1">
             Pelacakan anggaran RAB, pencatatan pengeluaran, dan verifikasi kuitansi SPJ.
           </p>
         </div>

@@ -19,110 +19,51 @@ export const StatCard: React.FC<StatCardProps> = ({
   accentColor = 'yellow',
   subtitle,
 }) => {
-  const getAccentBg = (): string => {
-    switch (accentColor) {
-      case 'pink':
-        return 'var(--mem-pink)'
-      case 'cyan':
-        return 'var(--mem-cyan)'
-      case 'purple':
-        return 'var(--mem-purple)'
-      case 'mint':
-        return 'var(--mem-mint)'
-      case 'yellow':
-      default:
-        return 'var(--mem-yellow)'
-    }
+  const accentClasses: Record<string, { bar: string; iconBg: string; text: string }> = {
+    pink: { bar: 'bg-[#FF4B91]', iconBg: 'bg-[#FF4B91]', text: 'text-white' },
+    cyan: { bar: 'bg-[#01CDFE]', iconBg: 'bg-[#01CDFE]', text: 'text-[#121215]' },
+    purple: { bar: 'bg-[#845EC2]', iconBg: 'bg-[#845EC2]', text: 'text-white' },
+    mint: { bar: 'bg-[#00F5D4]', iconBg: 'bg-[#00F5D4]', text: 'text-[#121215]' },
+    yellow: { bar: 'bg-[#FFE600]', iconBg: 'bg-[#FFE600]', text: 'text-[#121215]' },
   }
 
-  const isLight = accentColor === 'yellow' || accentColor === 'cyan' || accentColor === 'mint'
+  const currentAccent = accentClasses[accentColor] || accentClasses.yellow
 
   return (
-    <div
-      className="memphis-box"
-      style={{
-        padding: '1.25rem',
-        backgroundColor: '#FFFFFF',
-        position: 'relative',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
+    <div className="p-5 bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] relative overflow-hidden flex flex-col">
       {/* Top right corner decorative accent bar */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          width: '60px',
-          height: '6px',
-          backgroundColor: getAccentBg(),
-        }}
-      />
+      <div className={`absolute top-0 right-0 w-[60px] h-1.5 ${currentAccent.bar}`} />
 
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-        <span
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontWeight: 700,
-            fontSize: '0.875rem',
-            color: 'var(--mem-gray-500)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.04em',
-          }}
-        >
+      <div className="flex items-start justify-between mb-3">
+        <span className="font-['Space_Grotesk',sans-serif] font-bold text-xs text-gray-500 uppercase tracking-wider">
           {title}
         </span>
         {icon && (
           <div
-            style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '8px',
-              backgroundColor: getAccentBg(),
-              border: '2px solid var(--mem-dark)',
-              boxShadow: '2px 2px 0px var(--mem-dark)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: isLight ? 'var(--mem-dark)' : '#FFFFFF',
-            }}
+            className={`w-9 h-9 rounded-lg border-2 border-[#121215] shadow-[2px_2px_0px_0px_#121215] flex items-center justify-center shrink-0 ${currentAccent.iconBg} ${currentAccent.text}`}
           >
             {icon}
           </div>
         )}
       </div>
 
-      <div
-        style={{
-          fontFamily: 'var(--font-display)',
-          fontWeight: 900,
-          fontSize: '1.85rem',
-          color: 'var(--mem-dark)',
-          lineHeight: 1.1,
-          marginBottom: '0.5rem',
-        }}
-      >
+      <div className="font-['Space_Grotesk',sans-serif] font-black text-3xl text-[#121215] leading-tight mb-2">
         {value}
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: 'auto', fontSize: '0.8rem' }}>
+      <div className="flex items-center gap-2 mt-auto text-xs">
         {change && (
           <span
-            style={{
-              fontWeight: 800,
-              padding: '2px 6px',
-              borderRadius: '4px',
-              backgroundColor: isPositive ? 'rgba(0, 245, 212, 0.2)' : 'rgba(255, 75, 145, 0.2)',
-              color: isPositive ? '#008775' : '#D0145A',
-              border: `1.5px solid ${isPositive ? '#00C4AA' : '#FF4B91'}`,
-            }}
+            className={`font-black py-0.5 px-1.5 rounded text-[11px] border ${
+              isPositive
+                ? 'bg-[#00F5D4]/20 text-[#008775] border-[#00C4AA]'
+                : 'bg-[#FF4B91]/20 text-[#D0145A] border-[#FF4B91]'
+            }`}
           >
             {change}
           </span>
         )}
-        {subtitle && <span style={{ color: 'var(--mem-gray-500)' }}>{subtitle}</span>}
+        {subtitle && <span className="text-gray-500">{subtitle}</span>}
       </div>
     </div>
   )

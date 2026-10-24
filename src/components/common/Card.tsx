@@ -18,68 +18,41 @@ export const Card: React.FC<CardProps> = ({
   headerAction,
   hoverable = true,
   className = '',
-  style = {},
+  style,
   onClick,
 }) => {
-  const getHeaderColor = (): string => {
-    switch (headerColor) {
-      case 'yellow':
-        return 'var(--mem-yellow)'
-      case 'pink':
-        return 'var(--mem-pink)'
-      case 'cyan':
-        return 'var(--mem-cyan)'
-      case 'purple':
-        return 'var(--mem-purple)'
-      case 'mint':
-        return 'var(--mem-mint)'
-      default:
-        return 'transparent'
-    }
+  const headerClasses: Record<string, string> = {
+    yellow: 'bg-[#FFE600] text-[#121215]',
+    pink: 'bg-[#FF4B91] text-white',
+    cyan: 'bg-[#01CDFE] text-[#121215]',
+    purple: 'bg-[#845EC2] text-white',
+    mint: 'bg-[#00F5D4] text-[#121215]',
+    none: 'hidden',
   }
-
-  const isLightHeader = headerColor === 'yellow' || headerColor === 'cyan' || headerColor === 'mint'
 
   return (
     <div
-      className={`${hoverable ? 'memphis-card' : 'memphis-box'} ${className}`.trim()}
       onClick={onClick}
-      style={{
-        overflow: 'hidden',
-        cursor: onClick ? 'pointer' : 'default',
-        ...style,
-      }}
+      style={style}
+      className={`bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] overflow-hidden ${
+        onClick ? 'cursor-pointer' : 'cursor-default'
+      } ${
+        hoverable ? 'hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_#121215] transition-all' : ''
+      } ${className}`.trim()}
     >
       {headerColor !== 'none' && (
         <div
-          style={{
-            backgroundColor: getHeaderColor(),
-            borderBottom: 'var(--mem-border)',
-            padding: '0.65rem 1rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            color: isLightHeader ? 'var(--mem-dark)' : '#FFFFFF',
-          }}
+          className={`border-b-2 border-[#121215] py-2.5 px-4 flex items-center justify-between font-['Space_Grotesk',sans-serif] ${headerClasses[headerColor]}`}
         >
           {headerTitle && (
-            <h4
-              style={{
-                margin: 0,
-                fontSize: '0.95rem',
-                fontWeight: 800,
-                color: isLightHeader ? 'var(--mem-dark)' : '#FFFFFF',
-                letterSpacing: '0.02em',
-                textTransform: 'uppercase',
-              }}
-            >
+            <h4 className="m-0 text-sm font-black tracking-wider uppercase">
               {headerTitle}
             </h4>
           )}
           {headerAction && <div>{headerAction}</div>}
         </div>
       )}
-      <div style={{ padding: '1.25rem' }}>{children}</div>
+      <div className="p-5">{children}</div>
     </div>
   )
 }

@@ -39,124 +39,68 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
   }
 
   return (
-    <div
-      className="memphis-card"
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        backgroundColor: '#FFFFFF',
-      }}
-    >
+    <div className="flex flex-col h-full bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_#121215] transition-all overflow-hidden group">
       {/* Banner image with Memphis frame */}
-      <div
-        style={{
-          position: 'relative',
-          height: '180px',
-          overflow: 'hidden',
-          borderBottom: 'var(--mem-border)',
-          backgroundColor: 'var(--mem-yellow-light)',
-        }}
-      >
+      <div className="relative h-[180px] overflow-hidden border-b-2 border-[#121215] bg-[#FFF585]">
         <img
           src={event.bannerUrl}
           alt={event.title}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            transition: 'transform 0.3s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'scale(1.05)'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'scale(1)'
-          }}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
 
         {/* Category Pill Tag */}
-        <div style={{ position: 'absolute', top: '10px', left: '10px' }}>
+        <div className="absolute top-2.5 left-2.5">
           <Badge variant={getCategoryColor()} tilt="left">
             {event.category}
           </Badge>
         </div>
 
         {/* Location Type Tag */}
-        <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
-          <Badge variant="dark" style={{ textTransform: 'uppercase', fontSize: '0.7rem' }}>
+        <div className="absolute top-2.5 right-2.5">
+          <Badge variant="dark" className="uppercase text-[11px]">
             {event.location.type}
           </Badge>
         </div>
       </div>
 
       {/* Card Content */}
-      <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+      <div className="p-5 flex flex-col grow">
         {/* Organizer & Campus */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            fontSize: '0.8rem',
-            fontFamily: 'var(--font-mono)',
-            fontWeight: 700,
-            color: 'var(--mem-gray-500)',
-            marginBottom: '0.4rem',
-          }}
-        >
+        <div className="flex items-center justify-between text-xs font-mono font-bold text-gray-500 mb-1">
           <span>{event.organizationName}</span>
-          <span style={{ color: 'var(--mem-pink)', fontWeight: 800 }}>{event.university}</span>
+          <span className="text-[#FF4B91] font-black">{event.university}</span>
         </div>
 
         {/* Title */}
-        <h3
-          style={{
-            fontSize: '1.15rem',
-            lineHeight: 1.3,
-            marginBottom: '0.5rem',
-            color: 'var(--mem-dark)',
-          }}
-        >
-          <Link to={`/events/${event.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <h3 className="text-lg font-['Space_Grotesk',sans-serif] font-black leading-snug mb-2 text-[#121215]">
+          <Link to={`/events/${event.id}`} className="no-underline text-inherit hover:text-[#FF4B91] transition-colors">
             {event.title}
           </Link>
         </h3>
 
         {/* Short description */}
-        <p
-          style={{
-            fontSize: '0.875rem',
-            color: '#4B5563',
-            marginBottom: '1rem',
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-            flexGrow: 1,
-          }}
-        >
+        <p className="text-sm text-gray-600 mb-4 line-clamp-2 grow leading-relaxed">
           {event.shortDescription}
         </p>
 
         {/* Meta details */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', marginBottom: '1rem', fontSize: '0.825rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--mem-dark)', fontWeight: 600 }}>
-            <Calendar size={15} style={{ color: 'var(--mem-pink)' }} />
+        <div className="flex flex-col gap-1.5 mb-4 text-xs">
+          <div className="flex items-center gap-1.5 text-[#121215] font-semibold">
+            <Calendar size={15} className="text-[#FF4B91] shrink-0" />
             <span>{formattedDate}</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--mem-gray-500)' }}>
-            <MapPin size={15} style={{ color: 'var(--mem-cyan)' }} />
-            <span>
+          <div className="flex items-center gap-1.5 text-gray-500">
+            <MapPin size={15} className="text-[#01CDFE] shrink-0" />
+            <span className="truncate">
               {event.location.venueName ? `${event.location.venueName}, ${event.location.city || ''}` : 'Online Event'}
             </span>
           </div>
         </div>
 
         {/* Capacity Quota Progress */}
-        <div style={{ marginBottom: '1.2rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 700, marginBottom: '2px' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+        <div className="mb-4">
+          <div className="flex justify-between text-xs font-bold mb-1 text-gray-700">
+            <span className="flex items-center gap-1">
               <Users size={12} /> Terisi
             </span>
             <span>
@@ -174,26 +118,17 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
         </div>
 
         {/* Price & Action Button Footer */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            borderTop: '2px dashed var(--mem-gray-200)',
-            paddingTop: '0.85rem',
-            marginTop: 'auto',
-          }}
-        >
+        <div className="flex items-center justify-between border-t-2 border-dashed border-gray-200 pt-3.5 mt-auto">
           <div>
-            <span style={{ display: 'block', fontSize: '0.7rem', color: 'var(--mem-gray-500)', textTransform: 'uppercase', fontWeight: 700 }}>
+            <span className="block text-[11px] text-gray-500 uppercase font-bold tracking-wider">
               Mulai Dari
             </span>
-            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '1.1rem', color: 'var(--mem-dark)' }}>
+            <span className="font-['Space_Grotesk',sans-serif] font-black text-base text-[#121215]">
               {lowestPrice === 0 ? 'GRATIS' : `Rp ${lowestPrice.toLocaleString('id-ID')}`}
             </span>
           </div>
 
-          <Link to={`/events/${event.id}`} style={{ textDecoration: 'none' }}>
+          <Link to={`/events/${event.id}`} className="no-underline">
             <Button variant={lowestPrice === 0 ? 'mint' : 'yellow'} size="sm">
               Detail Tiket →
             </Button>

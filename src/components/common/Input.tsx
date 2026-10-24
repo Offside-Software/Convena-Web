@@ -15,75 +15,49 @@ export const Input: React.FC<InputProps> = ({
   icon,
   fullWidth = true,
   className = '',
-  style = {},
+  style,
   id,
   ...props
 }) => {
   const inputId = id || (label ? `input-${label.toLowerCase().replace(/\s+/g, '-')}` : undefined)
 
   return (
-    <div style={{ width: fullWidth ? '100%' : 'auto', marginBottom: '1rem' }} className={className}>
+    <div className={`mb-4 ${fullWidth ? 'w-full' : 'w-auto'} ${className}`}>
       {label && (
         <label
           htmlFor={inputId}
-          style={{
-            display: 'block',
-            fontFamily: 'var(--font-display)',
-            fontWeight: 700,
-            fontSize: '0.875rem',
-            marginBottom: '0.35rem',
-            color: 'var(--mem-dark)',
-          }}
+          className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5"
         >
           {label}
         </label>
       )}
-      <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+      <div
+        className={`flex items-center w-full bg-white border-2 rounded-xl transition-all ${
+          error
+            ? 'border-[#FF4B91] shadow-[2px_2px_0px_0px_#FF4B91]'
+            : 'border-[#121215] shadow-[2px_2px_0px_0px_#121215] focus-within:border-[#FF4B91] focus-within:shadow-[3px_3px_0px_0px_#FF4B91]'
+        }`}
+      >
         {icon && (
-          <span
-            style={{
-              position: 'absolute',
-              left: '0.75rem',
-              color: 'var(--mem-gray-500)',
-              pointerEvents: 'none',
-              display: 'inline-flex',
-            }}
-          >
+          <span className="pl-3.5 pr-2.5 text-gray-400 select-none shrink-0 flex items-center justify-center">
             {icon}
           </span>
         )}
         <input
           id={inputId}
-          style={{
-            paddingLeft: icon ? '2.5rem' : '0.85rem',
-            borderColor: error ? 'var(--mem-pink)' : undefined,
-            boxShadow: error ? '2px 2px 0px var(--mem-pink)' : undefined,
-            ...style,
-          }}
+          style={style}
+          className={`w-full py-2.5 pr-3.5 bg-transparent !border-none !shadow-none !outline-none text-sm font-medium text-[#121215] placeholder:text-gray-400 ${
+            !icon ? 'pl-3.5' : ''
+          }`}
           {...props}
         />
       </div>
       {error ? (
-        <span
-          style={{
-            display: 'block',
-            color: 'var(--mem-pink)',
-            fontSize: '0.8rem',
-            fontWeight: 700,
-            marginTop: '0.25rem',
-          }}
-        >
+        <span className="block text-[#FF4B91] text-xs font-bold mt-1">
           {error}
         </span>
       ) : helperText ? (
-        <span
-          style={{
-            display: 'block',
-            color: 'var(--mem-gray-500)',
-            fontSize: '0.8rem',
-            marginTop: '0.25rem',
-          }}
-        >
+        <span className="block text-gray-500 text-xs mt-1">
           {helperText}
         </span>
       ) : null}
