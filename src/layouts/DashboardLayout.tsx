@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import { Navbar } from '../components/layout/Navbar.tsx'
 import { Footer } from '../components/layout/Footer.tsx'
-import { LayoutDashboard, Sparkles, DollarSign, Calendar, ShieldCheck } from 'lucide-react'
+import { LayoutDashboard, Sparkles, DollarSign } from 'lucide-react'
 import { authService } from '../services/auth.service.ts'
 import { mockCurrentUser } from '../data/mockData.ts'
 import type { User } from '../types/user.ts'
@@ -26,7 +26,7 @@ export const DashboardLayout: React.FC = () => {
   const sidebarLinks = [
     { label: 'Ringkasan Organisasi', path: '/dashboard', icon: <LayoutDashboard size={18} /> },
     { label: 'Sponsorship Pipeline', path: '/dashboard/sponsorship', icon: <Sparkles size={18} /> },
-    { label: 'Anggaran & SPJ', path: '/dashboard/finances', icon: <DollarSign size={18} /> },
+    { label: 'Catat Pengeluaran', path: '/dashboard/finances', icon: <DollarSign size={18} /> },
   ]
 
   const isCurrent = (path: string) => {
