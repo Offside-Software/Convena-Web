@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Lock, Mail, ArrowRight, Sparkles, Eye, EyeOff, AlertCircle } from 'lucide-react'
+import { Lock, Mail, ArrowRight, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react'
 import { authService } from '../../services/auth.service.ts'
+import { Button } from '../../components/common/Button.tsx'
 
 export const LoginPage: React.FC = () => {
     const navigate = useNavigate()
-    const [identifier, setIdentifier] = useState('')
-    const [password, setPassword] = useState('')
+    const [identifier, setIdentifier] = useState('arya@student.itb.ac.id')
+    const [password, setPassword] = useState('convena2026')
     const [showPassword, setShowPassword] = useState(false)
-    const [rememberMe, setRememberMe] = useState(false)
+    const [rememberMe, setRememberMe] = useState(true)
     const [isLoading, setIsLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -16,18 +17,13 @@ export const LoginPage: React.FC = () => {
         e.preventDefault()
         setErrorMessage(null)
 
-        if (!identifier.trim() || !password.trim()) {
-            setErrorMessage('Harap isi username/email dan kata sandi')
-            return
-        }
-
         try {
             setIsLoading(true)
             await authService.login({ identifier, password })
             navigate('/dashboard')
         } catch (err: unknown) {
             const error = err as { message?: string }
-            setErrorMessage(error?.message || 'Gagal masuk. Periksa kembali kredensial Anda.')
+            setErrorMessage(error?.message || 'Gagal masuk. Silakan coba kembali.')
         } finally {
             setIsLoading(false)
         }
@@ -35,7 +31,7 @@ export const LoginPage: React.FC = () => {
 
     return (
         <div className="min-h-[calc(100vh-140px)] w-full flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-[#FAF9F6] bg-[radial-gradient(#FFE600_1.5px,transparent_1.5px)] [background-size:24px_24px] relative overflow-hidden">
-            {/* Decorative Neo-Brutalist SVGs with pure Tailwind */}
+            {/* Decorative Neo-Brutalist SVGs */}
             <div className="absolute top-12 left-10 pointer-events-none hidden md:block -rotate-12 opacity-80">
                 <svg className="w-24 h-12 text-[#FF4B91]" viewBox="0 0 120 40" fill="none" stroke="currentColor">
                     <path d="M5 20 L25 5 L45 35 L65 5 L85 35 L105 20" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
@@ -56,17 +52,11 @@ export const LoginPage: React.FC = () => {
                 </svg>
             </div>
 
-            <div className="absolute top-20 right-16 pointer-events-none hidden lg:block animate-spin [animation-duration:20s] opacity-70">
-                <svg className="w-14 h-14 text-[#FFE600]" viewBox="0 0 100 100" fill="currentColor">
-                    <polygon points="50,0 63,35 98,35 70,57 81,91 50,70 19,91 30,57 2,35 37,35" stroke="#121215" strokeWidth="4" />
-                </svg>
-            </div>
-
-            <div className="grid lg:grid-cols-2 sm:grid-cols-1 items-center space-between lg:gap-12 max-w-[1280px] relative z-10 relative z-10">
+            <div className="grid lg:grid-cols-2 sm:grid-cols-1 items-center space-between lg:gap-12 max-w-[1280px] relative z-10">
                 {/* Header Badge & Title */}
                 <div className="text-center m-3 items-center">
                     <div className="inline-flex items-center gap-2 bg-[#FFE600] border-2 border-[#121215] rounded-full px-4 py-1 font-['Space_Grotesk',sans-serif] font-black text-xs uppercase tracking-wider text-[#121215] rotate-2 shadow-[2px_2px_0px_0px_#121215] mb-3">
-                        <span>Selamat Datang</span>
+                        <span>Mode Uji Coba Terbuka</span>
                     </div>
                     <h1 className="font-['Space_Grotesk',sans-serif] font-black text-3xl sm:text-4xl text-[#121215] tracking-tight mb-2">
                         Masuk ke Convena
@@ -82,7 +72,7 @@ export const LoginPage: React.FC = () => {
                     <div className="bg-[#FF4B91] border-b-[3px] border-[#121215] px-6 py-3.5 flex items-center justify-between text-white font-['Space_Grotesk',sans-serif] font-black text-sm tracking-wider uppercase">
                         <span className="flex items-center gap-2">
                             <span className="w-2.5 h-2.5 bg-white rounded-full inline-block" />
-                            LOGIN AKUN
+                            DEMO TEST ACCESS
                         </span>
                         <div className="flex items-center gap-1.5">
                             <span className="w-3 h-3 rounded-full bg-[#FFE600] border border-[#121215]" />
@@ -92,6 +82,26 @@ export const LoginPage: React.FC = () => {
                     </div>
 
                     <div className="p-6 sm:p-7">
+                        {/* Notice for Lecturer Test */}
+                        <div className="p-4 bg-[#FFF585] border-2 border-[#121215] rounded-xl shadow-[3px_3px_0px_0px_#121215] mb-5">
+                            <div className="flex items-center gap-2 font-['Space_Grotesk',sans-serif] font-black text-xs text-[#121215] mb-1">
+                                <CheckCircle size={16} className="text-[#008775]" />
+                                AKUN ADMIN TERHUBUNG (OFFLINE MODE)
+                            </div>
+                            <p className="text-xs text-gray-700 m-0 leading-relaxed mb-3">
+                                Autentikasi API dilewati untuk kemudahan uji coba. Anda dapat langsung membuka dashboard dengan data panitia dummy.
+                            </p>
+                            <Button
+                                variant="pink"
+                                size="sm"
+                                fullWidth
+                                icon={<ArrowRight size={16} />}
+                                onClick={() => navigate('/dashboard')}
+                            >
+                                Langsung Masuk ke Dashboard Panitia
+                            </Button>
+                        </div>
+
                         <form onSubmit={handleSubmit} className="space-y-5">
                             {errorMessage && (
                                 <div className="bg-pink-50 border-2 border-[#FF4B91] text-[#FF4B91] rounded-xl p-3.5 text-xs sm:text-sm font-bold shadow-[3px_3px_0px_0px_#FF4B91] flex items-center gap-2.5">
@@ -164,44 +174,22 @@ export const LoginPage: React.FC = () => {
                                     />
                                     <span>Ingat saya di perangkat ini</span>
                                 </label>
-                                <a
-                                    href="#forgot"
-                                    onClick={(e) => {
-                                        e.preventDefault()
-                                        alert('Silakan hubungi administrator himpunan untuk mengatur ulang kata sandi.')
-                                    }}
-                                    className="font-bold text-[#FF4B91] hover:underline"
-                                >
-                                    Lupa sandi?
-                                </a>
                             </div>
 
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full mt-2 py-3.5 px-6 bg-[#FFE600] hover:bg-[#FFF585] text-[#121215] font-['Space_Grotesk',sans-serif] font-black text-sm sm:text-base uppercase tracking-wider border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] hover:shadow-[6px_6px_0px_0px_#121215] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0 active:translate-y-0 active:shadow-[2px_2px_0px_0px_#121215] transition-all flex items-center justify-center gap-2.5 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                                className="w-full flex items-center justify-center gap-2.5 bg-[#FFE600] hover:bg-[#FFE600]/90 text-[#121215] font-['Space_Grotesk',sans-serif] font-black text-sm py-3 px-6 rounded-xl border-2 border-[#121215] shadow-[4px_4px_0px_0px_#121215] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0 active:translate-y-0 active:shadow-[1px_1px_0px_0px_#121215] transition-all cursor-pointer disabled:opacity-50"
                             >
-                                {isLoading ? (
-                                    <>
-                                        <Sparkles size={18} className="animate-spin" />
-                                        <span>Memverifikasi Akun...</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <span>Masuk Sekarang</span>
-                                        <ArrowRight size={18} />
-                                    </>
-                                )}
+                                <span>{isLoading ? 'Memproses...' : 'Masuk Sekarang'}</span>
+                                <ArrowRight size={18} />
                             </button>
                         </form>
 
-                        <div className="mt-6 pt-5 border-t-2 border-dashed border-gray-200 text-center text-xs sm:text-sm text-gray-600 font-medium">
-                            <span>Belum memiliki akun Convena? </span>
-                            <Link
-                                to="/register"
-                                className="text-[#FF4B91] font-['Space_Grotesk',sans-serif] font-black hover:underline ml-1"
-                            >
-                                Daftar di sini
+                        <div className="text-center mt-6 pt-5 border-t-2 border-dashed border-gray-200">
+                            <span className="text-xs text-gray-500 font-medium">Belum memiliki akun ormawa? </span>
+                            <Link to="/register" className="text-xs font-bold text-[#FF4B91] hover:underline">
+                                Daftar Baru
                             </Link>
                         </div>
                     </div>
