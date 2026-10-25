@@ -121,15 +121,14 @@ export const EventsPage: React.FC = () => {
 
       {/* Filter and Search Bar */}
       <div className="p-5 bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] mb-8 flex flex-col gap-4">
-        {/* Search input */}
-        <div className="relative">
-          <Search size={20} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+        <div className="memphis-box bg-white border-2 border-[#121215] shadow-[6px_6px_0px_0px_#121215] rounded-xl flex gap-2 items-center">
+          <Search size={20} className="ml-2 text-gray-500 shrink-0" />
           <input
             type="text"
             placeholder="Cari berdasarkan judul, topik, pembicara, atau tagar..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-2 border-[#121215] rounded-lg font-medium text-sm text-[#121215] focus:outline-none focus:bg-white focus:border-[#FFE600] transition-all"
+            className="!border-none !shadow-none text-base flex-1 outline-hidden bg-transparent focus:ring-0"
           />
         </div>
 
@@ -193,7 +192,6 @@ export const EventsPage: React.FC = () => {
         </div>
       ) : events.length === 0 ? (
         <div className="py-16 text-center p-8 bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] max-w-lg mx-auto">
-          <div className="text-4xl mb-3">🔍</div>
           <h3 className="font-['Space_Grotesk',sans-serif] font-black text-xl text-[#121215] mb-2">
             Tidak Ada Event Ditemukan
           </h3>
