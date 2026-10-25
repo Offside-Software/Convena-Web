@@ -54,9 +54,9 @@ export const RegisterPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-[calc(100vh-140px)] flex items-center justify-center py-12 px-4 bg-[#FFE600]/10 relative overflow-hidden">
+    <div className="min-h-[calc(100vh-140px)] flex items-center justify-center p-4 bg-[#FFE600]/10 relative overflow-hidden">
       {/* Decorative Floating Memphis Shapes */}
-      <div className="absolute top-12 left-8 md:left-24 pointer-events-none select-none">
+      <div className="absolute top-8 left-24 md:left-4 pointer-events-none select-none">
         <MemphisShape type="zigzag" size={80} color="#FF4B91" animate="slow" />
       </div>
       <div className="absolute bottom-16 right-8 md:right-28 pointer-events-none select-none">
@@ -69,9 +69,8 @@ export const RegisterPage: React.FC = () => {
         <MemphisShape type="cross" size={36} color="#845EC2" />
       </div>
 
-      <div className="grid grid-cols-2 items-center space-between gap-12  max-w-[1280px] relative z-10 relative z-10">
-
-        <div className="col-span-1 mb-6 text-center">
+      <div className="grid lg:grid-cols-2 sm:grid-cols-1 items-center space-between lg:gap-12 max-w-[1280px] relative z-10 relative z-10">
+        <div className="col-span-1 m-3 text-center">
           <div className="inline-flex items-center gap-2 bg-[#FFE600] border-2 border-[#121215] rounded-full px-4 py-1 font-['Space_Grotesk',sans-serif] font-black text-xs uppercase tracking-wider text-[#121215] -rotate-2 shadow-[2px_2px_0px_0px_#121215] mb-3">
             <span>Selamat Datang di Convena</span>
           </div>
@@ -79,13 +78,13 @@ export const RegisterPage: React.FC = () => {
           <h1 className="font-['Space_Grotesk',sans-serif] font-black text-3xl sm:text-4xl text-[#121215] mb-2 tracking-tight">
             Mulai Kelola & Ikuti Event
           </h1>
-          <p className="text-sm text-gray-600 font-medium">
+          <p className="text-sm text-gray-600 font-medium max-w-xl">
             Buat satu akun untuk mengatur event, menjadi panitia, atau membeli tiket di seluruh kampus
           </p>
         </div>
 
         {/* Registration Card */}
-        <div className="col-span-1 bg-white border-4 border-[#121215] rounded-2xl shadow-[8px_8px_0px_0px_#121215] overflow-hidden">
+        <div className="col-span-1 bg-white border-4 border-[#121215] m-3 rounded-2xl shadow-[8px_8px_0px_0px_#121215] overflow-hidden">
           {/* Card Header Bar */}
           <div className="bg-[#00F5D4] border-b-4 border-[#121215] px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-2">

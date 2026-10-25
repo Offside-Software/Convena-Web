@@ -76,7 +76,7 @@ export const HomePage: React.FC = () => {
               placeholder="Cari hackathon, seminar BEM, workshop AI, kampus (ITB, UI)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="border-none shadow-none p-2 text-base flex-1 outline-hidden bg-transparent focus:ring-0"
+              className="!border-none !shadow-none p-2 text-base flex-1 outline-hidden bg-transparent focus:ring-0"
             />
             <Link to={`/events?search=${encodeURIComponent(searchQuery)}`} className="no-underline">
               <Button variant="yellow" size="md">

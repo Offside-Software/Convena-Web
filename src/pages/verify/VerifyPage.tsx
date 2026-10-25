@@ -64,9 +64,9 @@ export const VerifyPage: React.FC = () => {
       </div>
 
       {/* Search Input Box */}
-      <div className="max-w-[680px] mx-auto mb-10 p-5 bg-white border-2 border-[#121215] rounded-2xl shadow-[6px_6px_0px_0px_#121215]">
+      <div className="max-w-[680px] mx-auto mb-10 p-5 border-2 border-[#121215] rounded-2xl shadow-[6px_6px_0px_0px_#121215]">
         <form onSubmit={handleVerify} className="flex gap-2 flex-wrap">
-          <div className="grow basis-[300px]">
+          <div className="grow basis-[300px] ">
             <Input
               placeholder="Masukkan ID Sertifikat (Contoh: CNV-2026-ITB-8821)"
               value={code}

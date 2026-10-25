@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { MemphisShape } from '../shapes/MemphisShape.tsx'
 import { Badge } from '../common/Badge.tsx'
+import { BrandLogo } from '../common/BrandLogo.tsx'
 
 export const Footer: React.FC = () => {
   return (
@@ -20,15 +21,10 @@ export const Footer: React.FC = () => {
           {/* Brand info */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-[#FF4B91] border-2 border-[#121215] rounded-md flex items-center justify-center font-black text-white text-base">
-                C
-              </div>
-              <span className="font-['Space_Grotesk',sans-serif] font-black text-2xl text-[#121215]">
-                CONVENA
-              </span>
+              <BrandLogo/>
             </div>
             <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-              Operating system terintegrasi untuk organisasi mahasiswa Indonesia: manajemen acara, proposal, LPJ/SPJ, sponsorship CRM, dan sertifikat digital tervalidasi.
+              Event Management terintegrasi untuk organisasi mahasiswa Indonesia: manajemen acara, proposal, LPJ/SPJ, sponsorship CRM, dan sertifikat digital tervalidasi.
             </p>
             <div className="flex gap-2 flex-wrap">
               <Badge variant="pink">TEL-U</Badge>
