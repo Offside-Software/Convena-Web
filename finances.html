@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Keuangan & SPJ — Convena</title>
 
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -13,151 +14,13 @@
     rel="stylesheet"
   />
 
+  <!-- External CSS -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- React & Babel CDN -->
   <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-  <style>
-    :root {
-      --mem-yellow: #FFE600;
-      --mem-pink: #FF4B91;
-      --mem-cyan: #01CDFE;
-      --mem-mint: #00F5D4;
-      --mem-bg: #FAF9F6;
-      --mem-dark: #121215;
-      --border: 3px solid #121215;
-      --border-sm: 2px solid #121215;
-      --font-display: 'Space Grotesk', sans-serif;
-      --font-body: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: var(--font-body);
-      background-color: var(--mem-bg);
-      color: var(--mem-dark);
-      min-height: 100vh;
-    }
-
-    .navbar {
-      background: #FFFFFF;
-      border-bottom: var(--border);
-      padding: 0.85rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .brand {
-      font-family: var(--font-display);
-      font-weight: 800;
-      font-size: 1.4rem;
-      text-decoration: none;
-      color: var(--mem-dark);
-    }
-
-    .nav-links a {
-      font-family: var(--font-display);
-      font-weight: 700;
-      text-decoration: none;
-      color: var(--mem-dark);
-      margin-left: 1rem;
-      padding: 0.35rem 0.75rem;
-      border-radius: 6px;
-    }
-
-    .nav-links a.active {
-      background: var(--mem-yellow);
-      border: var(--border-sm);
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 2rem 1rem;
-    }
-
-    .box {
-      background: #FFFFFF;
-      border: var(--border);
-      box-shadow: 5px 5px 0px var(--mem-dark);
-      border-radius: 10px;
-      padding: 1.25rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 0.75rem;
-      align-items: end;
-    }
-
-    label {
-      display: block;
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 0.85rem;
-      margin-bottom: 0.3rem;
-    }
-
-    input {
-      width: 100%;
-      padding: 0.6rem 0.75rem;
-      border: var(--border-sm);
-      border-radius: 6px;
-      font-family: var(--font-body);
-    }
-
-    .btn {
-      font-family: var(--font-display);
-      font-weight: 700;
-      padding: 0.6rem 1rem;
-      border: var(--border-sm);
-      border-radius: 6px;
-      box-shadow: 2px 2px 0px var(--mem-dark);
-      cursor: pointer;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.9rem;
-    }
-
-    th, td {
-      padding: 0.75rem 0.5rem;
-      border-bottom: 1px solid #E5E7EB;
-    }
-
-    th {
-      border-bottom: var(--border-sm);
-      font-family: var(--font-display);
-    }
-
-    .badge {
-      display: inline-block;
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 0.72rem;
-      padding: 0.2rem 0.6rem;
-      border: 1.5px solid var(--mem-dark);
-      border-radius: 999px;
-    }
-  </style>
 </head>
 
 <body>
@@ -169,18 +32,22 @@
     function FinancesPage() {
       const totalBudget = 50000000; // Total Pagu Anggaran Rp 50.000.000
 
+      // State daftar pengeluaran & SPJ
       const [expenses, setExpenses] = useState([
         { id: 1, title: 'DP Sewa Aula Kampus', division: 'Logistik', amount: 15000000, verified: true },
         { id: 2, title: 'Cetak Spanduk & ID Card', division: 'Pubdok', amount: 3500000, verified: false },
       ]);
 
+      // State input form
       const [title, setTitle] = useState('');
       const [division, setDivision] = useState('');
       const [amount, setAmount] = useState('');
 
+      // Hitung total pengeluaran & sisa anggaran
       const totalSpent = expenses.reduce((sum, item) => sum + item.amount, 0);
       const remainingBudget = totalBudget - totalSpent;
 
+      // Fungsi tambah pengeluaran baru
       const handleAddExpense = (e) => {
         e.preventDefault();
         if (!title || !division || !amount) return;
@@ -199,6 +66,7 @@
         setAmount('');
       };
 
+      // Fungsi ubah status verifikasi SPJ
       const handleToggleVerify = (id) => {
         setExpenses(
           expenses.map((item) =>
@@ -210,7 +78,10 @@
       return (
         <>
           <header className="navbar">
-            <a href="index.html" className="brand">CONVENA</a>
+            <a href="index.html" className="brand">
+              <div className="brand-box">C</div>
+              <span className="brand-title">CONVENA</span>
+            </a>
             <nav className="nav-links">
               <a href="index.html">Home</a>
               <a href="events.html">Events</a>
@@ -230,6 +101,7 @@
               Pencatatan pengeluaran anggaran kegiatan dan verifikasi kuitansi SPJ.
             </p>
 
+            {/* 1. Ringkasan Anggaran */}
             <div className="summary-grid">
               <div className="box" style={{ marginBottom: 0 }}>
                 <small>TOTAL ANGGARAN</small>
@@ -253,6 +125,7 @@
               </div>
             </div>
 
+            {/* 2. Form Tambah Pengeluaran */}
             <div className="box">
               <h3 style={{ fontFamily: 'var(--font-display)', marginBottom: '1rem' }}>
                 Catat Pengeluaran Baru
@@ -298,6 +171,7 @@
               </form>
             </div>
 
+            {/* 3. Tabel Daftar Pengeluaran & SPJ */}
             <div className="box">
               <h3 style={{ fontFamily: 'var(--font-display)', marginBottom: '1rem' }}>
                 Daftar Pengeluaran & Status SPJ
@@ -323,6 +197,7 @@
                           className="badge"
                           style={{
                             background: item.verified ? 'var(--mem-mint)' : 'var(--mem-yellow)',
+                            marginBottom: 0,
                           }}
                         >
                           {item.verified ? 'Terverifikasi' : 'Menunggu SPJ'}
@@ -348,6 +223,10 @@
               </table>
             </div>
           </main>
+
+          <footer className="footer">
+            &copy; 2026 Convena — Platform Manajemen Event & Organisasi Mahasiswa
+          </footer>
         </>
       );
     }

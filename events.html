@@ -13,52 +13,12 @@
     rel="stylesheet"
   />
 
+  <!-- External CSS -->
+  <link rel="stylesheet" href="style.css" />
+
   <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-  <style>
-    :root {
-      --mem-yellow: #FFE600;
-      --mem-pink: #FF4B91;
-      --mem-cyan: #01CDFE;
-      --mem-mint: #00F5D4;
-      --mem-bg: #FAF9F6;
-      --mem-dark: #121215;
-      --border: 3px solid #121215;
-      --border-sm: 2px solid #121215;
-      --font-display: 'Space Grotesk', sans-serif;
-      --font-body: 'Plus Jakarta Sans', sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: var(--font-body); background: var(--mem-bg); color: var(--mem-dark); min-height: 100vh; display: flex; flex-direction: column; }
-
-    .navbar {
-      background: #FFFFFF;
-      border-bottom: 4px solid var(--mem-dark);
-      padding: 0.85rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .brand { display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-display); font-weight: 900; font-size: 1.4rem; text-decoration: none; color: var(--mem-dark); }
-    .brand-box { width: 36px; height: 36px; background: var(--mem-pink); border: var(--border-sm); border-radius: 8px; box-shadow: 2px 2px 0px var(--mem-dark); display: flex; align-items: center; justify-content: center; color: #FFF; }
-    .nav-links { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
-    .nav-links a { font-family: var(--font-display); font-weight: 700; font-size: 0.85rem; text-decoration: none; color: var(--mem-dark); padding: 0.4rem 0.75rem; border-radius: 6px; border: 2px solid transparent; }
-    .nav-links a.active, .nav-links a:hover { background: var(--mem-yellow); border-color: var(--mem-dark); box-shadow: 2px 2px 0px var(--mem-dark); }
-
-    .container { max-width: 1080px; width: 100%; margin: 0 auto; padding: 2.5rem 1.5rem; flex: 1; }
-    .box { background: #FFFFFF; border: var(--border); box-shadow: 5px 5px 0px var(--mem-dark); border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
-    .btn { font-family: var(--font-display); font-weight: 700; padding: 0.55rem 1rem; border: var(--border-sm); border-radius: 6px; box-shadow: 2px 2px 0px var(--mem-dark); cursor: pointer; background: var(--mem-yellow); }
-    input, select { width: 100%; padding: 0.6rem 0.75rem; border: var(--border-sm); border-radius: 6px; font-family: var(--font-body); }
-    .footer { background: #FFFFFF; border-top: 4px solid var(--mem-dark); text-align: center; padding: 1.25rem; font-size: 0.85rem; color: #6B7280; }
-  </style>
 </head>
 
 <body>
