@@ -127,9 +127,9 @@ export const SponsorshipPage: React.FC = () => {
                       : 'bg-[#FFE600]'
               }`}
             />
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-lg font-['Space_Grotesk',sans-serif] font-black text-[#121215] m-0">{pkg.name}</h3>
-              <Badge variant="dark" className="text-[11px]">
+            <div className="grid grid-cols-3 justify-between items-center mb-2">
+              <h3 className="col-span-2 text-lg font-['Space_Grotesk',sans-serif] font-black text-[#121215] m-0">{pkg.name}</h3>
+              <Badge variant="dark" className="col-span-1 text-[10px]">
                 {pkg.slotsFilled} / {pkg.slotLimit} Terisi
               </Badge>
             </div>
@@ -153,7 +153,7 @@ export const SponsorshipPage: React.FC = () => {
         </span>
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-start">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
         {stages.map((stg) => {
           const stageLeads = leads.filter((l) => l.stage === stg.stage)
           return (
@@ -213,7 +213,7 @@ export const SponsorshipPage: React.FC = () => {
       <Modal
         isOpen={isAiModalOpen}
         onClose={() => setIsAiModalOpen(false)}
-        title="Asisten Surat Proposal AI 🤖"
+        title="Asisten Surat Proposal AI"
         headerColor="pink"
         footer={
           <>
@@ -228,7 +228,7 @@ export const SponsorshipPage: React.FC = () => {
           </>
         }
       >
-        <div className="space-y-4">
+        <div className="flex flex-col space-y-4 gap-3">
           <p className="text-xs text-gray-500">
             Generate draf penawaran sponsorship resmi berstandar korporat Indonesia secara otomatis menggunakan LLM.
           </p>

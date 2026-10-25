@@ -8,8 +8,11 @@ import type { User } from '../types/user.ts'
 export const mockCurrentUser: User = {
   id: 'usr-001',
   name: 'Arya Pratama',
+  displayName: 'Arya Pratama',
+  username: 'aryapratama',
   email: 'arya@student.itb.ac.id',
   role: 'admin',
+  company: 'HMIF ITB',
   organizationId: 'org-hmif-itb',
   avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
   university: 'Institut Teknologi Bandung',
@@ -56,9 +59,46 @@ export const mockOrganizations: Organization[] = [
       website: 'https://bem.ui.ac.id',
     },
   },
+  {
+    id: 'org-bem-ugm',
+    name: 'Badan Eksekutif Mahasiswa KM UGM',
+    shortName: 'BEM KM UGM',
+    university: 'Universitas Gadjah Mada',
+    description: 'Organisasi kemahasiswaan tingkat universitas di Universitas Gadjah Mada yang berfokus pada pergerakan sosial dan riset inovasi.',
+    verified: true,
+    memberCount: 460,
+    activeEventsCount: 2,
+    divisions: [
+      { id: 'div-ugm-1', name: 'Kementerian Riset & Teknologi', memberCount: 55 },
+      { id: 'div-ugm-2', name: 'Kementerian Minat & Bakat', memberCount: 70 },
+      { id: 'div-ugm-3', name: 'Biro Keuangan & Kemitraan', memberCount: 40 },
+    ],
+    socials: {
+      instagram: '@bemkmugm',
+      website: 'https://bemkm.ugm.ac.id',
+    },
+  },
+  {
+    id: 'org-bem-its',
+    name: 'Badan Eksekutif Mahasiswa Institut Teknologi Sepuluh Nopember',
+    shortName: 'BEM ITS',
+    university: 'Institut Teknologi Sepuluh Nopember',
+    description: 'Lembaga eksekutif mahasiswa penggerak inovasi teknologi, robotika, dan maritim di Surabaya.',
+    verified: true,
+    memberCount: 410,
+    activeEventsCount: 2,
+    divisions: [
+      { id: 'div-its-1', name: 'Departemen Riset, Teknologi & Robotika', memberCount: 65 },
+      { id: 'div-its-2', name: 'Departemen Komunikasi & Branding', memberCount: 50 },
+    ],
+    socials: {
+      instagram: '@bem_its',
+      website: 'https://its.ac.id/kemahasiswaan',
+    },
+  },
 ]
 
-export const mockEvents: Event[] = [
+export const initialMockEvents: Event[] = [
   {
     id: 'evt-arkavidia-2026',
     title: 'Arkavidia 9.0: National Tech Festival & Hackathon',
@@ -86,6 +126,8 @@ export const mockEvents: Event[] = [
     attendeeCount: 420,
     totalCapacity: 600,
     certificateAvailable: true,
+    myRole: 'owner',
+    myCustomTitle: 'Ketua Pelaksana',
     ticketTiers: [
       {
         id: 'tkt-early',
@@ -142,6 +184,8 @@ export const mockEvents: Event[] = [
     attendeeCount: 780,
     totalCapacity: 1000,
     certificateAvailable: true,
+    myRole: 'admin',
+    myCustomTitle: 'Koordinator Acara',
     ticketTiers: [
       {
         id: 'tkt-online',
@@ -186,6 +230,8 @@ export const mockEvents: Event[] = [
     attendeeCount: 150,
     totalCapacity: 150,
     certificateAvailable: true,
+    myRole: 'owner',
+    myCustomTitle: 'Pemateri / Penanggung Jawab',
     ticketTiers: [
       {
         id: 'tkt-full-ws',
@@ -195,6 +241,121 @@ export const mockEvents: Event[] = [
         sold: 150,
         benefits: ['Interactive coding environment', 'Github repository access', 'Verifiable Completion Credential'],
         isAvailable: false,
+      },
+    ],
+  },
+  {
+    id: 'evt-ugm-hackathon-2026',
+    title: 'Gadjah Mada National Innovation Hackathon 2026',
+    slug: 'ugm-national-innovation-hackathon',
+    description: 'Ajang kompetisi coding dan pemecahan masalah sosial perkotaan & maritim selama 36 jam nonstop untuk mahasiswa seluruh perguruan tinggi se-Indonesia.',
+    shortDescription: 'National innovation hackathon by BEM KM UGM with total grant prizes of Rp 45.000.000.',
+    bannerUrl: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&auto=format&fit=crop&q=80',
+    category: 'competition',
+    status: 'published',
+    visibility: 'public',
+    startDate: '2026-11-28T08:00:00+07:00',
+    endDate: '2026-11-29T20:00:00+07:00',
+    location: {
+      type: 'offline',
+      venueName: 'Grha Sabha Pramana UGM',
+      address: 'Jl. Sosio Humaniora, Bulaksumur, Sleman',
+      city: 'Yogyakarta',
+    },
+    organizationId: 'org-bem-ugm',
+    organizationName: 'BEM KM UGM',
+    university: 'Universitas Gadjah Mada',
+    tags: ['Hackathon', 'Competition', 'Innovation', 'UGM'],
+    attendeeCount: 280,
+    totalCapacity: 350,
+    certificateAvailable: true,
+    myRole: 'committee',
+    ticketTiers: [
+      {
+        id: 'tkt-ugm-reg',
+        name: 'Team Registration (3-4 Mahasiswa)',
+        price: 75000,
+        quota: 100,
+        sold: 85,
+        benefits: ['36h venue access & accommodation', 'Mentorship session', 'Free meals and coffee', 'Certificate of Participation'],
+        isAvailable: true,
+      },
+    ],
+  },
+  {
+    id: 'evt-its-robotics-expo',
+    title: 'ITS National Robotics & Tech Carnival 2026',
+    slug: 'its-national-robotics-expo-2026',
+    description: 'Pameran riset robotika otomasi, kapal maritim nirawak, dan simulasi smart city persembahan tim riset inovasi mahasiswa ITS Surabaya.',
+    shortDescription: 'National robotics exhibition and tech competition by BEM ITS Surabaya.',
+    bannerUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&auto=format&fit=crop&q=80',
+    category: 'festival',
+    status: 'published',
+    visibility: 'public',
+    startDate: '2026-12-10T09:00:00+07:00',
+    endDate: '2026-12-12T17:00:00+07:00',
+    location: {
+      type: 'offline',
+      venueName: 'Graha Sepuluh Nopember ITS',
+      address: 'Kampus ITS Sukolilo',
+      city: 'Surabaya',
+    },
+    organizationId: 'org-bem-its',
+    organizationName: 'BEM ITS',
+    university: 'Institut Teknologi Sepuluh Nopember',
+    tags: ['Robotics', 'Carnival', 'Automation', 'ITS'],
+    attendeeCount: 520,
+    totalCapacity: 800,
+    certificateAvailable: true,
+    myRole: 'committee',
+    ticketTiers: [
+      {
+        id: 'tkt-its-free',
+        name: 'Tiket Masuk Umum (Gratis)',
+        price: 0,
+        quota: 600,
+        sold: 450,
+        benefits: ['Access to all exhibition booths', 'Robotics combat arena access', 'E-Certificate of Attendance'],
+        isAvailable: true,
+      },
+    ],
+  },
+  {
+    id: 'evt-uiux-design-sprint',
+    title: 'National UI/UX Design Sprint & Case Competition',
+    slug: 'national-ui-ux-design-sprint-2026',
+    description: 'Kompetisi perancangan produk digital dan antarmuka aplikasi berfokus pada inklusivitas pendidikan dan efisiensi birokrasi kampus.',
+    shortDescription: 'Product design & UI/UX challenge with industrial mentorship and portfolio review.',
+    bannerUrl: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&auto=format&fit=crop&q=80',
+    category: 'competition',
+    status: 'published',
+    visibility: 'public',
+    startDate: '2026-12-18T09:00:00+07:00',
+    endDate: '2026-12-19T18:00:00+07:00',
+    location: {
+      type: 'hybrid',
+      venueName: 'Labtek V Benny Subianto ITB & Online',
+      address: 'Kampus ITB Ganesha',
+      city: 'Bandung',
+      onlineUrl: 'https://meet.google.com/convena-design-sprint',
+    },
+    organizationId: 'org-hmif-itb',
+    organizationName: 'HMIF ITB',
+    university: 'Institut Teknologi Bandung',
+    tags: ['UIUX', 'Figma', 'Product', 'Design'],
+    attendeeCount: 195,
+    totalCapacity: 250,
+    certificateAvailable: true,
+    myRole: 'owner',
+    ticketTiers: [
+      {
+        id: 'tkt-uiux-solo',
+        name: 'Individual Challenger Pass',
+        price: 30000,
+        quota: 150,
+        sold: 130,
+        benefits: ['Design prompt package', '1-on-1 Portfolio review', 'Verified E-Certificate', 'Figma premium goodies'],
+        isAvailable: true,
       },
     ],
   },
@@ -243,9 +404,21 @@ export const mockSponsorPackages: SponsorPackage[] = [
       'MC acknowledgment during breaks',
     ],
   },
+  {
+    id: 'pkg-bronze',
+    name: 'Bronze & Community Partner',
+    price: 5000000,
+    slotLimit: 10,
+    slotsFilled: 4,
+    color: '#00F5D4',
+    deliverables: [
+      'Logo on event website & screen slide rotation',
+      'Promotional flyer placement on registration desk',
+    ],
+  },
 ]
 
-export const mockSponsorLeads: SponsorLead[] = [
+export const initialMockSponsorLeads: SponsorLead[] = [
   {
     id: 'spn-1',
     companyName: 'PT Telkom Indonesia',
@@ -298,9 +471,22 @@ export const mockSponsorLeads: SponsorLead[] = [
     notes: 'Committed to Silver + providing 150 academy scholarship tokens.',
     assignedCommittee: 'Fadhil (Divisi Sponsor)',
   },
+  {
+    id: 'spn-5',
+    companyName: 'Bank Mandiri (Persero) Tbk',
+    contactPerson: 'Anita Kusuma (Corporate Communication)',
+    email: 'anita.kusuma@bankmandiri.co.id',
+    phone: '+62 811-9988-7766',
+    stage: 'prospect',
+    packageInterest: 'Gold Sponsor',
+    value: 20000000,
+    lastContactDate: '2026-10-23',
+    notes: 'Inisiasi kontak awal via LinkedIn. Menunggu jadwal rapat pengajuan proposal.',
+    assignedCommittee: 'Nadia (Divisi Sponsor)',
+  },
 ]
 
-export const mockBudgetSummary: EventBudgetSummary = {
+export const initialMockBudgetSummary: EventBudgetSummary = {
   eventId: 'evt-arkavidia-2026',
   totalBudgetPlanned: 85000000,
   totalIncomeRealized: 72500000,
@@ -317,12 +503,15 @@ export const mockBudgetSummary: EventBudgetSummary = {
   ],
 }
 
-export const mockExpenses: ExpenseRecord[] = [
+export const initialMockExpenses: ExpenseRecord[] = [
   {
     id: 'exp-101',
     title: 'Down Payment Sewa Aula Barat ITB (50%)',
     category: 'venue',
     amount: 12500000,
+    receiptNumber: 'KWT-ITB-001',
+    hasDocument: true,
+    receiptUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&auto=format&fit=crop&q=80',
     receiptDate: '2026-10-10',
     submittedBy: 'Dimas (Logistik)',
     division: 'Divisi Logistik',
@@ -335,6 +524,9 @@ export const mockExpenses: ExpenseRecord[] = [
     title: 'Pelunasan Sewa Aula Barat ITB',
     category: 'venue',
     amount: 12500000,
+    receiptNumber: 'KWT-ITB-002',
+    hasDocument: true,
+    receiptUrl: 'https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=600&auto=format&fit=crop&q=80',
     receiptDate: '2026-10-15',
     submittedBy: 'Dimas (Logistik)',
     division: 'Divisi Logistik',
@@ -347,11 +539,57 @@ export const mockExpenses: ExpenseRecord[] = [
     title: 'Cetak 500 ID Card & Lanyard Peserta',
     category: 'marketing',
     amount: 3200000,
+    receiptNumber: 'KWT-ITB-003',
+    hasDocument: true,
+    receiptUrl: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?w=600&auto=format&fit=crop&q=80',
     receiptDate: '2026-10-21',
     submittedBy: 'Sarah (Pubdok)',
     division: 'Divisi Acara & Kreatif',
     spjStatus: 'submitted',
     notes: 'Invoice dari Percetakan Surya Grafika Bandung, menunggu verifikasi SPJ.',
+  },
+  {
+    id: 'exp-104',
+    title: 'Uang Muka Konsumsi Peserta & Panitia (Katering Baraya)',
+    category: 'catering',
+    amount: 7500000,
+    receiptNumber: 'KWT-ITB-004',
+    hasDocument: true,
+    receiptUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&auto=format&fit=crop&q=80',
+    receiptDate: '2026-10-22',
+    submittedBy: 'Anisa (Konsumsi)',
+    division: 'Divisi Logistik',
+    spjStatus: 'verified',
+    approvedBy: 'Rina (Bendahara HMIF)',
+    notes: 'Kuitansi bermaterai DP 50% untuk 400 porsi makan siang dan coffee break 2 hari.',
+  },
+  {
+    id: 'exp-105',
+    title: 'Sewa Rigging Stage, Sound System 10.000 Watt',
+    category: 'equipment',
+    amount: 5000000,
+    receiptNumber: 'KWT-ITB-005',
+    hasDocument: true,
+    receiptUrl: 'https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=600&auto=format&fit=crop&q=80',
+    receiptDate: '2026-10-23',
+    submittedBy: 'Dimas (Logistik)',
+    division: 'Divisi Logistik',
+    spjStatus: 'verified',
+    approvedBy: 'Rina (Bendahara HMIF)',
+    notes: 'Perjanjian sewa vendor ProSound Audio Bandung, sudah include teknisi standby.',
+  },
+  {
+    id: 'exp-106',
+    title: 'Honorarium Keynote Speaker Sesi AI & Kebijakan',
+    category: 'speaker_honor',
+    amount: 1100000,
+    receiptNumber: 'KWT-ITB-006',
+    hasDocument: false,
+    receiptDate: '2026-10-24',
+    submittedBy: 'Nadia (Acara)',
+    division: 'Divisi Acara & Kreatif',
+    spjStatus: 'submitted',
+    notes: 'Tanda terima transfer honorarium narasumber eksternal. Bukti scan kuitansi belum diunggah.',
   },
 ]
 
@@ -392,4 +630,31 @@ export const mockCertificates: Record<string, Certificate> = {
       { name: 'Genta Mahardika', title: 'Ketua BEM UI 2026' },
     ],
   },
+  'CNV-2026-UGM-3301': {
+    id: 'cert-3301',
+    certificateNumber: 'CNV-2026-UGM-3301',
+    recipientName: 'Bintang Pratama Nugraha',
+    recipientEmail: 'bintang.pratama@mail.ugm.ac.id',
+    studentId: '21/478912/TK/52109',
+    university: 'Universitas Gadjah Mada',
+    eventId: 'evt-ugm-hackathon-2026',
+    eventTitle: 'Gadjah Mada National Innovation Hackathon 2026',
+    organizationName: 'BEM KM UGM',
+    issueDate: '2026-10-24',
+    role: 'winner',
+    verified: true,
+    signatories: [
+      { name: 'Prof. dr. Ova Emilia, M.Med.Ed., Sp.OG(K)., Ph.D.', title: 'Rektor Universitas Gadjah Mada' },
+      { name: 'Rahmat Hidayat', title: 'Ketua Pelaksana GM Hackathon 2026' },
+    ],
+  },
 }
+
+// In-memory persistent state holders for live interactivity during lecturer test
+export const mockEvents: Event[] = [...initialMockEvents]
+export const mockExpenses: ExpenseRecord[] = [...initialMockExpenses]
+export const mockBudgetSummary: EventBudgetSummary = {
+  ...initialMockBudgetSummary,
+  categories: initialMockBudgetSummary.categories.map((c) => ({ ...c })),
+}
+export const mockSponsorLeads: SponsorLead[] = [...initialMockSponsorLeads]
