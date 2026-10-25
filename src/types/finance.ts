@@ -13,7 +13,9 @@ export interface ExpenseRecord {
   title: string
   category: ExpenseCategory
   amount: number
+  receiptNumber?: string
   receiptUrl?: string
+  hasDocument?: boolean
   receiptDate: string
   submittedBy: string
   division: string
