@@ -1,16 +1,356 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
-    <title>Convena — Student Event Platform</title>
-  </head>
-  <body class="memphis-body">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Convena — Student Event & Organization Platform</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- React & Babel CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    :root {
+      --mem-yellow: #FFE600;
+      --mem-yellow-light: #FFF585;
+      --mem-pink: #FF4B91;
+      --mem-pink-light: #FF94BE;
+      --mem-cyan: #01CDFE;
+      --mem-mint: #00F5D4;
+      --mem-purple: #845EC2;
+      --mem-bg: #FAF9F6;
+      --mem-surface: #FFFFFF;
+      --mem-dark: #121215;
+      --mem-gray-500: #6B7280;
+      --border: 3px solid #121215;
+      --border-sm: 2px solid #121215;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--mem-bg);
+      color: var(--mem-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      background: #FFFFFF;
+      border-bottom: 4px solid var(--mem-dark);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1.4rem;
+      text-decoration: none;
+      color: var(--mem-dark);
+    }
+
+    .brand-box {
+      width: 36px;
+      height: 36px;
+      background: var(--mem-pink);
+      border: var(--border-sm);
+      border-radius: 8px;
+      box-shadow: 2px 2px 0px var(--mem-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFF;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+      color: var(--mem-dark);
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      border: 2px solid transparent;
+    }
+
+    .nav-links a.active,
+    .nav-links a:hover {
+      background: var(--mem-yellow);
+      border-color: var(--mem-dark);
+      box-shadow: 2px 2px 0px var(--mem-dark);
+    }
+
+    .hero {
+      background-image: radial-gradient(var(--mem-yellow) 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+      border-bottom: 4px solid var(--mem-dark);
+      padding: 4rem 1.5rem;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      padding: 0.25rem 0.75rem;
+      background: var(--mem-yellow);
+      border: var(--border-sm);
+      box-shadow: 2px 2px 0px var(--mem-dark);
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-weight: 800;
+      text-decoration: none;
+      color: var(--mem-dark);
+      padding: 0.75rem 1.35rem;
+      border: var(--border);
+      border-radius: 8px;
+      box-shadow: 3px 3px 0px var(--mem-dark);
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: #FFFFFF;
+      border: var(--border);
+      box-shadow: 5px 5px 0px var(--mem-dark);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-body {
+      padding: 1.35rem;
+    }
+
+    .footer {
+      background: #FFFFFF;
+      border-top: 4px solid var(--mem-dark);
+      text-align: center;
+      padding: 1.25rem;
+      margin-top: auto;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--mem-gray-500);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function HomePage() {
+      const [events] = useState([
+        {
+          id: 'evt-1',
+          title: 'Arkavidia 9.0: National Tech Festival & Hackathon',
+          org: 'HMIF ITB',
+          date: '14 Nov 2026',
+          venue: 'Aula Barat ITB, Bandung',
+          price: 'Rp 35.000',
+          color: 'var(--mem-yellow)',
+        },
+        {
+          id: 'evt-2',
+          title: 'UI Youth Leadership & Policy Summit 2026',
+          org: 'BEM UI',
+          date: '22 Nov 2026',
+          venue: 'Balairung UI, Depok',
+          price: 'Gratis',
+          color: 'var(--mem-cyan)',
+        },
+        {
+          id: 'evt-3',
+          title: 'Tel-U Creative Design & Startup Expo',
+          org: 'BEM Tel-U',
+          date: '05 Des 2026',
+          venue: 'Telkom University Convention Hall',
+          price: 'Rp 25.000',
+          color: 'var(--mem-mint)',
+        },
+      ]);
+
+      return (
+        <>
+          <header className="navbar">
+            <a href="index.html" className="brand">
+              <div className="brand-box">C</div>
+              <span>CONVENA</span>
+            </a>
+            <nav className="nav-links">
+              <a href="index.html" className="active">Home</a>
+              <a href="events.html">Events</a>
+              <a href="dashboard.html">Dashboard</a>
+              <a href="sponsorship.html">Sponsorship</a>
+              <a href="finances.html">Budget & SPJ</a>
+              <a href="verify.html">Verify</a>
+              <a href="login.html" style={{ background: 'var(--mem-pink)', color: '#FFF', borderColor: '#121215' }}>
+                Login
+              </a>
+            </nav>
+          </header>
+
+          {/* Hero Section */}
+          <section className="hero">
+            <span className="badge">#1 PLATFORM ORMAWA INDONESIA</span>
+            <h1
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(2.2rem, 5vw, 3.6rem)',
+                fontWeight: 900,
+                maxWidth: '820px',
+                margin: '0 auto 1rem',
+                lineHeight: 1.15,
+              }}
+            >
+              Kelola Acara Kampus & Ormawa{' '}
+              <span
+                style={{
+                  background: 'var(--mem-yellow)',
+                  border: 'var(--border)',
+                  padding: '0 0.4rem',
+                  boxShadow: '4px 4px 0px var(--mem-dark)',
+                  display: 'inline-block',
+                }}
+              >
+                Tanpa Ribet
+              </span>
+            </h1>
+            <p
+              style={{
+                maxWidth: '680px',
+                margin: '0 auto 2rem',
+                color: '#374151',
+                fontSize: '1.05rem',
+                lineHeight: 1.6,
+              }}
+            >
+              Dari registrasi tiket acara, pelacakan proposal sponsorship CRM, transparansi anggaran & kuitansi SPJ,
+              hingga verifikasi e-sertifikat digital.
+            </p>
+
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <a href="events.html" className="btn" style={{ background: 'var(--mem-pink)', color: '#FFF' }}>
+                Jelajahi Event Kampus
+              </a>
+              <a href="finances.html" className="btn" style={{ background: 'var(--mem-cyan)' }}>
+                Buka Budget & SPJ
+              </a>
+            </div>
+          </section>
+
+          {/* Daftar Event Unggulan */}
+          <main className="container">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem' }}>Event Kampus Terpopuler</h2>
+              <a href="events.html" style={{ fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--mem-dark)' }}>
+                Lihat Semua →
+              </a>
+            </div>
+
+            <div className="grid-3">
+              {events.map((ev) => (
+                <div key={ev.id} className="card">
+                  <div
+                    style={{
+                      background: ev.color,
+                      borderBottom: 'var(--border)',
+                      padding: '0.75rem 1.25rem',
+                      fontFamily: 'var(--font-display)',
+                      fontWeight: 800,
+                      fontSize: '0.85rem',
+                    }}
+                  >
+                    {ev.org} • {ev.date}
+                  </div>
+                  <div className="card-body">
+                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', marginBottom: '0.5rem' }}>
+                      {ev.title}
+                    </h3>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--mem-gray-500)', marginBottom: '1rem' }}>
+                      📍 {ev.venue}
+                    </p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <strong style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem' }}>{ev.price}</strong>
+                      <a
+                        href="events.html"
+                        className="btn"
+                        style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', background: 'var(--mem-yellow)' }}
+                      >
+                        Detail Acara
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </main>
+
+          <footer className="footer">
+            &copy; 2026 Convena — Platform Manajemen Event & Organisasi Mahasiswa
+          </footer>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<HomePage />);
+  </script>
+</body>
+
 </html>

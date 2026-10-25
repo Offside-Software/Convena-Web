@@ -1,7 +1,0 @@
-export * from './api.ts'
-export * from './user.ts'
-export * from './organization.ts'
-export * from './event.ts'
-export * from './sponsorship.ts'
-export * from './finance.ts'
-export * from './certificate.ts'

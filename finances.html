@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keuangan & SPJ — Convena</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Space+Grotesk:wght@700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    :root {
+      --mem-yellow: #FFE600;
+      --mem-pink: #FF4B91;
+      --mem-cyan: #01CDFE;
+      --mem-mint: #00F5D4;
+      --mem-bg: #FAF9F6;
+      --mem-dark: #121215;
+      --border: 3px solid #121215;
+      --border-sm: 2px solid #121215;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--mem-bg);
+      color: var(--mem-dark);
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: #FFFFFF;
+      border-bottom: var(--border);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.4rem;
+      text-decoration: none;
+      color: var(--mem-dark);
+    }
+
+    .nav-links a {
+      font-family: var(--font-display);
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--mem-dark);
+      margin-left: 1rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+    }
+
+    .nav-links a.active {
+      background: var(--mem-yellow);
+      border: var(--border-sm);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .box {
+      background: #FFFFFF;
+      border: var(--border);
+      box-shadow: 5px 5px 0px var(--mem-dark);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.75rem;
+      align-items: end;
+    }
+
+    label {
+      display: block;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-bottom: 0.3rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border: var(--border-sm);
+      border-radius: 6px;
+      font-family: var(--font-body);
+    }
+
+    .btn {
+      font-family: var(--font-display);
+      font-weight: 700;
+      padding: 0.6rem 1rem;
+      border: var(--border-sm);
+      border-radius: 6px;
+      box-shadow: 2px 2px 0px var(--mem-dark);
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 0.75rem 0.5rem;
+      border-bottom: 1px solid #E5E7EB;
+    }
+
+    th {
+      border-bottom: var(--border-sm);
+      font-family: var(--font-display);
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.72rem;
+      padding: 0.2rem 0.6rem;
+      border: 1.5px solid var(--mem-dark);
+      border-radius: 999px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function FinancesPage() {
+      const totalBudget = 50000000; // Total Pagu Anggaran Rp 50.000.000
+
+      const [expenses, setExpenses] = useState([
+        { id: 1, title: 'DP Sewa Aula Kampus', division: 'Logistik', amount: 15000000, verified: true },
+        { id: 2, title: 'Cetak Spanduk & ID Card', division: 'Pubdok', amount: 3500000, verified: false },
+      ]);
+
+      const [title, setTitle] = useState('');
+      const [division, setDivision] = useState('');
+      const [amount, setAmount] = useState('');
+
+      const totalSpent = expenses.reduce((sum, item) => sum + item.amount, 0);
+      const remainingBudget = totalBudget - totalSpent;
+
+      const handleAddExpense = (e) => {
+        e.preventDefault();
+        if (!title || !division || !amount) return;
+
+        const newItem = {
+          id: Date.now(),
+          title: title,
+          division: division,
+          amount: Number(amount),
+          verified: false,
+        };
+
+        setExpenses([newItem, ...expenses]);
+        setTitle('');
+        setDivision('');
+        setAmount('');
+      };
+
+      const handleToggleVerify = (id) => {
+        setExpenses(
+          expenses.map((item) =>
+            item.id === id ? { ...item, verified: !item.verified } : item
+          )
+        );
+      };
+
+      return (
+        <>
+          <header className="navbar">
+            <a href="index.html" className="brand">CONVENA</a>
+            <nav className="nav-links">
+              <a href="index.html">Home</a>
+              <a href="events.html">Events</a>
+              <a href="dashboard.html">Dashboard</a>
+              <a href="sponsorship.html">Sponsorship</a>
+              <a href="finances.html" className="active">Budget & SPJ</a>
+              <a href="verify.html">Verify</a>
+              <a href="login.html">Login</a>
+            </nav>
+          </header>
+
+          <main className="container">
+            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', marginBottom: '0.25rem' }}>
+              Budget & SPJ Tracking
+            </h1>
+            <p style={{ color: '#6B7280', marginBottom: '1.5rem' }}>
+              Pencatatan pengeluaran anggaran kegiatan dan verifikasi kuitansi SPJ.
+            </p>
+
+            <div className="summary-grid">
+              <div className="box" style={{ marginBottom: 0 }}>
+                <small>TOTAL ANGGARAN</small>
+                <h2 style={{ fontFamily: 'var(--font-display)' }}>
+                  Rp {totalBudget.toLocaleString('id-ID')}
+                </h2>
+              </div>
+
+              <div className="box" style={{ marginBottom: 0, background: '#FF94BE' }}>
+                <small>TOTAL PENGELUARAN</small>
+                <h2 style={{ fontFamily: 'var(--font-display)' }}>
+                  Rp {totalSpent.toLocaleString('id-ID')}
+                </h2>
+              </div>
+
+              <div className="box" style={{ marginBottom: 0, background: 'var(--mem-yellow)' }}>
+                <small>SISA ANGGARAN</small>
+                <h2 style={{ fontFamily: 'var(--font-display)' }}>
+                  Rp {remainingBudget.toLocaleString('id-ID')}
+                </h2>
+              </div>
+            </div>
+
+            <div className="box">
+              <h3 style={{ fontFamily: 'var(--font-display)', marginBottom: '1rem' }}>
+                Catat Pengeluaran Baru
+              </h3>
+              <form className="form-grid" onSubmit={handleAddExpense}>
+                <div>
+                  <label>Nama Pengeluaran</label>
+                  <input
+                    type="text"
+                    placeholder="Contoh: Konsumsi Rapat"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label>Divisi</label>
+                  <input
+                    type="text"
+                    placeholder="Contoh: Konsumsi"
+                    value={division}
+                    onChange={(e) => setDivision(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label>Nominal (Rp)</label>
+                  <input
+                    type="number"
+                    placeholder="Contoh: 500000"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="btn"
+                  style={{ background: 'var(--mem-pink)', color: '#FFF' }}
+                >
+                  + Tambah
+                </button>
+              </form>
+            </div>
+
+            <div className="box">
+              <h3 style={{ fontFamily: 'var(--font-display)', marginBottom: '1rem' }}>
+                Daftar Pengeluaran & Status SPJ
+              </h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nama Pengeluaran</th>
+                    <th>Divisi</th>
+                    <th>Nominal</th>
+                    <th>Status SPJ</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {expenses.map((item) => (
+                    <tr key={item.id}>
+                      <td><strong>{item.title}</strong></td>
+                      <td>{item.division}</td>
+                      <td>Rp {item.amount.toLocaleString('id-ID')}</td>
+                      <td>
+                        <span
+                          className="badge"
+                          style={{
+                            background: item.verified ? 'var(--mem-mint)' : 'var(--mem-yellow)',
+                          }}
+                        >
+                          {item.verified ? 'Terverifikasi' : 'Menunggu SPJ'}
+                        </span>
+                      </td>
+                      <td>
+                        <button
+                          type="button"
+                          className="btn"
+                          style={{
+                            padding: '0.3rem 0.65rem',
+                            fontSize: '0.8rem',
+                            background: item.verified ? '#FFF' : 'var(--mem-cyan)',
+                          }}
+                          onClick={() => handleToggleVerify(item.id)}
+                        >
+                          {item.verified ? 'Batalkan' : 'Verifikasi SPJ'}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </main>
+        </>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<FinancesPage />);
+  </script>
+</body>
+
+</html>

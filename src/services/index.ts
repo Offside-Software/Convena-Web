@@ -1,7 +1,0 @@
-export * from './api/client.ts'
-export * from './events.service.ts'
-export * from './organization.service.ts'
-export * from './sponsorship.service.ts'
-export * from './finance.service.ts'
-export * from './certificate.service.ts'
-export * from './auth.service.ts'

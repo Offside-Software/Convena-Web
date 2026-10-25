@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Convena Student Org Platform</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    :root {
+      --mem-yellow: #FFE600;
+      --mem-yellow-light: #FFF585;
+      --mem-pink: #FF4B91;
+      --mem-pink-light: #FF94BE;
+      --mem-cyan: #01CDFE;
+      --mem-mint: #00F5D4;
+      --mem-bg: #FAF9F6;
+      --mem-surface: #FFFFFF;
+      --mem-dark: #121215;
+      --mem-gray-500: #6B7280;
+      --mem-border: 3px solid #121215;
+      --mem-border-sm: 2px solid #121215;
+      --mem-border-thick: 4px solid #121215;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--mem-bg);
+      background-image: radial-gradient(var(--mem-yellow) 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+      color: var(--mem-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      background: #FFFFFF;
+      border-bottom: var(--mem-border-thick);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+      color: var(--mem-dark);
+    }
+
+    .brand-box {
+      width: 38px;
+      height: 38px;
+      background: var(--mem-pink);
+      border: var(--mem-border);
+      border-radius: 8px;
+      box-shadow: 3px 3px 0px var(--mem-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1.25rem;
+      color: #FFFFFF;
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1.45rem;
+      letter-spacing: -0.03em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .nav-link {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: var(--mem-dark);
+      text-decoration: none;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      border: 2px solid transparent;
+    }
+
+    .nav-link:hover {
+      background: var(--mem-yellow);
+      border-color: var(--mem-dark);
+    }
+
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1rem;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .memphis-badge {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      padding: 0.25rem 0.7rem;
+      background: var(--mem-yellow);
+      border: var(--mem-border-sm);
+      box-shadow: 2px 2px 0px var(--mem-dark);
+      border-radius: 999px;
+      transform: rotate(-2deg);
+      margin-bottom: 0.6rem;
+    }
+
+    .memphis-card {
+      background: var(--mem-surface);
+      border: var(--mem-border);
+      box-shadow: 6px 6px 0px var(--mem-dark);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background: var(--mem-yellow);
+      border-bottom: var(--mem-border);
+      padding: 0.75rem 1.25rem;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+    }
+
+    .card-body {
+      padding: 1.5rem 1.25rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      display: block;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.875rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      padding: 0.65rem 0.85rem;
+      border: var(--mem-border-sm);
+      border-radius: 6px;
+      box-shadow: 2px 2px 0px var(--mem-dark);
+      background: #FFFFFF;
+      color: var(--mem-dark);
+      outline: none;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      border-color: var(--mem-pink);
+      box-shadow: 3px 3px 0px var(--mem-dark);
+    }
+
+    .memphis-btn {
+      width: 100%;
+      padding: 0.8rem 1.25rem;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1rem;
+      background: var(--mem-pink);
+      color: #FFFFFF;
+      border: var(--mem-border);
+      border-radius: 6px;
+      box-shadow: 3px 3px 0px var(--mem-dark);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-top: 0.5rem;
+    }
+
+    .memphis-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0px var(--mem-dark);
+    }
+
+    .alert-box {
+      padding: 0.75rem;
+      border: var(--mem-border-sm);
+      border-radius: 6px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      background: var(--mem-mint);
+    }
+
+    .footer {
+      background: #FFFFFF;
+      border-top: var(--mem-border-thick);
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--mem-gray-500);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function LoginPage() {
+      const [email, setEmail] = useState('raissa@student.telkomuniversity.ac.id');
+      const [password, setPassword] = useState('password123');
+      const [role, setRole] = useState('treasurer');
+      const [statusMsg, setStatusMsg] = useState('');
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!email || !password) return;
+
+        const userSession = {
+          id: 'usr-raissa',
+          name: email.split('@')[0].toUpperCase(),
+          email: email,
+          role: role,
+        };
+        localStorage.setItem('convena_auth_token', 'mock_token_' + Date.now());
+        localStorage.setItem('convena_auth_user', JSON.stringify(userSession));
+
+        setStatusMsg('Login berhasil! Mengalihkan ke halaman Budget & SPJ...');
+
+        setTimeout(() => {
+          window.location.href = 'finances.html';
+        }, 700);
+      };
+
+      return (
+        <>
+          <header className="navbar">
+            <a href="index.html" className="brand">
+              <div className="brand-box">C</div>
+              <span className="brand-title">CONVENA</span>
+            </a>
+            <nav className="nav-links">
+              <a href="index.html" className="nav-link">Home</a>
+              <a href="events.html" className="nav-link">Events</a>
+              <a href="dashboard.html" className="nav-link">Dashboard</a>
+              <a href="sponsorship.html" className="nav-link">Sponsorship</a>
+              <a href="finances.html" className="nav-link">Budget & SPJ</a>
+              <a href="verify.html" className="nav-link">Verify</a>
+              <a href="register.html" className="nav-link">Register</a>
+            </nav>
+          </header>
+
+          <main className="main-wrapper">
+            <div className="login-container">
+              <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                <span className="memphis-badge">PORTAL ORMAWA CONVENA</span>
+                <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2.1rem', fontWeight: 800 }}>
+                  Masuk Akun
+                </h1>
+                <p style={{ color: 'var(--mem-gray-500)', fontSize: '0.9rem', marginTop: '4px' }}>
+                  Kelola kegiatan, anggaran RAB, dan laporan SPJ organisasi Anda.
+                </p>
+              </div>
+
+              <div className="memphis-card">
+                <div className="card-header">Autentikasi Pengurus & Mahasiswa</div>
+                <div className="card-body">
+                  {statusMsg && <div className="alert-box">✅ {statusMsg}</div>}
+
+                  <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                      <label className="form-label">Email Mahasiswa / Pengurus</label>
+                      <input
+                        type="email"
+                        className="form-input"
+                        placeholder="raissa@student.telkomuniversity.ac.id"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Kata Sandi</label>
+                      <input
+                        type="password"
+                        className="form-input"
+                        placeholder="Masukkan kata sandi"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Masuk Sebagai Peran (Role)</label>
+                      <select
+                        className="form-select"
+                        value={role}
+                        onChange={(e) => setRole(e.target.value)}
+                      >
+                        <option value="treasurer">Bendahara / Keuangan (SPJ)</option>
+                        <option value="admin">Admin Organisasi</option>
+                        <option value="committee">Panitia Acara</option>
+                        <option value="attendee">Peserta / Mahasiswa</option>
+                      </select>
+                    </div>
+
+                    <button type="submit" className="memphis-btn">
+                      Masuk ke Convena
+                    </button>
+                  </form>
+
+                  <div
+                    style={{
+                      marginTop: '1.25rem',
+                      paddingTop: '1rem',
+                      borderTop: '2px dashed #E5E7EB',
+                      textAlign: 'center',
+                      fontSize: '0.88rem',
+                    }}
+                  >
+                    Belum punya akun?{' '}
+                    <a
+                      href="register.html"
+                      style={{
+                        fontFamily: 'var(--font-display)',
+                        fontWeight: 800,
+                        color: 'var(--mem-pink)',
+                        textDecoration: 'underline',
+                      }}
+                    >
+                      Daftar di sini →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <footer className="footer">
+            &copy; 2026 Convena — Platform Manajemen Event & Organisasi Mahasiswa
+          </footer>
+        </>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<LoginPage />);
+  </script>
+</body>
+
+</html>
