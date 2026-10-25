@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import { Sparkles, Check, Bot } from 'lucide-react'
+import { Bot, Check, Handshake, Search, Sparkles, Target, Users, Wallet } from 'lucide-react'
 import { Badge } from '../../components/common/Badge.tsx'
 import { Button } from '../../components/common/Button.tsx'
+import { Card } from '../../components/common/Card.tsx'
 import { Modal } from '../../components/common/Modal.tsx'
 import { Input } from '../../components/common/Input.tsx'
+import { ProgressBar } from '../../components/common/ProgressBar.tsx'
 import { Select } from '../../components/common/Select.tsx'
+import { StatCard } from '../../components/domain/StatCard.tsx'
+import { MemphisShape } from '../../components/shapes/MemphisShape.tsx'
 import { sponsorshipService } from '../../services/sponsorship.service.ts'
 import type { SponsorLead, SponsorPackage, PipelineStage } from '../../types/sponsorship.ts'
+
+const formatCurrency = (value: number) => `Rp ${value.toLocaleString('id-ID')}`
 
 export const SponsorshipPage: React.FC = () => {
   const [packages, setPackages] = useState<SponsorPackage[]>([])
   const [leads, setLeads] = useState<SponsorLead[]>([])
+  const [searchQuery, setSearchQuery] = useState('')
 
   // AI Modal
   const [isAiModalOpen, setIsAiModalOpen] = useState(false)
@@ -67,20 +74,41 @@ export const SponsorshipPage: React.FC = () => {
 
   const stages: { stage: PipelineStage; title: string; colorClass: string }[] = [
     { stage: 'prospect', title: 'Target Prospek', colorClass: 'bg-gray-200' },
+    { stage: 'contacted', title: 'Sudah Dihubungi', colorClass: 'bg-[#BD93F9]' },
     { stage: 'proposal_sent', title: 'Proposal Terkirim', colorClass: 'bg-[#70E7FF]' },
     { stage: 'negotiating', title: 'Negosiasi MOU', colorClass: 'bg-[#FFF585]' },
     { stage: 'committed', title: 'Komitmen Deal', colorClass: 'bg-[#FF94BE]' },
     { stage: 'paid', title: 'Lunas / Transfer', colorClass: 'bg-[#00F5D4]' },
+    { stage: 'rejected', title: 'Tidak Dilanjutkan', colorClass: 'bg-[#FF6F59]' },
   ]
 
-  const totalCommitted = leads
-    .filter((l) => l.stage === 'committed' || l.stage === 'paid')
-    .reduce((sum, l) => sum + l.value, 0)
+  const activeLeads = leads.filter((lead) => lead.stage !== 'rejected')
+  const closedLeads = leads.filter((lead) => lead.stage === 'committed' || lead.stage === 'paid')
+  const totalCommitted = closedLeads.reduce((sum, lead) => sum + lead.value, 0)
+  const totalPipeline = activeLeads.reduce((sum, lead) => sum + lead.value, 0)
+  const totalSlots = packages.reduce((sum, pkg) => sum + pkg.slotLimit, 0)
+  const filledSlots = packages.reduce((sum, pkg) => sum + pkg.slotsFilled, 0)
+  const conversionRate = leads.length ? Math.round((closedLeads.length / leads.length) * 100) : 0
+  const visibleLeads = leads.filter((lead) => {
+    const query = searchQuery.trim().toLowerCase()
+    return (
+      !query ||
+      lead.companyName.toLowerCase().includes(query) ||
+      lead.contactPerson.toLowerCase().includes(query) ||
+      lead.email.toLowerCase().includes(query)
+    )
+  })
+  const committedByPackage = packages.map((pkg) => ({
+    ...pkg,
+    committedValue: closedLeads
+      .filter((lead) => lead.packageInterest === pkg.name)
+      .reduce((sum, lead) => sum + lead.value, 0),
+  }))
 
   return (
-    <div>
+    <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
+      <div className="relative flex items-start justify-between flex-wrap gap-4">
         <div>
           <div className="mb-1.5">
             <Badge variant="pink" tilt="left">
@@ -91,123 +119,251 @@ export const SponsorshipPage: React.FC = () => {
             Sponsorship CRM
           </h1>
           <p className="text-gray-500 text-sm sm:text-base mt-1">
-            Kelola tahapan penawaran sponsor, kuota paket, dan buat draf penawaran proposal resmi dengan bantuan AI.
+            Kelola relasi sponsor, pantau performa pipeline, dan siapkan proposal resmi dengan bantuan AI.
           </p>
         </div>
 
-        <Button
-          variant="pink"
-          size="md"
-          icon={<Bot size={18} />}
-          onClick={() => {
-            setIsAiModalOpen(true)
-            setAiCompany('PT Shopee International')
-            setAiContact('Bpk. Andi Wijaya')
-          }}
-        >
-          Asisten Proposal AI
-        </Button>
-      </div>
-
-      {/* Package slots summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
-        {packages.map((pkg) => (
-          <div
-            key={pkg.id}
-            className="p-5 bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] relative overflow-hidden flex flex-col"
+        <div className="flex items-center gap-4">
+          <MemphisShape type="starburst" size={40} color="#FFE600" animate="slow" className="hidden lg:inline-block" />
+          <Button
+            variant="pink"
+            size="md"
+            icon={<Bot size={18} />}
+            onClick={() => {
+              setIsAiModalOpen(true)
+              setAiCompany('PT Shopee International')
+              setAiContact('Bpk. Andi Wijaya')
+            }}
           >
-            <div
-              className={`absolute top-0 left-0 w-full h-1.5 ${
-                pkg.color === '#FFE600'
-                  ? 'bg-[#FFE600]'
-                  : pkg.color === '#01CDFE'
-                    ? 'bg-[#01CDFE]'
-                    : pkg.color === '#FF4B91'
-                      ? 'bg-[#FF4B91]'
-                      : 'bg-[#FFE600]'
-              }`}
-            />
-            <div className="grid grid-cols-3 justify-between items-center mb-2">
-              <h3 className="col-span-2 text-lg font-['Space_Grotesk',sans-serif] font-black text-[#121215] m-0">{pkg.name}</h3>
-              <Badge variant="dark" className="col-span-1 text-[10px]">
-                {pkg.slotsFilled} / {pkg.slotLimit} Terisi
-              </Badge>
-            </div>
-            <div className="font-['Space_Grotesk',sans-serif] font-black text-2xl text-[#121215] mb-3">
-              Rp {pkg.price.toLocaleString('id-ID')}
-            </div>
-            <ul className="pl-5 m-0 text-xs text-gray-600 space-y-1">
-              {pkg.deliverables.slice(0, 3).map((d, i) => (
-                <li key={i}>{d}</li>
-              ))}
-            </ul>
-          </div>
-        ))}
+            Asisten Proposal AI
+          </Button>
+        </div>
       </div>
 
-      {/* Pipeline Kanban Columns */}
-      <h2 className="text-xl sm:text-2xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] mb-4 flex items-center gap-2 flex-wrap">
-        <Sparkles size={20} className="text-[#FF4B91]" /> Tahapan Pipeline Sponsorship
-        <span className="text-sm text-gray-500 font-semibold">
-          (Total Masuk: Rp {totalCommitted.toLocaleString('id-ID')})
-        </span>
-      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+        <StatCard
+          title="Total Calon Sponsor"
+          value={leads.length}
+          icon={<Users size={20} />}
+          accentColor="yellow"
+          subtitle="Semua lead terdaftar"
+        />
+        <StatCard
+          title="Nilai Pipeline Aktif"
+          value={formatCurrency(totalPipeline)}
+          icon={<Target size={20} />}
+          accentColor="cyan"
+          subtitle={`${activeLeads.length} lead masih berjalan`}
+        />
+        <StatCard
+          title="Sponsor Terkonfirmasi"
+          value={formatCurrency(totalCommitted)}
+          icon={<Wallet size={20} />}
+          accentColor="pink"
+          subtitle={`${closedLeads.length} deal komitmen / lunas`}
+        />
+        <StatCard
+          title="Konversi Deal"
+          value={`${conversionRate}%`}
+          icon={<Handshake size={20} />}
+          accentColor="mint"
+          subtitle={`${filledSlots} dari ${totalSlots} kuota paket terisi`}
+        />
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
-        {stages.map((stg) => {
-          const stageLeads = leads.filter((l) => l.stage === stg.stage)
-          return (
-            <div
-              key={stg.stage}
-              className="bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] p-3.5 flex flex-col gap-3 min-h-[380px]"
-            >
-              {/* Column Header */}
-              <div
-                className={`p-2 border-2 border-[#121215] rounded-lg flex justify-between items-center font-extrabold text-xs ${stg.colorClass} text-[#121215]`}
-              >
-                <span>{stg.title}</span>
-                <span className="font-mono">{stageLeads.length}</span>
-              </div>
+      {/* Sponsor Analytics */}
+      <section aria-labelledby="sponsor-analytics-title">
+        <div className="flex items-center gap-3 mb-4">
+          <MemphisShape type="zigzag" size={40} color="#FF4B91" />
+          <div>
+            <Badge variant="cyan" tilt="left">ANALITIK SPONSOR</Badge>
+            <h2 id="sponsor-analytics-title" className="text-xl sm:text-2xl font-black mt-2 mb-0">
+              Performa Kemitraan
+            </h2>
+          </div>
+        </div>
 
-              {/* Lead Cards */}
-              {stageLeads.map((lead) => (
-                <div
-                  key={lead.id}
-                  className="p-3.5 border-2 border-[#121215] rounded-lg bg-[#FAF9F6] shadow-[2px_2px_0px_0px_#121215]"
-                >
-                  <div className="font-black text-sm text-[#121215] mb-1">
-                    {lead.companyName}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+          <Card headerColor="yellow" headerTitle="Distribusi Pipeline">
+            <div className="space-y-4">
+              {stages.map((stage) => {
+                const stageLeads = leads.filter((lead) => lead.stage === stage.stage)
+                const stageValue = stageLeads.reduce((sum, lead) => sum + lead.value, 0)
+                const share = leads.length ? (stageLeads.length / leads.length) * 100 : 0
+
+                return (
+                  <div key={stage.stage}>
+                    <div className="flex justify-between items-baseline gap-3 mb-1">
+                      <span className="text-xs font-bold text-[#121215]">{stage.title}</span>
+                      <span className="text-xs text-gray-500 text-right">
+                        {stageLeads.length} lead · {formatCurrency(stageValue)}
+                      </span>
+                    </div>
+                    <div
+                      className="h-3 w-full rounded-full border-2 border-[#121215] bg-[#FAF9F6] overflow-hidden shadow-[2px_2px_0px_0px_#121215]"
+                      role="progressbar"
+                      aria-label={`Proporsi ${stage.title}`}
+                      aria-valuenow={Math.round(share)}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                    >
+                      <div className={`h-full ${stage.colorClass}`} style={{ width: `${share}%` }} />
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-500 mb-2">
-                    {lead.contactPerson}
+                )
+              })}
+            </div>
+          </Card>
+
+          <Card headerColor="pink" headerTitle="Kinerja Paket Sponsor">
+            <div className="space-y-5">
+              {committedByPackage.map((pkg) => (
+                <div key={pkg.id}>
+                  <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+                    <span className="text-sm font-black text-[#121215]">{pkg.name}</span>
+                    <span className="text-xs text-gray-500">
+                      {pkg.slotsFilled}/{pkg.slotLimit} slot · {formatCurrency(pkg.committedValue)}
+                    </span>
                   </div>
-
-                  <div className="font-['Space_Grotesk',sans-serif] font-black text-sm text-[#121215] mb-2">
-                    Rp {lead.value.toLocaleString('id-ID')}
-                  </div>
-
-                  <p className="text-xs text-gray-600 m-0 mb-3 leading-relaxed">
-                    {lead.notes}
-                  </p>
-
-                  {/* Stage mover selector */}
-                  <select
-                    value={lead.stage}
-                    onChange={(e) => handleStageChange(lead.id, e.target.value as PipelineStage)}
-                    className="w-full text-xs py-1 px-2 rounded-md border border-[#121215] bg-white cursor-pointer font-semibold shadow-xs"
-                  >
-                    <option value="prospect">Pindah: Prospek</option>
-                    <option value="proposal_sent">Pindah: Proposal Sent</option>
-                    <option value="negotiating">Pindah: Negosiasi</option>
-                    <option value="committed">Pindah: Komitmen</option>
-                    <option value="paid">Pindah: Lunas</option>
-                  </select>
+                  <ProgressBar
+                    value={pkg.slotsFilled}
+                    max={pkg.slotLimit}
+                    color={pkg.color === '#01CDFE' ? 'cyan' : pkg.color === '#FF4B91' ? 'pink' : pkg.color === '#00F5D4' ? 'mint' : 'yellow'}
+                    showPercentage={false}
+                    height={14}
+                    className="mb-0"
+                  />
                 </div>
               ))}
+              {packages.length === 0 && (
+                <p className="text-sm text-gray-500 text-center py-4">Belum ada data paket sponsor.</p>
+              )}
             </div>
-          )
-        })}
-      </div>
+          </Card>
+        </div>
+      </section>
+
+      {/* Package details */}
+      <section aria-labelledby="package-slots-title">
+        <div className="flex items-center gap-3 mb-4">
+          <MemphisShape type="circle-dots" size={34} color="#01CDFE" />
+          <h2 id="package-slots-title" className="text-xl sm:text-2xl font-black m-0">Paket & Kuota Sponsor</h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+          {packages.map((pkg) => (
+            <Card key={pkg.id} hoverable={false} className="relative">
+              <div className="absolute top-0 left-0 w-full h-1.5" style={{ backgroundColor: pkg.color }} />
+              <div className="flex justify-between items-start gap-2 mb-2">
+                <h3 className="text-base font-black m-0">{pkg.name}</h3>
+                <Badge variant="dark" className="text-[10px] shrink-0">
+                  {pkg.slotsFilled}/{pkg.slotLimit}
+                </Badge>
+              </div>
+              <div className="font-['Space_Grotesk',sans-serif] font-black text-xl text-[#121215] mb-2">
+                {formatCurrency(pkg.price)}
+              </div>
+              <ProgressBar
+                value={pkg.slotsFilled}
+                max={pkg.slotLimit}
+                color={pkg.color === '#01CDFE' ? 'cyan' : pkg.color === '#FF4B91' ? 'pink' : pkg.color === '#00F5D4' ? 'mint' : 'yellow'}
+                label="Kuota terisi"
+                height={14}
+              />
+              <ul className="pl-5 mt-3 mb-0 text-xs text-gray-600 space-y-1">
+                {pkg.deliverables.slice(0, 3).map((deliverable) => (
+                  <li key={deliverable}>{deliverable}</li>
+                ))}
+              </ul>
+            </Card>
+          ))}
+          {packages.length === 0 && (
+            <div className="sm:col-span-2 xl:col-span-4 rounded-xl border-2 border-dashed border-gray-300 p-8 text-center text-sm text-gray-500">
+              Belum ada paket sponsor.
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Sponsorship CRM pipeline */}
+      <section aria-labelledby="sponsor-pipeline-title">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-4">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <MemphisShape type="starburst" size={30} color="#FF4B91" animate="pulse" />
+              <Badge variant="pink" tilt="right">CRM PIPELINE</Badge>
+            </div>
+            <h2 id="sponsor-pipeline-title" className="text-xl sm:text-2xl font-black m-0">
+              Tahapan Pipeline Sponsorship
+            </h2>
+            <p className="text-sm text-gray-500 mt-1 mb-0">
+              Nilai komitmen deal: <strong className="text-[#121215]">{formatCurrency(totalCommitted)}</strong>
+            </p>
+          </div>
+          <label className="flex items-center gap-2.5 px-3 py-2 border-2 border-[#121215] rounded-lg bg-white shadow-[2px_2px_0px_0px_#121215] sm:w-72">
+            <Search size={16} className="text-gray-500 shrink-0" />
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Cari perusahaan atau kontak..."
+              aria-label="Cari perusahaan atau kontak sponsor"
+              className="!border-none !shadow-none !p-0 !m-0 !bg-transparent text-sm focus:!outline-none focus:!ring-0"
+            />
+          </label>
+        </div>
+
+        {visibleLeads.length === 0 && (
+          <div className="mb-4 rounded-xl border-2 border-dashed border-gray-300 p-6 text-center text-sm text-gray-500">
+            {leads.length ? 'Tidak ada sponsor yang cocok dengan pencarian.' : 'Belum ada lead sponsor.'}
+          </div>
+        )}
+
+        <div className="flex gap-4 overflow-x-auto items-start pb-3">
+          {stages.map((stage) => {
+            const stageLeads = visibleLeads.filter((lead) => lead.stage === stage.stage)
+            return (
+              <div
+                key={stage.stage}
+                className="bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] p-3.5 flex flex-col gap-3 min-h-[300px] w-[250px] shrink-0"
+              >
+                <div className={`p-2 border-2 border-[#121215] rounded-lg flex justify-between items-center font-extrabold text-xs ${stage.colorClass} text-[#121215]`}>
+                  <span>{stage.title}</span>
+                  <span className="font-mono">{stageLeads.length}</span>
+                </div>
+
+                {stageLeads.map((lead) => (
+                  <div
+                    key={lead.id}
+                    className="p-3.5 border-2 border-[#121215] rounded-lg bg-[#FAF9F6] shadow-[2px_2px_0px_0px_#121215]"
+                  >
+                    <div className="font-black text-sm text-[#121215] mb-1">{lead.companyName}</div>
+                    <div className="text-xs text-gray-500 mb-2">{lead.contactPerson}</div>
+                    <div className="font-['Space_Grotesk',sans-serif] font-black text-sm text-[#121215] mb-2">
+                      {formatCurrency(lead.value)}
+                    </div>
+                    {lead.notes && (
+                      <p className="text-xs text-gray-600 m-0 mb-3 leading-relaxed">{lead.notes}</p>
+                    )}
+                    <select
+                      value={lead.stage}
+                      onChange={(event) => handleStageChange(lead.id, event.target.value as PipelineStage)}
+                      aria-label={`Ubah tahap ${lead.companyName}`}
+                      className="w-full text-xs py-1 px-2 rounded-md border border-[#121215] bg-white cursor-pointer font-semibold shadow-xs"
+                    >
+                      {stages.map((option) => (
+                        <option key={option.stage} value={option.stage}>Pindah: {option.title}</option>
+                      ))}
+                    </select>
+                  </div>
+                ))}
+                {stageLeads.length === 0 && (
+                  <p className="text-xs text-gray-400 text-center mt-8">Belum ada lead di tahap ini.</p>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </section>
 
       {/* AI Proposal Assistant Modal */}
       <Modal
