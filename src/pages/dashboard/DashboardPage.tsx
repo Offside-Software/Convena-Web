@@ -8,6 +8,10 @@ import {
   Plus,
   ArrowUpRight,
   FileCheck,
+  Lock,
+  LogIn,
+  UserPlus,
+  ShieldAlert,
   CalendarCheck
 } from 'lucide-react'
 import { StatCard } from '../../components/domain/StatCard.tsx'
@@ -20,14 +24,14 @@ import { authService } from '../../services/auth.service.ts'
 import { eventsService } from '../../services/events.service.ts'
 import { financeService } from '../../services/finance.service.ts'
 import { sponsorshipService } from '../../services/sponsorship.service.ts'
-import { mockCurrentUser } from '../../data/mockData.ts'
 import type { Event } from '../../types/event.ts'
 import type { User } from '../../types/user.ts'
 import type { EventBudgetSummary } from '../../types/finance.ts'
 import type { SponsorLead } from '../../types/sponsorship.ts'
 
 export const DashboardPage: React.FC = () => {
-  const [currentUser, setCurrentUser] = useState<User>(mockCurrentUser)
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [authLoading, setAuthLoading] = useState(true)
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [events, setEvents] = useState<Event[]>([])
   const [budget, setBudget] = useState<EventBudgetSummary | null>(null)
@@ -38,28 +42,31 @@ export const DashboardPage: React.FC = () => {
 
     authService.getCurrentUser().then((user) => {
       if (!isMounted) return
-      if (user) {
-        setCurrentUser(user)
-      }
-    })
+      setCurrentUser(user)
+      setAuthLoading(false)
 
-    eventsService.getMyEvents().then((myEvents) => {
-      if (!isMounted) return
-      if (myEvents.length > 0) {
-        setEvents(myEvents)
-      } else {
-        eventsService.getEvents().then((allEvts) => {
-          if (isMounted) setEvents(allEvts.slice(0, 3))
+      if (user) {
+        // Fetch user's real events from database
+        eventsService.getMyEvents().then((myEvents) => {
+          if (!isMounted) return
+          if (myEvents.length > 0) {
+            setEvents(myEvents)
+          } else {
+            // Fallback to public events if user hasn't created one yet
+            eventsService.getEvents().then((allEvts) => {
+              if (isMounted) setEvents(allEvts.slice(0, 3))
+            })
+          }
+        })
+
+        financeService.getBudgetSummary('evt-arkavidia-2026').then((b) => {
+          if (isMounted) setBudget(b)
+        })
+
+        sponsorshipService.getLeads().then((l) => {
+          if (isMounted) setLeads(l)
         })
       }
-    })
-
-    financeService.getBudgetSummary('evt-arkavidia-2026').then((b) => {
-      if (isMounted) setBudget(b)
-    })
-
-    sponsorshipService.getLeads().then((l) => {
-      if (isMounted) setLeads(l)
     })
 
     return () => {
@@ -71,6 +78,65 @@ export const DashboardPage: React.FC = () => {
     setEvents((prev) => [newEvent, ...prev])
   }
 
+  // 1. Loading State
+  if (authLoading) {
+    return (
+      <div className="py-24 text-center">
+        <div className="w-12 h-12 border-4 border-[#121215] border-t-[#FFE600] rounded-full animate-spin mx-auto mb-4" />
+        <p className="font-['Space_Grotesk',sans-serif] font-bold text-sm text-[#121215]">
+          Memeriksa sesi pengguna...
+        </p>
+      </div>
+    )
+  }
+
+  // 2. Unauthenticated State: Hide entire dashboard and event creation
+  if (!currentUser) {
+    return (
+      <div className="py-12 px-4 max-w-xl mx-auto text-center">
+        <div className="bg-white border-4 border-[#121215] rounded-2xl shadow-[8px_8px_0px_0px_#121215] p-8 md:p-10 relative overflow-hidden">
+          <div className="inline-flex mb-4">
+            <Badge variant="pink" tilt="left" icon={<ShieldAlert size={14} />}>
+              AKSES TERBATAS
+            </Badge>
+          </div>
+
+          <div className="w-16 h-16 bg-[#FFE600] border-3 border-[#121215] rounded-2xl shadow-[4px_4px_0px_0px_#121215] flex items-center justify-center mx-auto mb-5">
+            <Lock size={32} className="text-[#121215]" />
+          </div>
+
+          <h2 className="text-2xl sm:text-3xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] mb-3">
+            Masuk untuk Mengakses Dashboard
+          </h2>
+
+          <p className="text-sm sm:text-base text-gray-600 mb-8 leading-relaxed">
+            Dashboard panitia, pembukuan anggaran SPJ, dan pembuatan event baru hanya dapat diakses setelah Anda masuk ke akun Convena.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-3.5 justify-center">
+            <Link to="/login" className="no-underline">
+              <Button variant="yellow" size="lg" icon={<LogIn size={18} />}>
+                Masuk ke Akun
+              </Button>
+            </Link>
+            <Link to="/register" className="no-underline">
+              <Button variant="cyan" size="lg" icon={<UserPlus size={18} />}>
+                Daftar Akun Baru
+              </Button>
+            </Link>
+          </div>
+
+          <div className="mt-8 pt-4 border-t-2 border-gray-100">
+            <Link to="/" className="text-xs text-gray-500 hover:text-[#121215] underline font-bold">
+              ← Kembali ke Halaman Utama
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // 3. Authenticated Dashboard State
   const totalAttendees = events.reduce((sum, e) => sum + e.attendeeCount, 0)
   const totalSponsorValue = leads
     .filter((l) => l.stage === 'committed' || l.stage === 'paid')

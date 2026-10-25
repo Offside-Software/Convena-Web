@@ -1,72 +1,53 @@
-import { mockCurrentUser } from '../data/mockData.ts'
+import { apiClient } from './api/client.ts'
 import type { User, AuthResponse, LoginCredentials, RegisterPayload } from '../types/user.ts'
 
 const TOKEN_KEY = 'convena_auth_token'
-const DUMMY_TOKEN = 'dummy-convena-auth-token-lecturer-test'
 
 export class AuthService {
-  private activeUser: User = { ...mockCurrentUser }
-
   async getCurrentUser(): Promise<User | null> {
-    // Offline/No-API dummy mode: always authenticated
-    return Promise.resolve(this.activeUser)
+    const token = this.getToken()
+    if (!token) {
+      return null
+    }
+
+    try {
+      return await apiClient.get<User>('/auth/me')
+    } catch {
+      this.logout()
+      return null
+    }
   }
 
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    try {
-      localStorage.setItem(TOKEN_KEY, DUMMY_TOKEN)
-    } catch {
-      // ignore
+    const response = await apiClient.post<AuthResponse>('/auth/login', credentials)
+    if (response?.token) {
+      localStorage.setItem(TOKEN_KEY, response.token)
     }
-
-    if (credentials.identifier && credentials.identifier.includes('@')) {
-      this.activeUser.email = credentials.identifier
-    }
-
-    return Promise.resolve({
-      token: DUMMY_TOKEN,
-      user: this.activeUser,
-    })
+    return response
   }
 
   async register(payload: RegisterPayload): Promise<AuthResponse> {
-    try {
-      localStorage.setItem(TOKEN_KEY, DUMMY_TOKEN)
-    } catch {
-      // ignore
+    const response = await apiClient.post<AuthResponse>('/auth/register', payload)
+    if (response?.token) {
+      localStorage.setItem(TOKEN_KEY, response.token)
     }
-
-    this.activeUser = {
-      ...this.activeUser,
-      name: payload.name || this.activeUser.name,
-      displayName: payload.name || this.activeUser.displayName,
-      username: payload.username || this.activeUser.username,
-      email: payload.email || this.activeUser.email,
-      company: payload.company || this.activeUser.company,
-    }
-
-    return Promise.resolve({
-      token: DUMMY_TOKEN,
-      user: this.activeUser,
-    })
+    return response
   }
 
   getToken(): string | null {
-    return DUMMY_TOKEN
+    try {
+      return localStorage.getItem(TOKEN_KEY)
+    } catch {
+      return null
+    }
   }
 
   isAuthenticated(): boolean {
-    return true
+    return !!this.getToken()
   }
 
   logout(): void {
-    try {
-      localStorage.removeItem(TOKEN_KEY)
-    } catch {
-      // ignore
-    }
-    // Retain default dummy user for offline test resilience
-    this.activeUser = { ...mockCurrentUser }
+    localStorage.removeItem(TOKEN_KEY)
   }
 }
 

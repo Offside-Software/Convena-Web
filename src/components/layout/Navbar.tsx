@@ -5,29 +5,32 @@ import { Button } from '../common/Button.tsx'
 import { Badge } from '../common/Badge.tsx'
 import { MemphisShape } from '../shapes/MemphisShape.tsx'
 import { authService } from '../../services/auth.service.ts'
-import { mockCurrentUser } from '../../data/mockData.ts'
 import type { User } from '../../types/user.ts'
 import { BrandLogo } from '../common/BrandLogo.tsx'
 
 export const Navbar: React.FC = () => {
     const location = useLocation()
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const [isLoggedIn, setIsLoggedIn] = useState(true)
-    const [user, setUser] = useState<User>(mockCurrentUser)
+    const [isLoggedIn, setIsLoggedIn] = useState(() => authService.isAuthenticated())
+    const [user, setUser] = useState<User | null>(null)
 
     useEffect(() => {
         let isMounted = true
-        authService.getCurrentUser().then((u) => {
-            if (!isMounted) return
-            if (u) {
-                setUser(u)
-                setIsLoggedIn(true)
-            }
-        })
+        if (isLoggedIn) {
+            authService.getCurrentUser().then((u) => {
+                if (!isMounted) return
+                if (u) {
+                    setUser(u)
+                } else {
+                    setIsLoggedIn(false)
+                    setUser(null)
+                }
+            })
+        }
         return () => {
             isMounted = false
         }
-    }, [])
+    }, [isLoggedIn])
 
     const navLinks = [
         { label: 'Explore Events', path: '/events', icon: <Calendar size={18} /> },
@@ -47,7 +50,7 @@ export const Navbar: React.FC = () => {
             {/* Top micro announcement banner */}
             <div className="bg-[#FFE600] border-b-2 border-[#121215] py-1 px-4 text-xs font-bold font-['Space_Grotesk',sans-serif] flex items-center justify-center gap-2 overflow-hidden text-[#121215]">
                 <span className="bg-[#FF4B91] text-white py-0.5 px-1.5 rounded text-[11px] font-black">
-                    DEMO MODE
+                    NEW
                 </span>
                 <span>Platform Manajemen Event & Organisasi Mahasiswa Indonesia Terintegrasi</span>
                 <MemphisShape type="cross" size={12} color="#121215" />
@@ -98,10 +101,10 @@ export const Navbar: React.FC = () => {
                                         </div>
                                     )}
                                     <span className="hidden md:inline font-['Space_Grotesk',sans-serif] font-bold text-xs text-[#121215] max-w-[120px] truncate">
-                                        {user?.name || user?.username || 'Arya Pratama'}
+                                        {user?.name || user?.username || 'Pengguna'}
                                     </span>
                                     <Badge variant="cyan">
-                                        {user?.role ? user.role.toUpperCase() : 'ADMIN'}
+                                        {user?.role ? user.role.toUpperCase() : 'MEMBER'}
                                     </Badge>
                                 </div>
                             </Link>
@@ -109,11 +112,11 @@ export const Navbar: React.FC = () => {
                                 type="button"
                                 onClick={() => {
                                     authService.logout()
-                                    setUser({ ...mockCurrentUser })
-                                    setIsLoggedIn(true)
+                                    setIsLoggedIn(false)
+                                    setUser(null)
                                 }}
-                                title="Reset Akun Demo"
-                                className="hidden md:flex p-1.5 bg-[#FAF9F6] hover:bg-gray-100 border-2 border-[#121215] rounded-md shadow-[2px_2px_0px_0px_#121215] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0 active:translate-y-0 transition-all cursor-pointer text-[#121215]"
+                                title="Keluar"
+                                className="hidden md:flex p-1.5 bg-[#FAF9F6] hover:bg-red-50 border-2 border-[#121215] rounded-md shadow-[2px_2px_0px_0px_#121215] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0 active:translate-y-0 transition-all cursor-pointer text-[#121215] hover:text-red-600"
                             >
                                 <LogOut size={16} />
                             </button>
@@ -160,24 +163,50 @@ export const Navbar: React.FC = () => {
                             <span>{link.label}</span>
                         </Link>
                     ))}
+                    <Link
+                        to="/events?new=true"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="no-underline mt-2"
+                    >
+                    </Link>
 
-                    <div className="mt-2 pt-2 border-t-2 border-gray-100 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <span className="font-bold text-xs text-[#121215]">
-                                {user?.name || 'Arya Pratama'}
-                            </span>
-                            <Badge variant="cyan">ADMIN</Badge>
+                    {!isLoggedIn ? (
+                        <div className="flex flex-col gap-2 mt-1">
+                            <Link
+                                to="/login"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="no-underline"
+                            >
+                                <Button variant="cyan" fullWidth icon={<LogIn size={18} />}>
+                                    Masuk ke Akun
+                                </Button>
+                            </Link>
+                            <Link
+                                to="/register"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="no-underline"
+                            >
+                                <Button variant="yellow" fullWidth>
+                                    Daftar Akun Baru
+                                </Button>
+                            </Link>
                         </div>
-                        <Link
-                            to="/dashboard"
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="no-underline"
-                        >
-                            <Button variant="yellow" size="sm">
-                                Buka Dashboard
+                    ) : (
+                        <div className="mt-1">
+                            <Button
+                                variant="outline"
+                                fullWidth
+                                icon={<LogOut size={18} />}
+                                onClick={() => {
+                                    authService.logout()
+                                    setIsLoggedIn(false)
+                                    setMobileMenuOpen(false)
+                                }}
+                            >
+                                Keluar Akun
                             </Button>
-                        </Link>
-                    </div>
+                        </div>
+                    )}
                 </div>
             )}
         </header>

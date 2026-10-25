@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Filter, Plus, Search, Sparkles } from 'lucide-react'
 import { EventCard } from '../../components/domain/EventCard.tsx'
 import { Button } from '../../components/common/Button.tsx'
@@ -8,16 +8,16 @@ import { MemphisShape } from '../../components/shapes/MemphisShape.tsx'
 import { CreateEventModal } from '../dashboard/components/CreateEventModal.tsx'
 import { eventsService } from '../../services/events.service.ts'
 import { authService } from '../../services/auth.service.ts'
-import { mockCurrentUser } from '../../data/mockData.ts'
 import type { Event } from '../../types/event.ts'
 import type { User } from '../../types/user.ts'
 
 export const EventsPage: React.FC = () => {
+  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const initialSearch = searchParams.get('search') || ''
   const isCreateParam = searchParams.get('new') === 'true'
 
-  const [currentUser, setCurrentUser] = useState<User>(mockCurrentUser)
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState(initialSearch)
@@ -44,9 +44,9 @@ export const EventsPage: React.FC = () => {
   useEffect(() => {
     let isMounted = true
     authService.getCurrentUser().then((user) => {
-      if (isMounted && user) {
+      if (isMounted) {
         setCurrentUser(user)
-        if (isCreateParam) {
+        if (isCreateParam && user) {
           setIsModalOpen(true)
         }
       }
@@ -80,6 +80,10 @@ export const EventsPage: React.FC = () => {
   }, [search, selectedCategory, selectedCampus])
 
   const handleOpenCreateModal = () => {
+    if (!currentUser) {
+      navigate('/login?redirect=/events?new=true')
+      return
+    }
     setIsModalOpen(true)
   }
 
