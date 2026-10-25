@@ -158,7 +158,7 @@ export const DashboardPage: React.FC = () => {
       </div>
 
       {/* Two Column Section */}
-      <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-1 gap-6">
         {/* Left Column: Active Events Management */}
         <div className="flex flex-col gap-6">
           <Card headerColor="yellow" headerTitle="Event Aktif Kepengurusan">
@@ -196,14 +196,6 @@ export const DashboardPage: React.FC = () => {
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="font-extrabold text-sm text-[#121215]">{evt.title}</span>
-                          {evt.myRole && (
-                            <Badge
-                              variant={evt.myRole === 'owner' ? 'pink' : evt.myRole === 'admin' ? 'yellow' : 'mint'}
-                              className="text-[10px] py-0.5 px-2 capitalize"
-                            >
-                              {evt.myRole}
-                            </Badge>
-                          )}
                         </div>
                         <div className="text-xs text-gray-500 mt-0.5">
                           {evt.attendeeCount} / {evt.totalCapacity} Tiket Terbit • {evt.category}
@@ -211,11 +203,25 @@ export const DashboardPage: React.FC = () => {
                       </div>
                     </div>
 
-                    <Link to={`/events/${evt.id}`} className="no-underline">
-                      <Button variant="outline" size="sm" icon={<ArrowUpRight size={14} />}>
-                        Kelola
-                      </Button>
-                    </Link>
+                    <div className='flex flex-row gap-3'>
+                      {evt.myRole && (
+                        <Badge
+                          variant={evt.myRole === 'owner' ? 'pink' : evt.myRole === 'admin' ? 'yellow' : 'mint'}
+                          className="text-[10px] py-0.5 px-2 capitalize"
+                        >
+                          {evt.myRole}
+                        </Badge>
+                      )}
+
+                      <Link to={`/events/${evt.id}`} className="no-underline">
+                        <Button variant="outline" size="sm" icon={<ArrowUpRight size={14} />}>
+                          Kelola
+                        </Button>
+                      </Link>
+                    </div>
+
+
+
                   </div>
                 ))}
               </div>
