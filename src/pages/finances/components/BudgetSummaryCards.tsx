@@ -12,49 +12,53 @@ export const BudgetSummaryCards: React.FC<BudgetSummaryCardsProps> = ({ budget }
       : 0
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-      <div className="p-5 bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215]">
-        <span className="text-xs font-mono text-gray-500 uppercase tracking-wider block">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 font-['Montserrat',sans-serif]">
+      {/* Pagu RAB */}
+      <div className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl">
+        <span className="text-xs text-[#9C9C9C] uppercase tracking-wider block font-semibold">
           Total Pagu Anggaran (RAB)
         </span>
-        <div className="font-['Space_Grotesk',sans-serif] font-black text-2xl sm:text-3xl text-[#121215] my-1">
+        <div className="font-extrabold text-2xl sm:text-3xl text-white my-1 tracking-tight">
           Rp {budget.totalBudgetPlanned.toLocaleString('id-ID')}
         </div>
-        <span className="text-xs text-gray-500">Alokasi RAB Disetujui</span>
+        <span className="text-xs text-[#9C9C9C]">Alokasi RAB Disetujui</span>
       </div>
 
-      <div className="p-5 bg-[#FF94BE] border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215]">
-        <span className="text-xs font-mono text-[#121215] uppercase tracking-wider block font-bold">
+      {/* Realisasi */}
+      <div className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl">
+        <span className="text-xs text-[#9C9C9C] uppercase tracking-wider block font-semibold">
           Realisasi Pengeluaran
         </span>
-        <div className="font-['Space_Grotesk',sans-serif] font-black text-2xl sm:text-3xl text-[#121215] my-1">
+        <div className="font-extrabold text-2xl sm:text-3xl text-[#CFFE06] my-1 tracking-tight">
           Rp {budget.totalExpenseRealized.toLocaleString('id-ID')}
         </div>
-        <span className="text-xs text-[#121215] font-semibold">
-          {usagePercent}% dari total pagu anggaran
+        <span className="text-xs text-[#9C9C9C]">
+          {usagePercent}% dari total pagu
         </span>
       </div>
 
-      <div className="p-5 bg-[#FFF585] border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215]">
-        <span className="text-xs font-mono text-[#121215] uppercase tracking-wider block font-bold">
+      {/* Sisa Saldo */}
+      <div className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl">
+        <span className="text-xs text-[#9C9C9C] uppercase tracking-wider block font-semibold">
           Sisa Saldo Anggaran
         </span>
-        <div className="font-['Space_Grotesk',sans-serif] font-black text-2xl sm:text-3xl text-[#121215] my-1">
+        <div className="font-extrabold text-2xl sm:text-3xl text-white my-1 tracking-tight">
           Rp {budget.remainingBudget.toLocaleString('id-ID')}
         </div>
-        <span className="text-xs text-[#121215] font-semibold">
+        <span className="text-xs text-[#CFFE06] font-semibold">
           {budget.remainingBudget >= 0 ? 'Aman terkendali' : 'Melebihi Pagu RAB'}
         </span>
       </div>
 
-      <div className="p-5 bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215]">
-        <span className="text-xs font-mono text-gray-500 uppercase tracking-wider block">
-          SPJ Menunggu Verifikasi
+      {/* SPJ Pending */}
+      <div className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl">
+        <span className="text-xs text-[#9C9C9C] uppercase tracking-wider block font-semibold">
+          SPJ Pending Audit
         </span>
-        <div className="font-['Space_Grotesk',sans-serif] font-black text-2xl sm:text-3xl text-[#FF4B91] my-1">
+        <div className="font-extrabold text-2xl sm:text-3xl text-[#DF00D0] my-1 tracking-tight">
           {budget.pendingSpjCount} Kuitansi
         </div>
-        <span className="text-xs text-gray-500">Perlu dicek Bendahara</span>
+        <span className="text-xs text-[#9C9C9C]">Perlu dicek Bendahara</span>
       </div>
     </div>
   )

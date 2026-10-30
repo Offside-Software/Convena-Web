@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import './styles/theme.css';
 
-/* Reset & Box Sizing */
+/* Global Reset & Box Sizing */
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -9,12 +9,14 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  background-color: #000000;
+  color: #FFFFFF;
 }
 
-body.memphis-body {
-  font-family: var(--font-body);
-  background-color: var(--mem-bg);
-  color: var(--mem-dark);
+body {
+  font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+  background-color: #000000;
+  color: #FFFFFF;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -24,30 +26,31 @@ body.memphis-body {
 
 /* Headings */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
-  font-weight: 800;
-  color: var(--mem-dark);
-  line-height: 1.2;
-}
-
-h1 {
-  font-size: clamp(2rem, 4vw + 1rem, 3.5rem);
-  letter-spacing: -0.03em;
-}
-
-h2 {
-  font-size: clamp(1.5rem, 2.5vw + 0.5rem, 2.25rem);
+  font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.25;
   letter-spacing: -0.02em;
 }
 
+h1 {
+  font-size: clamp(2rem, 3.5vw + 1rem, 3.25rem);
+  font-weight: 800;
+}
+
+h2 {
+  font-size: clamp(1.5rem, 2vw + 0.5rem, 2.25rem);
+  font-weight: 700;
+}
+
 h3 {
-  font-size: 1.5rem;
-  letter-spacing: -0.01em;
+  font-size: 1.35rem;
+  font-weight: 700;
 }
 
 p {
-  color: #374151;
-  font-size: 1rem;
+  color: #9C9C9C;
+  font-size: 0.95rem;
   line-height: 1.6;
 }
 
@@ -58,63 +61,55 @@ a {
 
 /* Focus styles */
 :focus-visible {
-  outline: 3px solid var(--mem-pink);
+  outline: 2px solid #CFFE06;
   outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background-color: #CFFE06;
+  color: #000000;
 }
 
 /* Form Elements */
 input:not([type="checkbox"]):not([type="radio"]), textarea, select {
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  color: var(--mem-dark);
-  background-color: var(--mem-surface);
-  border: var(--mem-border-sm);
-  border-radius: var(--mem-radius-sm);
-  padding: 0.65rem 0.85rem;
-  box-shadow: 2px 2px 0px var(--mem-dark);
-  transition: var(--mem-transition);
+  font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+  font-size: 0.9rem;
+  color: #FFFFFF;
+  background-color: #202020;
+  border: 1px solid #3D3D3D;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
   width: 100%;
 }
 
 input:not([type="checkbox"]):not([type="radio"]):focus, textarea:focus, select:focus {
   outline: none;
-  border-color: var(--mem-pink);
-  box-shadow: 3px 3px 0px var(--mem-dark);
-}
-
-input[type="checkbox"], input[type="radio"] {
-  width: auto;
-  padding: 0;
-  box-shadow: none;
+  border-color: #CFFE06;
+  box-shadow: 0 0 0 1px #CFFE06;
 }
 
 input::placeholder, textarea::placeholder {
-  color: #9CA3AF;
+  color: #9C9C9C;
+  opacity: 0.7;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--mem-bg);
-  border-left: 2px solid var(--mem-dark);
+  background: #151515;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--mem-yellow);
-  border: 2px solid var(--mem-dark);
-  box-shadow: inset 1px 1px 0px #fff;
+  background: #3D3D3D;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--mem-pink);
-}
-
-/* Selection */
-::selection {
-  background-color: var(--mem-yellow);
-  color: var(--mem-dark);
+  background: #9C9C9C;
 }

@@ -8,11 +8,7 @@ import {
   Plus,
   ArrowUpRight,
   FileCheck,
-  Lock,
-  LogIn,
-  UserPlus,
-  ShieldAlert,
-  CalendarCheck
+  CalendarCheck,
 } from 'lucide-react'
 import { StatCard } from '../../components/domain/StatCard.tsx'
 import { Card } from '../../components/common/Card.tsx'
@@ -46,13 +42,11 @@ export const DashboardPage: React.FC = () => {
       setAuthLoading(false)
 
       if (user) {
-        // Fetch user's real events from database
         eventsService.getMyEvents().then((myEvents) => {
           if (!isMounted) return
           if (myEvents.length > 0) {
             setEvents(myEvents)
           } else {
-            // Fallback to public events if user hasn't created one yet
             eventsService.getEvents().then((allEvts) => {
               if (isMounted) setEvents(allEvts.slice(0, 3))
             })
@@ -78,102 +72,56 @@ export const DashboardPage: React.FC = () => {
     setEvents((prev) => [newEvent, ...prev])
   }
 
-  // 1. Loading State
   if (authLoading) {
     return (
       <div className="py-24 text-center">
-        <div className="w-12 h-12 border-4 border-[#121215] border-t-[#FFE600] rounded-full animate-spin mx-auto mb-4" />
-        <p className="font-['Space_Grotesk',sans-serif] font-bold text-sm text-[#121215]">
+        <div className="w-10 h-10 border-2 border-[#CFFE06] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+        <p className="font-semibold text-xs text-[#9C9C9C]">
           Memeriksa sesi pengguna...
         </p>
       </div>
     )
   }
 
-  // 2. Unauthenticated State: Hide entire dashboard and event creation
-  if (!currentUser) {
-    return (
-      <div className="py-12 px-4 max-w-xl mx-auto text-center">
-        <div className="bg-white border-4 border-[#121215] rounded-2xl shadow-[8px_8px_0px_0px_#121215] p-8 md:p-10 relative overflow-hidden">
-          <div className="inline-flex mb-4">
-            <Badge variant="pink" tilt="left" icon={<ShieldAlert size={14} />}>
-              AKSES TERBATAS
-            </Badge>
-          </div>
+  if (!currentUser) return null
 
-          <div className="w-16 h-16 bg-[#FFE600] border-3 border-[#121215] rounded-2xl shadow-[4px_4px_0px_0px_#121215] flex items-center justify-center mx-auto mb-5">
-            <Lock size={32} className="text-[#121215]" />
-          </div>
-
-          <h2 className="text-2xl sm:text-3xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] mb-3">
-            Masuk untuk Mengakses Dashboard
-          </h2>
-
-          <p className="text-sm sm:text-base text-gray-600 mb-8 leading-relaxed">
-            Dashboard panitia, pembukuan anggaran SPJ, dan pembuatan event baru hanya dapat diakses setelah Anda masuk ke akun Convena.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-3.5 justify-center">
-            <Link to="/login" className="no-underline">
-              <Button variant="yellow" size="lg" icon={<LogIn size={18} />}>
-                Masuk ke Akun
-              </Button>
-            </Link>
-            <Link to="/register" className="no-underline">
-              <Button variant="cyan" size="lg" icon={<UserPlus size={18} />}>
-                Daftar Akun Baru
-              </Button>
-            </Link>
-          </div>
-
-          <div className="mt-8 pt-4 border-t-2 border-gray-100">
-            <Link to="/" className="text-xs text-gray-500 hover:text-[#121215] underline font-bold">
-              ← Kembali ke Halaman Utama
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // 3. Authenticated Dashboard State
   const totalAttendees = events.reduce((sum, e) => sum + e.attendeeCount, 0)
   const totalSponsorValue = leads
     .filter((l) => l.stage === 'committed' || l.stage === 'paid')
     .reduce((sum, l) => sum + l.value, 0)
 
   return (
-    <div>
+    <div className="font-['Montserrat',sans-serif] bg-[#000000] text-white">
       {/* Header Bar */}
       <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
         <div>
-          <div className="mb-1.5 flex items-center gap-2">
-            <Badge variant="cyan" tilt="left">
-              ORGANIZER OVERVIEW
+          <div className="mb-2 flex items-center gap-2">
+            <Badge variant="accent">
+              ADMIN WORKSPACE
             </Badge>
-            <span className="text-xs font-bold text-gray-500">
-              Halo, <span className="text-[#121215]">{currentUser.displayName || currentUser.name}</span>
+            <span className="text-xs text-[#9C9C9C]">
+              Halo, <span className="text-white font-bold">{currentUser.displayName || currentUser.name}</span>
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] m-0">
-            Dashboard Panitia Ormawa
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight m-0">
+            Ringkasan Manajemen Ormawa
           </h1>
-          <p className="text-gray-500 text-sm sm:text-base mt-1">
-            Pantau performa kegiatan, realisasi anggaran SPJ, dan kemitraan sponsorship.
+          <p className="text-xs sm:text-sm text-[#9C9C9C] mt-1">
+            Pantau kinerja kegiatan, serapan anggaran SPJ kuitansi, dan kesepakatan sponsorship.
           </p>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-2.5">
           <Button
-            variant="pink"
+            variant="accent"
             size="md"
-            icon={<Plus size={18} />}
+            icon={<Plus size={16} />}
             onClick={() => setIsCreateModalOpen(true)}
           >
             Buat Event Baru
           </Button>
           <Link to="/dashboard/finances" className="no-underline">
-            <Button variant="yellow" size="md" icon={<Receipt size={18} />}>
+            <Button variant="outline" size="md" icon={<Receipt size={16} />}>
               Catat SPJ
             </Button>
           </Link>
@@ -181,14 +129,13 @@ export const DashboardPage: React.FC = () => {
       </div>
 
       {/* 4 Primary Metric Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard
           title="Total Pendaftar"
           value={totalAttendees.toLocaleString('id-ID')}
           change="+18.4%"
           isPositive={true}
-          icon={<Users size={20} />}
-          accentColor="yellow"
+          icon={<Users size={18} />}
           subtitle="dari target 1.750"
         />
 
@@ -197,8 +144,7 @@ export const DashboardPage: React.FC = () => {
           value={`Rp ${(totalSponsorValue / 1000000).toFixed(1)} jt`}
           change="3 Deal Baru"
           isPositive={true}
-          icon={<Sparkles size={20} />}
-          accentColor="pink"
+          icon={<Sparkles size={18} />}
           subtitle="Pipeline aktif Rp 100 jt"
         />
 
@@ -207,8 +153,7 @@ export const DashboardPage: React.FC = () => {
           value={budget ? `Rp ${(budget.totalExpenseRealized / 1000000).toFixed(1)} jt` : 'Rp 0'}
           change={`${budget ? Math.round((budget.totalExpenseRealized / budget.totalBudgetPlanned) * 100) : 0}%`}
           isPositive={true}
-          icon={<DollarSign size={20} />}
-          accentColor="cyan"
+          icon={<DollarSign size={18} />}
           subtitle="dari pagu anggaran"
         />
 
@@ -217,61 +162,60 @@ export const DashboardPage: React.FC = () => {
           value={budget?.pendingSpjCount || 0}
           change="Perlu review"
           isPositive={false}
-          icon={<Receipt size={20} />}
-          accentColor="purple"
-          subtitle="Bendahara HMIF"
+          icon={<Receipt size={18} />}
+          subtitle="Bendahara Organisasi"
         />
       </div>
 
       {/* Two Column Section */}
-      <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6">
         {/* Left Column: Active Events Management */}
-        <div className="flex flex-col gap-6">
-          <Card headerColor="yellow" headerTitle="Event Aktif Kepengurusan">
+        <div className="space-y-6">
+          <Card headerColor="dark" headerTitle="Event Aktif Kepengurusan">
             {events.length === 0 ? (
-              <div className="p-8 text-center bg-gray-50/50 rounded-xl border-2 border-dashed border-gray-200">
-                <CalendarCheck size={36} className="text-gray-400 mx-auto mb-2" />
-                <h4 className="font-['Space_Grotesk',sans-serif] font-black text-sm text-[#121215] mb-1">
+              <div className="p-8 text-center bg-[#151515] rounded-xl border border-dashed border-[#3D3D3D]">
+                <CalendarCheck size={36} className="text-[#9C9C9C] mx-auto mb-2" />
+                <h4 className="font-bold text-sm text-white mb-1">
                   Belum Ada Event Aktif
                 </h4>
-                <p className="text-xs text-gray-500 mb-4">
+                <p className="text-xs text-[#9C9C9C] mb-4">
                   Buat event pertama Anda sekarang untuk mulai mengelola tiket, anggaran, dan sponsorship.
                 </p>
                 <Button
-                  variant="pink"
+                  variant="accent"
                   size="sm"
-                  icon={<Plus size={16} />}
+                  icon={<Plus size={15} />}
                   onClick={() => setIsCreateModalOpen(true)}
                 >
                   Buat Event Pertama
                 </Button>
               </div>
             ) : (
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3">
                 {events.map((evt) => (
                   <div
                     key={evt.id}
-                    className="flex items-center justify-between p-3.5 border-2 border-[#121215] rounded-xl bg-white shadow-[2px_2px_0px_0px_#121215]"
+                    className="flex items-center justify-between p-3.5 border border-[#3D3D3D]/50 rounded-xl bg-[#151515] hover:border-[#CFFE06]/40 transition-colors"
                   >
                     <div className="flex items-center gap-3">
                       <img
                         src={evt.bannerUrl}
                         alt=""
-                        className="w-12 h-12 rounded-lg border-2 border-[#121215] object-cover"
+                        className="w-12 h-12 rounded-lg border border-[#3D3D3D] object-cover"
                       />
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-extrabold text-sm text-[#121215]">{evt.title}</span>
+                          <span className="font-bold text-sm text-white">{evt.title}</span>
                           {evt.myRole && (
                             <Badge
-                              variant={evt.myRole === 'owner' ? 'pink' : evt.myRole === 'admin' ? 'yellow' : 'mint'}
+                              variant="accent"
                               className="text-[10px] py-0.5 px-2 capitalize"
                             >
                               {evt.myRole}
                             </Badge>
                           )}
                         </div>
-                        <div className="text-xs text-gray-500 mt-0.5">
+                        <div className="text-xs text-[#9C9C9C] mt-0.5">
                           {evt.attendeeCount} / {evt.totalCapacity} Tiket Terbit • {evt.category}
                         </div>
                       </div>
@@ -291,28 +235,32 @@ export const DashboardPage: React.FC = () => {
           {/* Quick Action Tiles */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Link to="/dashboard/sponsorship" className="no-underline">
-              <div className="p-5 bg-[#FF94BE] border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all flex items-center gap-3.5 cursor-pointer">
-                <Sparkles size={28} className="text-[#FF4B91] shrink-0" />
+              <div className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl hover:border-[#CFFE06]/50 transition-colors flex items-center gap-3.5 cursor-pointer">
+                <div className="w-10 h-10 rounded-full bg-[#202020] text-[#CFFE06] flex items-center justify-center shrink-0">
+                  <Sparkles size={20} />
+                </div>
                 <div>
-                  <h4 className="text-sm font-['Space_Grotesk',sans-serif] font-black text-[#121215] m-0">
+                  <h4 className="text-sm font-bold text-white m-0">
                     Sponsorship CRM
                   </h4>
-                  <p className="m-0 text-xs text-[#121215]">
+                  <p className="m-0 text-xs text-[#9C9C9C] mt-0.5">
                     Buka kanban pipeline mitra
                   </p>
                 </div>
               </div>
             </Link>
 
-            <Link to="/verify" className="no-underline">
-              <div className="p-5 bg-[#FFF585] border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all flex items-center gap-3.5 cursor-pointer">
-                <FileCheck size={28} className="text-[#121215] shrink-0" />
+            <Link to="/dashboard/verify" className="no-underline">
+              <div className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl hover:border-[#CFFE06]/50 transition-colors flex items-center gap-3.5 cursor-pointer">
+                <div className="w-10 h-10 rounded-full bg-[#202020] text-[#CFFE06] flex items-center justify-center shrink-0">
+                  <FileCheck size={20} />
+                </div>
                 <div>
-                  <h4 className="text-sm font-['Space_Grotesk',sans-serif] font-black text-[#121215] m-0">
+                  <h4 className="text-sm font-bold text-white m-0">
                     Validasi Sertifikat
                   </h4>
-                  <p className="m-0 text-xs text-[#121215]">
-                    Cek kode sertifikat publik
+                  <p className="m-0 text-xs text-[#9C9C9C] mt-0.5">
+                    Validasi sertifikat di workspace
                   </p>
                 </div>
               </div>
@@ -321,48 +269,47 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         {/* Right Column: Financial Burn Rate & SPJ Audit Status */}
-        <div className="flex flex-col gap-6">
-          <Card headerColor="cyan" headerTitle="Anggaran & Realisasi Arkavidia 9.0">
+        <div className="space-y-6">
+          <Card headerColor="dark" headerTitle="Realisasi Anggaran Arkavidia">
             {budget && (
               <div>
                 <div className="mb-5">
-                  <div className="flex justify-between text-xs sm:text-sm mb-1">
-                    <span className="font-bold text-[#121215]">
-                      Total Pagu: Rp {budget.totalBudgetPlanned.toLocaleString('id-ID')}
+                  <div className="flex justify-between text-xs mb-1.5">
+                    <span className="text-[#9C9C9C]">
+                      Pagu: Rp {budget.totalBudgetPlanned.toLocaleString('id-ID')}
                     </span>
-                    <span className="text-[#FF4B91] font-black">
+                    <span className="text-[#CFFE06] font-bold">
                       Rp {budget.totalExpenseRealized.toLocaleString('id-ID')}
                     </span>
                   </div>
                   <ProgressBar
                     value={budget.totalExpenseRealized}
                     max={budget.totalBudgetPlanned}
-                    color="pink"
-                    striped
-                    height={14}
+                    color="accent"
+                    height={8}
                   />
-                  <div className="text-xs text-gray-500 mt-1">
-                    Sisa Anggaran Tersedia: Rp {budget.remainingBudget.toLocaleString('id-ID')}
+                  <div className="text-xs text-[#9C9C9C] mt-1.5">
+                    Sisa Anggaran: <span className="text-white font-semibold">Rp {budget.remainingBudget.toLocaleString('id-ID')}</span>
                   </div>
                 </div>
 
-                <div className="border-t-2 border-dashed border-gray-200 pt-4">
-                  <h4 className="text-xs font-['Space_Grotesk',sans-serif] font-black text-[#121215] mb-3 uppercase tracking-wider">
+                <div className="border-t border-[#3D3D3D]/50 pt-4">
+                  <h4 className="text-xs font-bold text-white mb-3 uppercase tracking-wider">
                     Alokasi per Pos Biaya
                   </h4>
-                  <div className="flex flex-col gap-2.5">
+                  <div className="flex flex-col gap-3">
                     {budget.categories.map((c) => (
                       <div key={c.category}>
-                        <div className="flex justify-between text-xs font-semibold text-gray-700 mb-1">
+                        <div className="flex justify-between text-xs text-[#9C9C9C] mb-1">
                           <span>{c.label}</span>
-                          <span>Rp {(c.spentAmount / 1000000).toFixed(1)} jt</span>
+                          <span className="text-white font-medium">Rp {(c.spentAmount / 1000000).toFixed(1)} jt</span>
                         </div>
                         <ProgressBar
                           value={c.spentAmount}
                           max={c.plannedAmount}
-                          color={c.spentAmount >= c.plannedAmount ? 'pink' : 'cyan'}
+                          color={c.spentAmount >= c.plannedAmount ? 'purple' : 'accent'}
                           showPercentage={false}
-                          height={8}
+                          height={6}
                         />
                       </div>
                     ))}
@@ -371,7 +318,7 @@ export const DashboardPage: React.FC = () => {
 
                 <div className="mt-5">
                   <Link to="/dashboard/finances" className="no-underline">
-                    <Button variant="cyan" fullWidth size="sm">
+                    <Button variant="outline" fullWidth size="sm">
                       Buka Rincian SPJ & Kuitansi →
                     </Button>
                   </Link>

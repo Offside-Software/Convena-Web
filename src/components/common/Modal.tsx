@@ -6,7 +6,7 @@ export interface ModalProps {
   onClose: () => void
   title: string
   children: React.ReactNode
-  headerColor?: 'pink' | 'cyan' | 'purple' | 'mint' | 'yellow'
+  headerColor?: 'pink' | 'cyan' | 'purple' | 'mint' | 'yellow' | 'accent' | 'dark'
   footer?: React.ReactNode
   maxWidth?: string
 }
@@ -16,7 +16,6 @@ export const Modal: React.FC<ModalProps> = ({
   onClose,
   title,
   children,
-  headerColor = 'yellow',
   footer,
   maxWidth,
 }) => {
@@ -38,50 +37,41 @@ export const Modal: React.FC<ModalProps> = ({
 
   if (!isOpen) return null
 
-  const headerBgClasses: Record<string, string> = {
-    pink: 'bg-[#FF4B91] text-white',
-    cyan: 'bg-[#01CDFE] text-[#121215]',
-    purple: 'bg-[#845EC2] text-white',
-    mint: 'bg-[#00F5D4] text-[#121215]',
-    yellow: 'bg-[#FFE600] text-[#121215]',
-  }
-
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#121215]/65 backdrop-blur-xs"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-[fadeIn_0.15s_ease-out]"
       onClick={onClose}
     >
       <div
-        className={`w-full ${maxWidth || 'max-w-[540px]'} bg-white border-4 border-[#121215] shadow-[8px_8px_0px_0px_#121215] rounded-2xl overflow-hidden animate-[memphis-pulse-scale_0.2s_cubic-bezier(0.16,1,0.3,1)]`}
+        className={`w-full ${maxWidth || 'max-w-[540px]'} bg-[#151515] border border-[#3D3D3D] shadow-2xl rounded-xl overflow-hidden transition-all duration-200`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div
-          className={`border-b-2 border-[#121215] py-3.5 px-5 flex items-center justify-between font-['Space_Grotesk',sans-serif] ${
-            headerBgClasses[headerColor] || headerBgClasses.yellow
-          }`}
-        >
-          <h3 className="m-0 text-xl font-black">
-            {title}
-          </h3>
+        <div className="border-b border-[#3D3D3D]/70 py-4 px-6 flex items-center justify-between font-['Montserrat',sans-serif] bg-[#202020]">
+          <div className="flex items-center gap-2.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#CFFE06]" />
+            <h3 className="m-0 text-lg font-bold text-white tracking-tight">
+              {title}
+            </h3>
+          </div>
           <button
             type="button"
             onClick={onClose}
-            className="bg-transparent border-none cursor-pointer flex items-center justify-center p-1 rounded-md text-inherit hover:opacity-75 transition-opacity"
+            className="w-8 h-8 rounded-full bg-[#151515] border border-[#3D3D3D] text-[#9C9C9C] hover:text-[#CFFE06] hover:border-[#CFFE06] transition-colors flex items-center justify-center cursor-pointer"
             aria-label="Tutup Modal"
           >
-            <X size={20} />
+            <X size={16} />
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 max-h-[75vh] overflow-y-auto">
+        <div className="p-6 max-h-[75vh] overflow-y-auto text-white">
           {children}
         </div>
 
         {/* Optional Footer */}
         {footer && (
-          <div className="border-t-2 border-[#121215] py-3.5 px-5 flex justify-end gap-3 bg-gray-50">
+          <div className="border-t border-[#3D3D3D]/70 py-4 px-6 flex justify-end gap-3 bg-[#181818]">
             {footer}
           </div>
         )}

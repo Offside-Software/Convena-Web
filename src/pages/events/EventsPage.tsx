@@ -1,29 +1,21 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Filter, Plus, Search, Sparkles } from 'lucide-react'
+import { useSearchParams } from 'react-router-dom'
+import { Filter, Search, Sparkles } from 'lucide-react'
 import { EventCard } from '../../components/domain/EventCard.tsx'
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
-import { MemphisShape } from '../../components/shapes/MemphisShape.tsx'
-import { CreateEventModal } from '../dashboard/components/CreateEventModal.tsx'
 import { eventsService } from '../../services/events.service.ts'
-import { authService } from '../../services/auth.service.ts'
 import type { Event } from '../../types/event.ts'
-import type { User } from '../../types/user.ts'
 
 export const EventsPage: React.FC = () => {
-  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const initialSearch = searchParams.get('search') || ''
-  const isCreateParam = searchParams.get('new') === 'true'
 
-  const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState(initialSearch)
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [selectedCampus, setSelectedCampus] = useState<string>('all')
-  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const categories = [
     { label: 'Semua Kategori', value: 'all' },
@@ -35,27 +27,12 @@ export const EventsPage: React.FC = () => {
 
   const campuses = [
     { label: 'Semua Kampus', value: 'all' },
-    { label: 'Institut Teknologi Bandung', value: 'ITB' },
-    { label: 'Universitas Indonesia', value: 'UI' },
-    { label: 'Universitas Gadjah Mada', value: 'UGM' },
-    { label: 'Institut Teknologi Sepuluh Nopember', value: 'ITS' },
+    { label: 'Telkom University', value: 'Telkom' },
+    { label: 'ITB', value: 'ITB' },
+    { label: 'UI', value: 'UI' },
+    { label: 'UGM', value: 'UGM' },
+    { label: 'ITS', value: 'ITS' },
   ]
-
-  useEffect(() => {
-    let isMounted = true
-    authService.getCurrentUser().then((user) => {
-      if (isMounted) {
-        setCurrentUser(user)
-        if (isCreateParam && user) {
-          setIsModalOpen(true)
-        }
-      }
-    })
-
-    return () => {
-      isMounted = false
-    }
-  }, [isCreateParam])
 
   useEffect(() => {
     let isMounted = true
@@ -79,64 +56,41 @@ export const EventsPage: React.FC = () => {
     }
   }, [search, selectedCategory, selectedCampus])
 
-  const handleOpenCreateModal = () => {
-    if (!currentUser) {
-      navigate('/login?redirect=/events?new=true')
-      return
-    }
-    setIsModalOpen(true)
-  }
-
-  const handleEventCreated = (newEvent: Event) => {
-    setEvents((prev) => [newEvent, ...prev])
-  }
-
   return (
-    <div className="max-w-[1280px] mx-auto py-10 px-4 sm:px-6">
-      {/* Header bar */}
-      <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
-        <div>
-          <div className="inline-flex mb-1.5">
-            <Badge variant="yellow" tilt="left" icon={<Sparkles size={14} />}>
-              KATALOG RESMI
-            </Badge>
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] m-0">
-            Jelajahi Event Ormawa
-          </h1>
-          <p className="text-gray-500 text-sm sm:text-base mt-1">
-            Temukan seminar, kompetisi, hackathon, dan festival mahasiswa se-Indonesia.
-          </p>
+    <div className="max-w-[1280px] mx-auto py-10 px-4 sm:px-6 font-['Montserrat',sans-serif] bg-[#000000] text-white">
+      {/* Header bar - Strictly for Discovering Events */}
+      <div className="mb-8">
+        <div className="inline-flex mb-2">
+          <Badge variant="accent" icon={<Sparkles size={13} />}>
+            EXPLORE EVENTS
+          </Badge>
         </div>
-
-        <Button
-          variant="pink"
-          size="md"
-          icon={<Plus size={18} />}
-          onClick={handleOpenCreateModal}
-        >
-          Buat Event Baru
-        </Button>
+        <h1 className="text-3xl sm:text-4xl font-black text-white m-0 tracking-tight">
+          Jelajahi Event Kampus
+        </h1>
+        <p className="text-[#9C9C9C] text-sm sm:text-base mt-1">
+          Temukan seminar, kompetisi, hackathon, dan festival mahasiswa se-Indonesia.
+        </p>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="p-5 bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] mb-8 flex flex-col gap-4">
-        <div className="memphis-box bg-white border-2 border-[#121215] shadow-[6px_6px_0px_0px_#121215] rounded-xl flex gap-2 items-center">
-          <Search size={20} className="ml-2 text-gray-500 shrink-0" />
+      <div className="p-5 bg-[#151515] border border-[#3D3D3D]/50 rounded-xl mb-8 flex flex-col gap-4">
+        <div className="bg-[#202020] border border-[#3D3D3D] rounded-xl flex gap-3 items-center px-4 py-2.5 focus-within:border-[#CFFE06] transition-colors">
+          <Search size={18} className="text-[#9C9C9C] shrink-0" />
           <input
             type="text"
-            placeholder="Cari berdasarkan judul, topik, pembicara, atau tagar..."
+            placeholder="Cari berdasarkan judul acara, topik, ormawa, atau tagar..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="!border-none !shadow-none text-base flex-1 outline-hidden bg-transparent focus:ring-0"
+            className="w-full bg-transparent border-none outline-none text-sm font-medium text-white placeholder:text-[#9C9C9C]/60"
           />
         </div>
 
         {/* Categories and Campus pill filters */}
-        <div className="flex items-center justify-between flex-wrap gap-4 pt-2 border-t-2 border-gray-100">
+        <div className="flex items-center justify-between flex-wrap gap-4 pt-2 border-t border-[#202020]">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-bold text-gray-500 flex items-center gap-1 mr-1">
-              <Filter size={14} /> Kategori:
+            <span className="text-xs font-semibold text-[#9C9C9C] flex items-center gap-1 mr-1">
+              <Filter size={13} /> Kategori:
             </span>
             {categories.map((cat) => {
               const active = selectedCategory === cat.value
@@ -145,10 +99,10 @@ export const EventsPage: React.FC = () => {
                   key={cat.value}
                   type="button"
                   onClick={() => setSelectedCategory(cat.value)}
-                  className={`text-xs font-bold py-1.5 px-3 rounded-full border-2 border-[#121215] transition-all cursor-pointer ${
+                  className={`text-xs font-bold py-1.5 px-3.5 rounded-full transition-all cursor-pointer ${
                     active
-                      ? 'bg-[#FFE600] shadow-[2px_2px_0px_0px_#121215] text-[#121215]'
-                      : 'bg-white hover:bg-gray-100 text-[#121215]'
+                      ? 'bg-[#CFFE06] text-[#000000] shadow-[0_0_12px_rgba(207,254,6,0.25)]'
+                      : 'bg-[#202020] text-[#9C9C9C] hover:text-white border border-[#3D3D3D]/60'
                   }`}
                 >
                   {cat.label}
@@ -158,7 +112,7 @@ export const EventsPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-bold text-gray-500 mr-1">Kampus:</span>
+            <span className="text-xs font-semibold text-[#9C9C9C] mr-1">Kampus:</span>
             {campuses.map((camp) => {
               const active = selectedCampus === camp.value
               return (
@@ -166,10 +120,10 @@ export const EventsPage: React.FC = () => {
                   key={camp.value}
                   type="button"
                   onClick={() => setSelectedCampus(camp.value)}
-                  className={`text-xs font-bold py-1 px-2.5 rounded-md border-2 border-[#121215] transition-all cursor-pointer ${
+                  className={`text-xs font-bold py-1.5 px-3.5 rounded-full transition-all cursor-pointer ${
                     active
-                      ? 'bg-[#00F5D4] shadow-[2px_2px_0px_0px_#121215] text-[#121215]'
-                      : 'bg-white hover:bg-gray-100 text-[#121215]'
+                      ? 'bg-[#CFFE06] text-[#000000]'
+                      : 'bg-[#202020] text-[#9C9C9C] hover:text-white border border-[#3D3D3D]/60'
                   }`}
                 >
                   {camp.label}
@@ -182,24 +136,22 @@ export const EventsPage: React.FC = () => {
 
       {/* Events Grid Section */}
       {loading ? (
-        <div className="py-20 text-center">
-          <div className="inline-block animate-spin mb-4">
-            <MemphisShape type="starburst" size={36} color="#FFE600" />
-          </div>
-          <div className="font-['Space_Grotesk',sans-serif] font-bold text-lg text-[#121215]">
+        <div className="py-24 text-center">
+          <div className="w-10 h-10 border-2 border-[#CFFE06] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="font-bold text-sm text-[#9C9C9C]">
             Memuat Katalog Kegiatan...
           </div>
         </div>
       ) : events.length === 0 ? (
-        <div className="py-16 text-center p-8 bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] max-w-lg mx-auto">
-          <h3 className="font-['Space_Grotesk',sans-serif] font-black text-xl text-[#121215] mb-2">
+        <div className="py-16 text-center p-8 bg-[#151515] border border-[#3D3D3D]/50 rounded-xl max-w-lg mx-auto">
+          <h3 className="font-bold text-lg text-white mb-2">
             Tidak Ada Event Ditemukan
           </h3>
-          <p className="text-gray-500 text-sm mb-6">
+          <p className="text-[#9C9C9C] text-xs mb-6">
             Coba sesuaikan kata kunci pencarian atau ubah filter kategori/kampus Anda.
           </p>
           <Button
-            variant="yellow"
+            variant="accent"
             size="sm"
             onClick={() => {
               setSearch('')
@@ -216,15 +168,6 @@ export const EventsPage: React.FC = () => {
             <EventCard key={event.id} event={event} />
           ))}
         </div>
-      )}
-
-      {/* Unified Create Event Modal */}
-      {currentUser && (
-        <CreateEventModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onEventCreated={handleEventCreated}
-        />
       )}
     </div>
   )

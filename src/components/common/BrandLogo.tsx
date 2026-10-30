@@ -1,19 +1,37 @@
-import React from 'react';
+import React from 'react'
 
-export const BrandLogo: React.FC = () => {
-    return (
-        <>
-            <div className="w-[42px] h-[42px] bg-[#FF4B91] border-2 border-[#121215] rounded-lg shadow-[3px_3px_0px_0px_#121215] flex items-center justify-center relative -rotate-3">
-                <span className="font-['Space_Grotesk',sans-serif] font-black text-2xl text-white">
-                    C
-                </span>
-                <div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-[#FFE600] border-2 border-[#121215] rounded-full" />
-            </div>
-            <div className="mr-4">
-                <span className="font-['Space_Grotesk',sans-serif] font-black text-2xl tracking-tight text-[#121215] block leading-none">
-                    CONVENA
-                </span>
-            </div>
-        </>
-    );
+export interface BrandLogoProps {
+  size?: 'sm' | 'md' | 'lg'
+  showTagline?: boolean
+}
+
+export const BrandLogo: React.FC<BrandLogoProps> = ({ size = 'md' }) => {
+  const iconSizes = {
+    sm: 'w-7 h-7 text-sm',
+    md: 'w-9 h-9 text-base',
+    lg: 'w-11 h-11 text-xl',
+  }
+
+  const textSizes = {
+    sm: 'text-lg',
+    md: 'text-xl',
+    lg: 'text-2xl',
+  }
+
+  return (
+    <div className="flex items-center gap-2.5 select-none">
+      <div
+        className={`${iconSizes[size]} rounded-full bg-[#151515] border border-[#3D3D3D] flex items-center justify-center text-[#CFFE06] font-extrabold relative transition-transform hover:scale-105`}
+      >
+        <span>C</span>
+        <span className="w-1.5 h-1.5 rounded-full bg-[#CFFE06] absolute bottom-1 right-1" />
+      </div>
+      <div className="flex items-baseline">
+        <span className={`font-['Montserrat',sans-serif] font-black tracking-tight text-white ${textSizes[size]}`}>
+          Convena
+        </span>
+        <span className="w-1.5 h-1.5 rounded-full bg-[#CFFE06] ml-0.5 inline-block" />
+      </div>
+    </div>
+  )
 }

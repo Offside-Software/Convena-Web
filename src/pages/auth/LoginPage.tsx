@@ -1,212 +1,169 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Lock, Mail, ArrowRight, Sparkles, Eye, EyeOff, AlertCircle } from 'lucide-react'
+import { Eye, EyeOff, AlertCircle, Sparkles } from 'lucide-react'
 import { authService } from '../../services/auth.service.ts'
 
 export const LoginPage: React.FC = () => {
-    const navigate = useNavigate()
-    const [identifier, setIdentifier] = useState('')
-    const [password, setPassword] = useState('')
-    const [showPassword, setShowPassword] = useState(false)
-    const [rememberMe, setRememberMe] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
-    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const navigate = useNavigate()
+  const [identifier, setIdentifier] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setErrorMessage(null)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setErrorMessage(null)
 
-        if (!identifier.trim() || !password.trim()) {
-            setErrorMessage('Harap isi username/email dan kata sandi')
-            return
-        }
-
-        try {
-            setIsLoading(true)
-            await authService.login({ identifier, password })
-            navigate('/dashboard')
-        } catch (err: unknown) {
-            const error = err as { message?: string }
-            setErrorMessage(error?.message || 'Gagal masuk. Periksa kembali kredensial Anda.')
-        } finally {
-            setIsLoading(false)
-        }
+    if (!identifier.trim() || !password.trim()) {
+      setErrorMessage('Harap isi username/email dan password')
+      return
     }
 
-    return (
-        <div className="min-h-[calc(100vh-140px)] w-full flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-[#FAF9F6] bg-[radial-gradient(#FFE600_1.5px,transparent_1.5px)] [background-size:24px_24px] relative overflow-hidden">
-            {/* Decorative Neo-Brutalist SVGs with pure Tailwind */}
-            <div className="absolute top-12 left-10 pointer-events-none hidden md:block -rotate-12 opacity-80">
-                <svg className="w-24 h-12 text-[#FF4B91]" viewBox="0 0 120 40" fill="none" stroke="currentColor">
-                    <path d="M5 20 L25 5 L45 35 L65 5 L85 35 L105 20" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-            </div>
+    try {
+      setIsLoading(true)
+      await authService.login({ identifier, password })
+      navigate('/dashboard')
+    } catch (err: unknown) {
+      const error = err as { message?: string }
+      setErrorMessage(error?.message || 'Gagal masuk. Periksa kembali kredensial Anda.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
-            <div className="absolute bottom-16 right-12 pointer-events-none hidden md:block rotate-12 opacity-80">
-                <svg className="w-16 h-16 text-[#01CDFE]" viewBox="0 0 100 100" fill="currentColor">
-                    <circle cx="20" cy="20" r="8" />
-                    <circle cx="50" cy="20" r="8" />
-                    <circle cx="80" cy="20" r="8" />
-                    <circle cx="20" cy="50" r="8" />
-                    <circle cx="50" cy="50" r="8" />
-                    <circle cx="80" cy="50" r="8" />
-                    <circle cx="20" cy="80" r="8" />
-                    <circle cx="50" cy="80" r="8" />
-                    <circle cx="80" cy="80" r="8" />
-                </svg>
-            </div>
+  // Quick Demo Admin auto-fill helper
+  const handleQuickDemo = () => {
+    setIdentifier('arya@student.itb.ac.id')
+    setPassword('admin123')
+  }
 
-            <div className="absolute top-20 right-16 pointer-events-none hidden lg:block animate-spin [animation-duration:20s] opacity-70">
-                <svg className="w-14 h-14 text-[#FFE600]" viewBox="0 0 100 100" fill="currentColor">
-                    <polygon points="50,0 63,35 98,35 70,57 81,91 50,70 19,91 30,57 2,35 37,35" stroke="#121215" strokeWidth="4" />
-                </svg>
-            </div>
-
-            <div className="grid lg:grid-cols-2 sm:grid-cols-1 items-center space-between lg:gap-12 max-w-[1280px] relative z-10 relative z-10">
-                {/* Header Badge & Title */}
-                <div className="text-center m-3 items-center">
-                    <div className="inline-flex items-center gap-2 bg-[#FFE600] border-2 border-[#121215] rounded-full px-4 py-1 font-['Space_Grotesk',sans-serif] font-black text-xs uppercase tracking-wider text-[#121215] rotate-2 shadow-[2px_2px_0px_0px_#121215] mb-3">
-                        <span>Selamat Datang</span>
-                    </div>
-                    <h1 className="font-['Space_Grotesk',sans-serif] font-black text-3xl sm:text-4xl text-[#121215] tracking-tight mb-2">
-                        Masuk ke Convena
-                    </h1>
-                    <p className="text-xs sm:text-sm font-medium text-gray-600">
-                        Kelola event kampus & organisasi mahasiswa secara terintegrasi
-                    </p>
-                </div>
-
-                {/* Card Box */}
-                <div className="bg-white border-[3px] border-[#121215] m-3 rounded-2xl shadow-[6px_6px_0px_0px_#121215] overflow-hidden">
-                    {/* Card Window Bar */}
-                    <div className="bg-[#FF4B91] border-b-[3px] border-[#121215] px-6 py-3.5 flex items-center justify-between text-white font-['Space_Grotesk',sans-serif] font-black text-sm tracking-wider uppercase">
-                        <span className="flex items-center gap-2">
-                            <span className="w-2.5 h-2.5 bg-white rounded-full inline-block" />
-                            LOGIN AKUN
-                        </span>
-                        <div className="flex items-center gap-1.5">
-                            <span className="w-3 h-3 rounded-full bg-[#FFE600] border border-[#121215]" />
-                            <span className="w-3 h-3 rounded-full bg-[#01CDFE] border border-[#121215]" />
-                            <span className="w-3 h-3 rounded-full bg-white border border-[#121215]" />
-                        </div>
-                    </div>
-
-                    <div className="p-6 sm:p-7">
-                        <form onSubmit={handleSubmit} className="space-y-5">
-                            {errorMessage && (
-                                <div className="bg-pink-50 border-2 border-[#FF4B91] text-[#FF4B91] rounded-xl p-3.5 text-xs sm:text-sm font-bold shadow-[3px_3px_0px_0px_#FF4B91] flex items-center gap-2.5">
-                                    <AlertCircle size={18} className="shrink-0" />
-                                    <span>{errorMessage}</span>
-                                </div>
-                            )}
-
-                            <div>
-                                <label
-                                    htmlFor="identifier"
-                                    className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-2"
-                                >
-                                    Username atau Email
-                                </label>
-                                <div className="flex items-center w-full bg-white border-2 border-[#121215] rounded-xl shadow-[3px_3px_0px_0px_#121215] focus-within:border-[#FF4B91] focus-within:shadow-[4px_4px_0px_0px_#FF4B91] transition-all">
-                                    <span className="pl-3.5 pr-2.5 text-gray-400 shrink-0 select-none">
-                                        <Mail size={18} />
-                                    </span>
-                                    <input
-                                        id="identifier"
-                                        type="text"
-                                        required
-                                        placeholder="nama@kampus.ac.id atau username"
-                                        value={identifier}
-                                        onChange={(e) => setIdentifier(e.target.value)}
-                                        className="!border-none !shadow-none !bg-transparent w-full py-3 pr-4 text-sm font-medium text-[#121215] placeholder:text-gray-400 !outline-none focus:!ring-0"
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label
-                                    htmlFor="password"
-                                    className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-2"
-                                >
-                                    Kata Sandi
-                                </label>
-                                <div className="flex items-center w-full bg-white border-2 border-[#121215] rounded-xl shadow-[3px_3px_0px_0px_#121215] focus-within:border-[#FF4B91] focus-within:shadow-[4px_4px_0px_0px_#FF4B91] transition-all">
-                                    <span className="pl-3.5 pr-2.5 text-gray-400 shrink-0 select-none">
-                                        <Lock size={18} />
-                                    </span>
-                                    <input
-                                        id="password"
-                                        type={showPassword ? 'text' : 'password'}
-                                        required
-                                        placeholder="••••••••"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        className="!border-none !shadow-none !bg-transparent w-full py-3 pr-2 text-sm font-medium text-[#121215] placeholder:text-gray-400 !outline-none focus:!ring-0"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="pr-3.5 pl-2 text-gray-400 hover:text-[#121215] shrink-0 cursor-pointer focus:outline-none"
-                                        aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
-                                    >
-                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center justify-between text-xs pt-1">
-                                <label className="flex items-center gap-2.5 cursor-pointer font-medium text-gray-700 select-none">
-                                    <input
-                                        type="checkbox"
-                                        checked={rememberMe}
-                                        onChange={(e) => setRememberMe(e.target.checked)}
-                                        className="!w-4 !h-4 rounded border-2 border-[#121215] accent-[#FF4B91] cursor-pointer shrink-0 !shadow-none"
-                                    />
-                                    <span>Ingat saya di perangkat ini</span>
-                                </label>
-                                <a
-                                    href="#forgot"
-                                    onClick={(e) => {
-                                        e.preventDefault()
-                                        alert('Silakan hubungi administrator himpunan untuk mengatur ulang kata sandi.')
-                                    }}
-                                    className="font-bold text-[#FF4B91] hover:underline"
-                                >
-                                    Lupa sandi?
-                                </a>
-                            </div>
-
-                            <button
-                                type="submit"
-                                disabled={isLoading}
-                                className="w-full mt-2 py-3.5 px-6 bg-[#FFE600] hover:bg-[#FFF585] text-[#121215] font-['Space_Grotesk',sans-serif] font-black text-sm sm:text-base uppercase tracking-wider border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] hover:shadow-[6px_6px_0px_0px_#121215] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0 active:translate-y-0 active:shadow-[2px_2px_0px_0px_#121215] transition-all flex items-center justify-center gap-2.5 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-                            >
-                                {isLoading ? (
-                                    <>
-                                        <Sparkles size={18} className="animate-spin" />
-                                        <span>Memverifikasi Akun...</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <span>Masuk Sekarang</span>
-                                        <ArrowRight size={18} />
-                                    </>
-                                )}
-                            </button>
-                        </form>
-
-                        <div className="mt-6 pt-5 border-t-2 border-dashed border-gray-200 text-center text-xs sm:text-sm text-gray-600 font-medium">
-                            <span>Belum memiliki akun Convena? </span>
-                            <Link
-                                to="/register"
-                                className="text-[#FF4B91] font-['Space_Grotesk',sans-serif] font-black hover:underline ml-1"
-                            >
-                                Daftar di sini
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className="min-h-[calc(100vh-70px)] w-full flex flex-col justify-between items-center px-4 py-12 relative overflow-hidden bg-[#000000] font-['Montserrat',sans-serif]">
+      {/* Centered Login Container */}
+      <div className="w-full max-w-[380px] z-10 my-auto">
+        {/* Header Title as seen in Image 5 */}
+        <div className="text-center mb-10">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-0.5">
+            Welcome to
+          </h2>
+          <h1 className="text-4xl sm:text-5xl font-black text-[#CFFE06] tracking-tight leading-tight">
+            Convena
+          </h1>
         </div>
-    )
+
+        {/* Login Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {errorMessage && (
+            <div className="bg-[#202020] border border-[#DF00D0] text-[#DF00D0] rounded-xl p-3 text-xs font-semibold flex items-center gap-2">
+              <AlertCircle size={16} className="shrink-0" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
+
+          {/* Username / email */}
+          <div>
+            <label
+              htmlFor="identifier"
+              className="block font-medium text-xs text-[#9C9C9C] mb-2"
+            >
+              Username / email
+            </label>
+            <input
+              id="identifier"
+              type="text"
+              required
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              className="w-full bg-[#1c1c1c] border border-[#333333] rounded-xl py-3 px-4 text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06] transition-colors"
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label
+              htmlFor="password"
+              className="block font-medium text-xs text-[#9C9C9C] mb-2"
+            >
+              Password
+            </label>
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-[#1c1c1c] border border-[#333333] rounded-xl py-3 pl-4 pr-11 text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06] transition-colors"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9C9C9C] hover:text-white transition-colors cursor-pointer"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Forgot password? */}
+          <div className="flex justify-end pt-1">
+            <button
+              type="button"
+              onClick={() => alert('Fitur reset password: Hubungi administrator ormawa untuk bantuan verifikasi.')}
+              className="text-xs font-semibold text-[#CFFE06] hover:underline bg-transparent border-none p-0 cursor-pointer"
+            >
+              Forgot password?
+            </button>
+          </div>
+
+          {/* Rounded Pill Button: Login */}
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-3.5 px-6 bg-[#CFFE06] hover:bg-[#bde805] text-[#000000] font-bold text-sm rounded-full transition-all duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(207,254,6,0.25)] hover:shadow-[0_0_25px_rgba(207,254,6,0.4)] active:scale-[0.99] flex items-center justify-center gap-2"
+            >
+              {isLoading ? (
+                <>
+                  <Sparkles size={16} className="animate-spin text-black" />
+                  <span>Signing in...</span>
+                </>
+              ) : (
+                <span>Login</span>
+              )}
+            </button>
+          </div>
+
+          {/* Register Link */}
+          <div className="text-center pt-3 text-xs font-medium">
+            <span className="text-[#9C9C9C]">don't have an account yet? </span>
+            <Link to="/register" className="text-[#CFFE06] font-semibold hover:underline">
+              register here
+            </Link>
+          </div>
+
+          {/* Demo Auto-fill Helper */}
+          <div className="pt-4 text-center">
+            <button
+              type="button"
+              onClick={handleQuickDemo}
+              className="text-[11px] text-[#9C9C9C] hover:text-[#CFFE06] bg-[#151515] border border-[#3D3D3D] rounded-full py-1.5 px-3 transition-colors cursor-pointer"
+            >
+              Demo Admin Auto-Fill (Arya Pratama)
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {/* Subtle Purple to Neon-Green Gradient Ambient Glow at Bottom (matching Image 5) */}
+      <div
+        className="pointer-events-none absolute bottom-0 left-0 right-0 h-[220px] opacity-75 blur-[70px]"
+        style={{
+          background: 'radial-gradient(ellipse at bottom, #CFFE06 0%, #DF00D0 50%, transparent 80%)',
+        }}
+      />
+    </div>
+  )
 }
