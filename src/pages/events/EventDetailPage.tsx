@@ -105,8 +105,8 @@ export const EventDetailPage: React.FC = () => {
         >
           <ArrowLeft size={18} />
         </Link>
-        <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight m-0">
-          Dashboard
+        <h1 className="font-bold text-white tracking-tight m-0">
+          Event
         </h1>
       </div>
 
@@ -117,7 +117,7 @@ export const EventDetailPage: React.FC = () => {
           <div className="bg-[#141414] border border-[#262626] rounded-xl overflow-hidden">
             <div className="h-[280px] sm:h-[360px] relative overflow-hidden bg-[#202020]">
               <img
-                src={event.bannerUrl}
+                src={event.bannerUrl || ''}
                 alt={event.title}
                 className="w-full h-full object-cover"
               />
@@ -127,7 +127,7 @@ export const EventDetailPage: React.FC = () => {
                   {event.category.toUpperCase()}
                 </Badge>
                 <Badge variant="dark">
-                  {event.university}
+                  {event.company || 'Telkom University'}
                 </Badge>
               </div>
             </div>
@@ -147,7 +147,7 @@ export const EventDetailPage: React.FC = () => {
 
               {/* Tag pills */}
               <div className="flex gap-2 flex-wrap mb-6">
-                {event.tags.map((t) => (
+                {(event.tags ?? []).map((t) => (
                   <Badge key={t} variant="dark">
                     #{t}
                   </Badge>
@@ -333,21 +333,31 @@ export const EventDetailPage: React.FC = () => {
               <span className="block text-xs font-semibold text-[#9C9C9C]">
                 Data Pemilik Tiket
               </span>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <input
-                  type="text"
-                  placeholder="Nama Lengkap"
-                  value={attendeeName}
-                  onChange={(e) => setAttendeeName(e.target.value)}
-                  className="w-full bg-[#0a0a0a] border border-[#262626] rounded-lg py-1.5 px-3 text-xs text-white outline-none focus:border-[#CFFE06]"
-                />
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={attendeeEmail}
-                  onChange={(e) => setAttendeeEmail(e.target.value)}
-                  className="w-full bg-[#0a0a0a] border border-[#262626] rounded-lg py-1.5 px-3 text-xs text-white outline-none focus:border-[#CFFE06]"
-                />
+              <div className="grid grid-rows-1 gap-2">
+                <div>
+                  <span className='my-1.5 block text-xs font-semibold text-[#9C9C9C]'>
+                    Nama
+                  </span>
+                  <input
+                    type="text"
+                    placeholder="Nama Lengkap"
+                    value={attendeeName}
+                    onChange={(e) => setAttendeeName(e.target.value)}
+                    className="w-full bg-[#0a0a0a] border border-[#262626] rounded-lg py-1.5 px-3 text-xs text-white outline-none focus:border-[#CFFE06]"
+                  />
+                </div>
+                <div>
+                  <span className='my-1.5 block text-xs font-semibold text-[#9C9C9C]'>
+                    Email
+                  </span>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={attendeeEmail}
+                    onChange={(e) => setAttendeeEmail(e.target.value)}
+                    className="w-full bg-[#0a0a0a] border border-[#262626] rounded-lg py-1.5 px-3 text-xs text-white outline-none focus:border-[#CFFE06]"
+                  />
+                </div>
               </div>
             </div>
 
@@ -427,12 +437,12 @@ export const EventDetailPage: React.FC = () => {
 
             <div className="border-t border-[#262626] pt-3.5 mt-3.5 flex items-baseline justify-between">
               <div>
-                <span className="text-[11px] text-[#9C9C9C] block mb-0.5">Est. To Be Paid</span>
+                <span className="text-[11px] font-medium text-[#9C9C9C] block mb-0.5">Est. To Be Paid</span>
                 <span className="text-xl font-black text-white">
                   Rp {totalToPay.toLocaleString('id-ID')}
                 </span>
               </div>
-              <span className="text-[11px] text-[#9C9C9C]">Expires in 15:00</span>
+              <span className="text-[11px] font-medium text-[#9C9C9C]">Expires in 15:00</span>
             </div>
           </div>
 

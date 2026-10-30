@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { ShieldCheck, Search, CheckCircle2, QrCode, XCircle } from 'lucide-react'
+import { CheckCircle2, QrCode, XCircle } from 'lucide-react'
 import { Button } from '../../components/common/Button.tsx'
-import { Badge } from '../../components/common/Badge.tsx'
+import { SearchBar } from '../../components/common/SearchBar.tsx'
 import { certificateService } from '../../services/certificate.service.ts'
 import type { Certificate } from '../../types/certificate.ts'
 
@@ -48,11 +48,6 @@ export const VerifyPage: React.FC = () => {
     <div className="max-w-[1080px] mx-auto py-12 px-4 sm:px-6 pb-24 font-['Montserrat',sans-serif] bg-[#000000] text-white">
       {/* Title Header */}
       <div className="text-center mb-10">
-        <div className="inline-flex mb-3">
-          <Badge variant="accent" icon={<ShieldCheck size={14} />}>
-            PORTAL OTENTIKASI RESMI
-          </Badge>
-        </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">
           Verifikasi Keaslian E-Sertifikat
         </h1>
@@ -63,22 +58,18 @@ export const VerifyPage: React.FC = () => {
 
       {/* Search Input Box */}
       <div className="max-w-[680px] mx-auto mb-10 p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl">
-        <form onSubmit={handleVerify} className="flex gap-2.5 flex-wrap">
-          <div className="grow basis-[300px] flex items-center bg-[#202020] border border-[#3D3D3D] rounded-full px-4 py-1.5 focus-within:border-[#CFFE06] transition-colors">
-            <Search size={18} className="text-[#9C9C9C] mr-2 shrink-0" />
-            <input
-              type="text"
-              placeholder="Masukkan ID Sertifikat (Contoh: CNV-2026-ITB-8821)"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              className="w-full bg-transparent border-none outline-none text-sm font-medium text-white placeholder:text-[#9C9C9C]/60"
-              required
-            />
-          </div>
-          <Button variant="accent" size="md" type="submit" disabled={loading}>
-            {loading ? 'Memvalidasi...' : 'Verifikasi'}
-          </Button>
-        </form>
+        <SearchBar
+          placeholder="Masukkan ID Sertifikat (Contoh: CNV-2026-ITB-8821)"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          onSubmit={handleVerify}
+          showSubmitButton={true}
+          submitLabel={loading ? 'Memvalidasi...' : 'Verifikasi'}
+          submitLoading={loading}
+          submitDisabled={loading}
+          variant="grey"
+          required
+        />
 
         {/* Quick sample fillers */}
         <div className="flex items-center gap-2 mt-4 flex-wrap text-xs">
@@ -122,7 +113,7 @@ export const VerifyPage: React.FC = () => {
               <div className="py-12 px-6 sm:px-12 text-center relative bg-[#121212]">
                 {/* Institution Heading */}
                 <div className="text-xs font-semibold text-[#9C9C9C] uppercase tracking-widest mb-3">
-                  {certificate.organizationName} • {certificate.university}
+                  {certificate.organizationName} • {certificate.company}
                 </div>
 
                 <div className="font-extrabold text-2xl sm:text-3xl text-white mb-4 tracking-tight">

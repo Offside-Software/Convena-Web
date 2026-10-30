@@ -1,3 +1,5 @@
+import type { TicketTier } from './event.ts'
+
 export type EventRole =
   | 'owner'
   | 'admin'
@@ -24,25 +26,26 @@ export interface EventWithRole {
   createdBy: string
   title: string
   slug: string
-  description?: string
-  shortDescription?: string
-  bannerUrl?: string
+  description?: string | null
+  shortDescription?: string | null
+  bannerUrl?: string | null
   category: string
   status: string
   visibility: string
   startDate: string
   endDate: string
   locationType: string
-  venueName?: string
-  organizationName?: string
-  university?: string
+  venueName?: string | null
+  address?: string | null
+  city?: string | null
+  onlineUrl?: string | null
+  organizationName?: string | null
+  company?: string | null
+  ticketTiers?: TicketTier[]
   createdAt: string
+  updatedAt?: string | null
   myRole: EventRole
-  myCustomTitle?: string
-  ticketTiers?: import('./event.ts').TicketTier[]
-  tags?: string[]
-  attendeeCount?: number
-  totalCapacity?: number
+  myCustomTitle?: string | null
 }
 
 export interface InviteMemberPayload {

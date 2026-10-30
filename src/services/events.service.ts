@@ -5,25 +5,16 @@ import type {
   EventFilterParams,
   CreateEventInput,
   CreateEventResponse,
-  RawApiEvent,
   RegisterTicketInput,
   RegisterTicketResponse,
   TicketTier,
   EventCategory,
   EventStatus,
+  LocationType,
 } from '../types/event.ts'
 import type { EventWithRole } from '../types/membership.ts'
 
-export type EventRawInput = (RawApiEvent | EventWithRole) & {
-  ticketTiers?: TicketTier[]
-  tags?: string[]
-  attendeeCount?: number
-  totalCapacity?: number
-}
-
-export function normalizeEvent(rawInput: RawApiEvent | EventWithRole): Event {
-  const raw = rawInput as EventRawInput
-
+export function normalizeEvent(raw: any): Event {
   // Ensure ticketTiers is always an array
   let ticketTiers: TicketTier[] = []
   if (Array.isArray(raw.ticketTiers) && raw.ticketTiers.length > 0) {
@@ -36,11 +27,11 @@ export function normalizeEvent(rawInput: RawApiEvent | EventWithRole): Event {
     } else {
       ticketTiers = [
         {
-          id: `tier-general-${raw.id}`,
-          name: 'General Admission',
+          id: `tier-std-${raw.id || 'default'}`,
+          name: 'Standard',
           price: 0,
-          quota: raw.totalCapacity || 500,
-          sold: raw.attendeeCount || 0,
+          quota: 250,
+          sold: 0,
           benefits: ['Akses Acara Penuh', 'Sertifikat Digital', 'Materi Pembicara'],
           isAvailable: true,
         },
@@ -65,17 +56,31 @@ export function normalizeEvent(rawInput: RawApiEvent | EventWithRole): Event {
     ? (raw.status as EventStatus)
     : 'published'
 
-  const locationType =
+  const locationType: LocationType =
     raw.locationType === 'online' || raw.locationType === 'hybrid'
       ? raw.locationType
       : 'offline'
 
-  const address = 'address' in raw ? (raw.address ?? undefined) : undefined
-  const city = 'city' in raw ? (raw.city ?? undefined) : undefined
-  const onlineUrl = 'onlineUrl' in raw ? (raw.onlineUrl ?? undefined) : undefined
+  const venueName = raw.venueName || raw.location?.venueName || (locationType === 'online' ? 'Online' : 'Venue Acara')
+  const address = raw.address || raw.location?.address || ''
+  const city = raw.city || raw.location?.city || ''
+  const onlineUrl = raw.onlineUrl || raw.location?.onlineUrl || ''
+  const company = raw.company || raw.university || 'Telkom University'
+  const organizationName = raw.organizationName || 'BEM & DPM Kema Telkom University'
+
+  const attendeeCount =
+    typeof raw.attendeeCount === 'number'
+      ? raw.attendeeCount
+      : ticketTiers.reduce((acc, t) => acc + (t.sold || 0), 0)
+
+  const totalCapacity =
+    typeof raw.totalCapacity === 'number' && raw.totalCapacity > 0
+      ? raw.totalCapacity
+      : ticketTiers.reduce((acc, t) => acc + (t.quota || 0), 0) || 500
 
   return {
     id: String(raw.id),
+    createdBy: raw.createdBy || 'usr-default',
     title: raw.title || 'Untitled Event',
     slug: raw.slug || String(raw.id),
     description: raw.description || '',
@@ -88,22 +93,27 @@ export function normalizeEvent(rawInput: RawApiEvent | EventWithRole): Event {
     visibility: raw.visibility === 'private' ? 'private' : 'public',
     startDate: raw.startDate,
     endDate: raw.endDate || raw.startDate,
+    locationType,
+    venueName,
+    address,
+    city,
+    onlineUrl,
+    organizationName,
+    company,
+    ticketTiers,
+    createdAt: raw.createdAt || new Date().toISOString(),
+    updatedAt: raw.updatedAt,
     location: {
       type: locationType,
-      venueName: raw.venueName || 'Telkom University Convention Hall',
+      venueName,
       address,
-      city: city || 'Bandung',
+      city,
       onlineUrl,
     },
-    organizationId: raw.createdBy || 'org-default',
-    organizationName: raw.organizationName || 'BEM & DPM Kema Telkom University',
-    university: raw.university || 'Telkom University',
-    ticketTiers,
-    tags: raw.tags && raw.tags.length > 0 ? raw.tags : ['Ormawa', 'Kampus', 'Inovasi'],
-    attendeeCount: raw.attendeeCount ?? 0,
-    totalCapacity: raw.totalCapacity ?? 500,
-    myRole: 'myRole' in raw ? raw.myRole : undefined,
-    myCustomTitle: 'myCustomTitle' in raw ? raw.myCustomTitle : undefined,
+    attendeeCount,
+    totalCapacity,
+    myRole: raw.myRole,
+    myCustomTitle: raw.myCustomTitle,
   }
 }
 
@@ -112,11 +122,11 @@ export class EventsService {
     try {
       const queryParams: Record<string, string | undefined> = {
         category: params?.category,
-        university: params?.university,
+        company: params?.company,
         status: params?.status,
         search: params?.search,
       }
-      const rawEvents = await apiClient.get<RawApiEvent[]>('/events', queryParams)
+      const rawEvents = await apiClient.get<any[]>('/events', queryParams)
       if (Array.isArray(rawEvents)) {
         return rawEvents.map(normalizeEvent)
       }
@@ -127,9 +137,9 @@ export class EventsService {
       if (params?.category && params.category !== 'all') {
         filtered = filtered.filter((e) => e.category === params.category)
       }
-      if (params?.university && params.university !== 'all') {
+      if (params?.company && params.company !== 'all') {
         filtered = filtered.filter((e) =>
-          e.university.toLowerCase().includes(params.university!.toLowerCase())
+          e.company?.toLowerCase().includes(params.company!.toLowerCase())
         )
       }
       if (params?.search) {
@@ -137,8 +147,9 @@ export class EventsService {
         filtered = filtered.filter(
           (e) =>
             e.title.toLowerCase().includes(query) ||
-            e.description.toLowerCase().includes(query) ||
-            (e.tags && e.tags.some((t) => t.toLowerCase().includes(query)))
+            (e.description && e.description.toLowerCase().includes(query)) ||
+            (e.organizationName && e.organizationName.toLowerCase().includes(query)) ||
+            (e.company && e.company.toLowerCase().includes(query))
         )
       }
       return filtered
@@ -159,7 +170,7 @@ export class EventsService {
 
   async getEventById(id: string): Promise<Event | undefined> {
     try {
-      const raw = await apiClient.get<RawApiEvent>(`/events/${id}`)
+      const raw = await apiClient.get<any>(`/events/${id}`)
       if (raw) {
         return normalizeEvent(raw)
       }

@@ -100,7 +100,7 @@ export const DashboardLayout: React.FC = () => {
             <div>
               <BrandLogo />
               <div className="text-[11px] font-semibold text-[#9C9C9C] mt-1">
-                Admin Workspace
+                Workspace
               </div>
             </div>
             <span className="w-2.5 h-2.5 rounded-full bg-[#CFFE06] shadow-[0_0_8px_#CFFE06]" />
@@ -175,7 +175,7 @@ export const DashboardLayout: React.FC = () => {
                 {currentUser?.name || 'Arya Pratama'}
               </div>
               <div className="text-[10px] text-[#9C9C9C] truncate">
-                {currentUser?.company || currentUser?.university || 'Telkom University'}
+                {currentUser?.company || 'Telkom University'}
               </div>
             </div>
           </div>

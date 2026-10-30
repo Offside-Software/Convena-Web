@@ -8,6 +8,10 @@ export type EventCategory =
 
 export type EventStatus = 'draft' | 'published' | 'ongoing' | 'completed' | 'cancelled'
 
+export type EventVisibility = 'public' | 'private'
+
+export type LocationType = 'offline' | 'online' | 'hybrid'
+
 export interface TicketTier {
   id: string
   name: string
@@ -19,67 +23,43 @@ export interface TicketTier {
 }
 
 export interface EventLocation {
-  type: 'offline' | 'online' | 'hybrid'
+  type: LocationType
   venueName?: string
   address?: string
   city?: string
-  lat?: number
-  lng?: number
   onlineUrl?: string
 }
 
 export interface Event {
   id: string
-  title: string
-  slug: string
-  description: string
-  shortDescription: string
-  bannerUrl: string
-  category: EventCategory
-  status: EventStatus
-  visibility: 'public' | 'private'
-  startDate: string
-  endDate: string
-  location: EventLocation
-  organizationId: string
-  organizationName: string
-  university: string
-  ticketTiers?: TicketTier[]
-  tags: string[]
-  attendeeCount: number
-  totalCapacity: number
-  requiresApproval?: boolean
-  certificateAvailable?: boolean
-  myRole?: string
-  myCustomTitle?: string
-}
-
-export interface RawApiEvent {
-  id: string
   createdBy?: string
   title: string
-  slug?: string
+  slug: string
   description?: string | null
   shortDescription?: string | null
   bannerUrl?: string | null
-  category: string
-  status?: string
-  visibility?: string
+  category: EventCategory
+  status: EventStatus
+  visibility?: EventVisibility
   startDate: string
-  endDate?: string
-  locationType?: 'offline' | 'online' | 'hybrid' | string
+  endDate: string
+  locationType?: LocationType
   venueName?: string | null
   address?: string | null
   city?: string | null
   onlineUrl?: string | null
   organizationName?: string | null
-  university?: string | null
+  company?: string | null
+  ticketTiers?: TicketTier[]
   createdAt?: string
   updatedAt?: string
-  ticketTiers?: TicketTier[]
+
+  // UI convenience mappings
+  location: EventLocation
+  attendeeCount: number
+  totalCapacity: number
   tags?: string[]
-  attendeeCount?: number
-  totalCapacity?: number
+  organizationId?: string
   myRole?: string
   myCustomTitle?: string
 }
@@ -91,25 +71,28 @@ export interface CreateEventInput {
   shortDescription?: string
   bannerUrl?: string
   category: EventCategory
+  status?: EventStatus
+  visibility?: EventVisibility
   startDate: string
   endDate: string
-  locationType?: 'offline' | 'online' | 'hybrid'
+  locationType: LocationType
   venueName?: string
   address?: string
   city?: string
   onlineUrl?: string
   organizationName?: string
-  university?: string
+  company?: string
+  ticketTiers?: TicketTier[]
 }
 
 export interface CreateEventResponse {
-  event: RawApiEvent
+  event: Event
   role: string
 }
 
 export interface EventFilterParams {
   category?: string
-  university?: string
+  company?: string
   city?: string
   status?: string
   search?: string

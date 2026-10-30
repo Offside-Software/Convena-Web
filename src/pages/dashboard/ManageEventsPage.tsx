@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
-import { Plus, Search, Calendar, Users, MapPin, ArrowUpRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Plus, Calendar, Users, MapPin, ArrowUpRight } from 'lucide-react'
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
 import { ProgressBar } from '../../components/common/ProgressBar.tsx'
-import { CreateEventModal } from './components/CreateEventModal.tsx'
+import { SearchBar } from '../../components/common/SearchBar.tsx'
 import { eventsService } from '../../services/events.service.ts'
 import type { Event } from '../../types/event.ts'
 
 export const ManageEventsPage: React.FC = () => {
-  const [searchParams] = useSearchParams()
-  const isCreateParam = searchParams.get('new') === 'true'
-
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'draft'>('all')
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(isCreateParam)
 
   useEffect(() => {
     let isMounted = true
@@ -38,15 +34,12 @@ export const ManageEventsPage: React.FC = () => {
     }
   }, [])
 
-  const handleEventCreated = (newEvent: Event) => {
-    setEvents((prev) => [newEvent, ...prev])
-  }
-
   const filteredEvents = events.filter((e) => {
     const matchesSearch =
       e.title.toLowerCase().includes(search.toLowerCase()) ||
-      e.description.toLowerCase().includes(search.toLowerCase()) ||
-      e.organizationName.toLowerCase().includes(search.toLowerCase())
+      (e.description && e.description.toLowerCase().includes(search.toLowerCase())) ||
+      (e.organizationName && e.organizationName.toLowerCase().includes(search.toLowerCase())) ||
+      (e.company && e.company.toLowerCase().includes(search.toLowerCase()))
 
     const matchesStatus = statusFilter === 'all' || e.status === statusFilter
     return matchesSearch && matchesStatus
@@ -70,29 +63,29 @@ export const ManageEventsPage: React.FC = () => {
           </p>
         </div>
 
-        <Button
-          variant="accent"
-          size="md"
-          icon={<Plus size={16} />}
-          onClick={() => setIsCreateModalOpen(true)}
-        >
-          Buat Event Baru
-        </Button>
+        <Link to="/dashboard/events/create" className="no-underline">
+          <Button
+            variant="accent"
+            size="md"
+            icon={<Plus size={16} />}
+          >
+            Buat Event Baru
+          </Button>
+        </Link>
       </div>
 
       {/* Filter and Search Bar */}
       <div className="p-4 bg-[#151515] border border-[#3D3D3D]/50 rounded-xl mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Search Input */}
-        <div className="w-full sm:w-auto flex-1 flex items-center bg-[#202020] border border-[#3D3D3D] rounded-full px-4 py-2 focus-within:border-[#CFFE06] transition-colors">
-          <Search size={16} className="text-[#9C9C9C] mr-2 shrink-0" />
-          <input
-            type="text"
-            placeholder="Cari event yang Anda kelola..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-transparent border-none outline-none text-xs sm:text-sm font-medium text-white placeholder:text-[#9C9C9C]/60"
-          />
-        </div>
+        <SearchBar
+          containerClassName="w-full sm:w-auto flex-1"
+          inputContainerClassName="rounded-full"
+          placeholder="Cari event yang Anda kelola..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          showSubmitButton={false}
+          clearable
+        />
 
         {/* Status Filter Tabs */}
         <div className="flex items-center gap-2 self-start sm:self-center">
@@ -138,14 +131,15 @@ export const ManageEventsPage: React.FC = () => {
           <p className="text-[#9C9C9C] text-xs mb-6">
             Tidak ada event yang sesuai dengan pencarian atau filter Anda.
           </p>
-          <Button
-            variant="accent"
-            size="sm"
-            icon={<Plus size={15} />}
-            onClick={() => setIsCreateModalOpen(true)}
-          >
-            Buat Event Baru
-          </Button>
+          <Link to="/dashboard/events/create" className="no-underline">
+            <Button
+              variant="accent"
+              size="sm"
+              icon={<Plus size={15} />}
+            >
+              Buat Event Baru
+            </Button>
+          </Link>
         </div>
       ) : (
         <div className="space-y-4">
@@ -164,7 +158,7 @@ export const ManageEventsPage: React.FC = () => {
                 {/* Left: Thumbnail & Details */}
                 <div className="flex items-start gap-4">
                   <img
-                    src={evt.bannerUrl}
+                    src={evt.bannerUrl || ''}
                     alt={evt.title}
                     className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl border border-[#3D3D3D] object-cover shrink-0"
                   />
@@ -177,7 +171,7 @@ export const ManageEventsPage: React.FC = () => {
                         {evt.status === 'published' ? 'PUBLISHED' : 'DRAFT'}
                       </Badge>
                       <span className="text-xs text-[#9C9C9C] font-medium">
-                        {evt.organizationName}
+                        {evt.organizationName} • {evt.company}
                       </span>
                     </div>
 
@@ -192,7 +186,7 @@ export const ManageEventsPage: React.FC = () => {
                       </div>
                       <div className="flex items-center gap-1.5">
                         <MapPin size={13} className="text-[#CFFE06]" />
-                        <span>{evt.location.venueName || 'Online'}</span>
+                        <span>{evt.location.venueName || (evt.location.type === 'online' ? 'Online' : 'Venue Acara')}</span>
                       </div>
                     </div>
                   </div>
@@ -231,13 +225,6 @@ export const ManageEventsPage: React.FC = () => {
           })}
         </div>
       )}
-
-      {/* Create Event Modal */}
-      <CreateEventModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onEventCreated={handleEventCreated}
-      />
     </div>
   )
 }

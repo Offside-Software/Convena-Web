@@ -4,7 +4,7 @@ export interface Certificate {
   recipientName: string
   recipientEmail: string
   studentId?: string
-  university: string
+  company: string
   eventId: string
   eventTitle: string
   organizationName: string

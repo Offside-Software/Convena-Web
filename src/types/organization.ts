@@ -9,7 +9,7 @@ export interface Organization {
   id: string
   name: string
   shortName: string
-  university: string
+  company: string
   description: string
   logoUrl?: string
   bannerUrl?: string

@@ -83,7 +83,7 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center gap-3">
           {isLoggedIn ? (
             <div className="flex items-center gap-3">
-              {/* Dedicated Admin Workspace Button */}
+              {/* Dedicated Workspace Button */}
               <Link to="/dashboard" className="no-underline">
                 <Button
                   variant="accent"
@@ -91,11 +91,11 @@ export const Navbar: React.FC = () => {
                   icon={<LayoutDashboard size={15} />}
                   className="hidden sm:inline-flex"
                 >
-                  Admin Workspace
+                  Workspace
                 </Button>
               </Link>
 
-              {/* Admin Profile Chip */}
+              {/* Profile Chip */}
               <Link to="/dashboard" className="no-underline hidden md:flex items-center gap-2.5 px-2.5 py-1 bg-[#151515] border border-[#3D3D3D] rounded-full hover:border-[#CFFE06]/40 transition-colors">
                 {user?.avatarUrl ? (
                   <img
@@ -180,7 +180,7 @@ export const Navbar: React.FC = () => {
                 className="no-underline"
               >
                 <Button variant="accent" fullWidth icon={<LayoutDashboard size={16} />}>
-                  Admin Workspace
+                  Workspace
                 </Button>
               </Link>
               <Button

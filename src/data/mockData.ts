@@ -12,7 +12,7 @@ export const mockCurrentUser: User = {
   role: 'admin',
   organizationId: 'org-hmif-itb',
   avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-  university: 'Institut Teknologi Bandung',
+  company: 'Institut Teknologi Bandung',
   studentId: '13522045',
 }
 
@@ -21,7 +21,7 @@ export const mockOrganizations: Organization[] = [
     id: 'org-hmif-itb',
     name: 'Himpunan Mahasiswa Informatika ITB',
     shortName: 'HMIF ITB',
-    university: 'Institut Teknologi Bandung',
+    company: 'Institut Teknologi Bandung',
     description: 'Wadah kemahasiswaan bagi mahasiswa Teknik Informatika dan Sistem dan Teknologi Informasi ITB.',
     verified: true,
     memberCount: 380,
@@ -41,7 +41,7 @@ export const mockOrganizations: Organization[] = [
     id: 'org-bem-ui',
     name: 'Badan Eksekutif Mahasiswa Universitas Indonesia',
     shortName: 'BEM UI',
-    university: 'Universitas Indonesia',
+    company: 'Universitas Indonesia',
     description: 'Lembaga eksekutif mahasiswa tertinggi di tingkat Universitas Indonesia yang aktif mengabdi dan berkarya.',
     verified: true,
     memberCount: 520,
@@ -76,16 +76,16 @@ export const mockEvents: Event[] = [
       venueName: 'Telkom University Convention Hall',
       address: 'Jl. Telekomunikasi No. 1, Buahbatu, Bandung',
       city: 'Bandung',
-      lat: -6.9744,
-      lng: 107.6303,
+
+
     },
     organizationId: 'org-telu-bem',
     organizationName: 'BEM Kema Telkom University',
-    university: 'Telkom University',
+    company: 'Telkom University',
     tags: ['Tech', 'AI', 'Innovation', 'Summit'],
     attendeeCount: 450,
     totalCapacity: 800,
-    certificateAvailable: true,
+
     ticketTiers: [
       {
         id: 'tkt-vip-workshop',
@@ -133,16 +133,16 @@ export const mockEvents: Event[] = [
       venueName: 'Aula Barat ITB',
       address: 'Jl. Ganesha No. 10, Bandung',
       city: 'Bandung',
-      lat: -6.8915,
-      lng: 107.6107,
+
+
     },
     organizationId: 'org-hmif-itb',
     organizationName: 'HMIF ITB',
-    university: 'Institut Teknologi Bandung',
+    company: 'Institut Teknologi Bandung',
     tags: ['Tech', 'Hackathon', 'AI', 'Competition'],
     attendeeCount: 420,
     totalCapacity: 600,
-    certificateAvailable: true,
+
     ticketTiers: [
       {
         id: 'tkt-early',
@@ -194,11 +194,11 @@ export const mockEvents: Event[] = [
     },
     organizationId: 'org-bem-ui',
     organizationName: 'BEM UI',
-    university: 'Universitas Indonesia',
+    company: 'Universitas Indonesia',
     tags: ['Leadership', 'Policy', 'Youth', 'NationBuilding'],
     attendeeCount: 780,
     totalCapacity: 1000,
-    certificateAvailable: true,
+
     ticketTiers: [
       {
         id: 'tkt-online',
@@ -238,11 +238,11 @@ export const mockEvents: Event[] = [
     },
     organizationId: 'org-hmif-itb',
     organizationName: 'HMIF ITB',
-    university: 'Institut Teknologi Bandung',
+    company: 'Institut Teknologi Bandung',
     tags: ['AI', 'Python', 'Coding', 'Agents'],
     attendeeCount: 150,
     totalCapacity: 150,
-    certificateAvailable: true,
+
     ticketTiers: [
       {
         id: 'tkt-full-ws',
@@ -419,7 +419,7 @@ export const mockCertificates: Record<string, Certificate> = {
     recipientName: 'Arya Pratama',
     recipientEmail: 'arya@student.telkomuniversity.ac.id',
     studentId: '1301223045',
-    university: 'Telkom University',
+    company: 'Telkom University',
     eventId: 'evt-global-tech-summit',
     eventTitle: 'Global Tech Innovators Summit 2026 Tel-U',
     organizationName: 'BEM Kema Telkom University',
@@ -437,7 +437,7 @@ export const mockCertificates: Record<string, Certificate> = {
     recipientName: 'Muhammad Rizky Ramadhan',
     recipientEmail: 'mrizky@student.itb.ac.id',
     studentId: '13522019',
-    university: 'Institut Teknologi Bandung',
+    company: 'Institut Teknologi Bandung',
     eventId: 'evt-arkavidia-2026',
     eventTitle: 'Arkavidia 9.0: National Tech Festival & Hackathon',
     organizationName: 'HMIF ITB',
@@ -455,7 +455,7 @@ export const mockCertificates: Record<string, Certificate> = {
     recipientName: 'Jessica Aurelia Siregar',
     recipientEmail: 'jessica.aurelia@ui.ac.id',
     studentId: '2206819201',
-    university: 'Universitas Indonesia',
+    company: 'Universitas Indonesia',
     eventId: 'evt-ui-leadership-summit',
     eventTitle: 'UI Youth Leadership & Policy Forum 2026',
     organizationName: 'BEM UI',
