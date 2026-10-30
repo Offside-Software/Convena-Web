@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, CheckCircle2, DollarSign, FileText, Search, ShieldCheck, Sparkles, Trophy, Users, ArrowRight } from 'lucide-react'
+import { Calendar, CheckCircle2, DollarSign, FileText, ShieldCheck, Sparkles, Trophy, Users, ArrowRight } from 'lucide-react'
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
 import { EventCard } from '../../components/domain/EventCard.tsx'
@@ -8,12 +8,11 @@ import { eventsService } from '../../services/events.service.ts'
 import type { Event } from '../../types/event.ts'
 
 export const HomePage: React.FC = () => {
-  const [featuredEvents, setFeaturedEvents] = useState<Event[]>([])
-  const [searchQuery, setSearchQuery] = useState('')
+  const [featuredEvents, setFeaturedEvents] = useState<Event[]>([]);
 
   useEffect(() => {
-    eventsService.getEvents().then(setFeaturedEvents)
-  }, [])
+    eventsService.getEvents().then(setFeaturedEvents);
+  }, []);
 
   return (
     <div className="relative overflow-hidden bg-[#000000] text-white font-['Montserrat',sans-serif]">
@@ -55,23 +54,6 @@ export const HomePage: React.FC = () => {
             <Link to="/verify" className="no-underline">
               <Button variant="outline" size="lg" icon={<ShieldCheck size={18} />}>
                 Verify Certificate
-              </Button>
-            </Link>
-          </div>
-
-          {/* Clean Dark Search Box */}
-          <div className="max-w-[640px] mx-auto p-2 bg-[#151515] border border-[#3D3D3D] rounded-full flex gap-2 items-center shadow-2xl focus-within:border-[#CFFE06] transition-colors">
-            <Search size={20} className="ml-3 text-[#9C9C9C] shrink-0" />
-            <input
-              type="text"
-              placeholder="Cari hackathon, seminar, workshop, kampus (Tel-U, ITB, UI)..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-transparent border-none outline-none py-1.5 text-sm font-medium text-white placeholder:text-[#9C9C9C]/60"
-            />
-            <Link to={`/events?search=${encodeURIComponent(searchQuery)}`} className="no-underline">
-              <Button variant="accent" size="sm">
-                Cari
               </Button>
             </Link>
           </div>
