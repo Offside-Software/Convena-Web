@@ -88,7 +88,7 @@ export class AuthService {
         name: payload.name,
         email: payload.email,
         role: 'admin',
-        university: payload.company || 'Telkom University',
+
         company: payload.company || 'Organisasi Mahasiswa',
       }
       localStorage.setItem(TOKEN_KEY, mockToken)

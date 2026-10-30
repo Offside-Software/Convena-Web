@@ -15,7 +15,6 @@ import { Card } from '../../components/common/Card.tsx'
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
 import { ProgressBar } from '../../components/common/ProgressBar.tsx'
-import { CreateEventModal } from './components/CreateEventModal.tsx'
 import { authService } from '../../services/auth.service.ts'
 import { eventsService } from '../../services/events.service.ts'
 import { financeService } from '../../services/finance.service.ts'
@@ -28,7 +27,6 @@ import type { SponsorLead } from '../../types/sponsorship.ts'
 export const DashboardPage: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [authLoading, setAuthLoading] = useState(true)
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [events, setEvents] = useState<Event[]>([])
   const [budget, setBudget] = useState<EventBudgetSummary | null>(null)
   const [leads, setLeads] = useState<SponsorLead[]>([])
@@ -68,10 +66,6 @@ export const DashboardPage: React.FC = () => {
     }
   }, [])
 
-  const handleEventCreated = (newEvent: Event) => {
-    setEvents((prev) => [newEvent, ...prev])
-  }
-
   if (authLoading) {
     return (
       <div className="py-24 text-center">
@@ -97,7 +91,7 @@ export const DashboardPage: React.FC = () => {
         <div>
           <div className="mb-2 flex items-center gap-2">
             <Badge variant="accent">
-              ADMIN WORKSPACE
+              WORKSPACE
             </Badge>
             <span className="text-xs text-[#9C9C9C]">
               Halo, <span className="text-white font-bold">{currentUser.displayName || currentUser.name}</span>
@@ -112,14 +106,15 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         <div className="flex gap-2.5">
-          <Button
-            variant="accent"
-            size="md"
-            icon={<Plus size={16} />}
-            onClick={() => setIsCreateModalOpen(true)}
-          >
-            Buat Event Baru
-          </Button>
+          <Link to="/dashboard/events/create" className="no-underline">
+            <Button
+              variant="accent"
+              size="md"
+              icon={<Plus size={16} />}
+            >
+              Buat Event Baru
+            </Button>
+          </Link>
           <Link to="/dashboard/finances" className="no-underline">
             <Button variant="outline" size="md" icon={<Receipt size={16} />}>
               Catat SPJ
@@ -181,14 +176,15 @@ export const DashboardPage: React.FC = () => {
                 <p className="text-xs text-[#9C9C9C] mb-4">
                   Buat event pertama Anda sekarang untuk mulai mengelola tiket, anggaran, dan sponsorship.
                 </p>
-                <Button
-                  variant="accent"
-                  size="sm"
-                  icon={<Plus size={15} />}
-                  onClick={() => setIsCreateModalOpen(true)}
-                >
-                  Buat Event Pertama
-                </Button>
+                <Link to="/dashboard/events/create" className="no-underline">
+                  <Button
+                    variant="accent"
+                    size="sm"
+                    icon={<Plus size={15} />}
+                  >
+                    Buat Event Pertama
+                  </Button>
+                </Link>
               </div>
             ) : (
               <div className="flex flex-col gap-3">
@@ -199,7 +195,7 @@ export const DashboardPage: React.FC = () => {
                   >
                     <div className="flex items-center gap-3">
                       <img
-                        src={evt.bannerUrl}
+                        src={evt.bannerUrl || ''}
                         alt=""
                         className="w-12 h-12 rounded-lg border border-[#3D3D3D] object-cover"
                       />
@@ -328,13 +324,6 @@ export const DashboardPage: React.FC = () => {
           </Card>
         </div>
       </div>
-
-      {/* Modal: Create Event */}
-      <CreateEventModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onEventCreated={handleEventCreated}
-      />
     </div>
   )
 }

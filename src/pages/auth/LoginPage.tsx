@@ -75,7 +75,7 @@ export const LoginPage: React.FC = () => {
               required
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
-              className="w-full bg-[#1c1c1c] border border-[#333333] rounded-xl py-3 px-4 text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06] transition-colors"
+              className="w-full bg-[#161616] border border-[#2a2a2a] rounded-xl py-3 px-4 text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06] transition-colors"
             />
           </div>
 
@@ -94,7 +94,7 @@ export const LoginPage: React.FC = () => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-[#1c1c1c] border border-[#333333] rounded-xl py-3 pl-4 pr-11 text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06] transition-colors"
+                className="w-full bg-[#161616] border border-[#2a2a2a] rounded-xl py-3 pl-4 pr-11 text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06] transition-colors"
               />
               <button
                 type="button"
@@ -136,12 +136,14 @@ export const LoginPage: React.FC = () => {
             </button>
           </div>
 
-          {/* Register Link */}
-          <div className="text-center pt-3 text-xs font-medium">
-            <span className="text-[#9C9C9C]">don't have an account yet? </span>
-            <Link to="/register" className="text-[#CFFE06] font-semibold hover:underline">
-              register here
-            </Link>
+          {/* Register Link (matching Image 5 stacked layout) */}
+          <div className="text-center pt-4 text-xs font-medium space-y-0.5">
+            <div className="text-[#9C9C9C]">don't have an account yet?</div>
+            <div>
+              <Link to="/register" className="text-[#CFFE06] font-semibold hover:underline">
+                register here
+              </Link>
+            </div>
           </div>
 
           {/* Demo Auto-fill Helper */}
@@ -157,11 +159,11 @@ export const LoginPage: React.FC = () => {
         </form>
       </div>
 
-      {/* Subtle Purple to Neon-Green Gradient Ambient Glow at Bottom (matching Image 5) */}
+      {/* Radiant Magenta & Neon-Green Ambient Glow at Bottom (matching Image 5) */}
       <div
-        className="pointer-events-none absolute bottom-0 left-0 right-0 h-[220px] opacity-75 blur-[70px]"
+        className="pointer-events-none absolute bottom-0 left-0 right-0 h-[260px] opacity-80 blur-[80px]"
         style={{
-          background: 'radial-gradient(ellipse at bottom, #CFFE06 0%, #DF00D0 50%, transparent 80%)',
+          background: 'radial-gradient(ellipse 90% 100% at bottom, #CFFE06 0%, #DF00D0 55%, transparent 85%)',
         }}
       />
     </div>

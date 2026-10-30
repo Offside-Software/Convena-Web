@@ -48,10 +48,10 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Admin Workspace Features */}
+          {/* Workspace Features */}
           <div>
             <h4 className="font-['Montserrat',sans-serif] font-bold text-xs uppercase tracking-wider text-white mb-4">
-              Admin Workspace
+              Workspace
             </h4>
             <ul className="list-none p-0 m-0 space-y-2.5">
               <li>

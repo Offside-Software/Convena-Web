@@ -90,6 +90,28 @@ input:not([type="checkbox"]):not([type="radio"]):focus, textarea:focus, select:f
   box-shadow: 0 0 0 1px #CFFE06;
 }
 
+/* Reset inner search input focus outline & box-shadow to prevent double outline */
+input.search-bar-input,
+.search-bar-input {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+}
+
+input.search-bar-input:focus,
+input.search-bar-input:focus-visible,
+.search-bar-input:focus,
+.search-bar-input:focus-visible,
+input[data-search-input="true"]:focus,
+input[data-search-input="true"]:focus-visible {
+  border: none !important;
+  border-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 input::placeholder, textarea::placeholder {
   color: #9C9C9C;
   opacity: 0.7;

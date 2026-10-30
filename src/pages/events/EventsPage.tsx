@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Filter, Search, Sparkles } from 'lucide-react'
+import { Filter, Sparkles } from 'lucide-react'
 import { EventCard } from '../../components/domain/EventCard.tsx'
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
+import { SearchBar } from '../../components/common/SearchBar.tsx'
 import { eventsService } from '../../services/events.service.ts'
 import type { Event } from '../../types/event.ts'
 
@@ -41,7 +42,7 @@ export const EventsPage: React.FC = () => {
       const data = await eventsService.getEvents({
         search: search || undefined,
         category: selectedCategory !== 'all' ? selectedCategory : undefined,
-        university: selectedCampus !== 'all' ? selectedCampus : undefined,
+        company: selectedCampus !== 'all' ? selectedCampus : undefined,
       })
       if (isMounted) {
         setEvents(data)
@@ -75,16 +76,13 @@ export const EventsPage: React.FC = () => {
 
       {/* Filter and Search Bar */}
       <div className="p-5 bg-[#151515] border border-[#3D3D3D]/50 rounded-xl mb-8 flex flex-col gap-4">
-        <div className="bg-[#202020] border border-[#3D3D3D] rounded-xl flex gap-3 items-center px-4 py-2.5 focus-within:border-[#CFFE06] transition-colors">
-          <Search size={18} className="text-[#9C9C9C] shrink-0" />
-          <input
-            type="text"
-            placeholder="Cari berdasarkan judul acara, topik, ormawa, atau tagar..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-transparent border-none outline-none text-sm font-medium text-white placeholder:text-[#9C9C9C]/60"
-          />
-        </div>
+        <SearchBar
+          placeholder="Cari berdasarkan judul acara, topik, ormawa, atau tagar..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          showSubmitButton={false}
+          clearable
+        />
 
         {/* Categories and Campus pill filters */}
         <div className="flex items-center justify-between flex-wrap gap-4 pt-2 border-t border-[#202020]">

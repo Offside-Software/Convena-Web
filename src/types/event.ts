@@ -8,6 +8,10 @@ export type EventCategory =
 
 export type EventStatus = 'draft' | 'published' | 'ongoing' | 'completed' | 'cancelled'
 
+export type EventVisibility = 'public' | 'private'
+
+export type LocationType = 'offline' | 'online' | 'hybrid'
+
 export interface TicketTier {
   id: string
   name: string
@@ -19,37 +23,43 @@ export interface TicketTier {
 }
 
 export interface EventLocation {
-  type: 'offline' | 'online' | 'hybrid'
+  type: LocationType
   venueName?: string
   address?: string
   city?: string
-  lat?: number
-  lng?: number
   onlineUrl?: string
 }
 
 export interface Event {
   id: string
+  createdBy?: string
   title: string
   slug: string
-  description: string
-  shortDescription: string
-  bannerUrl: string
+  description?: string | null
+  shortDescription?: string | null
+  bannerUrl?: string | null
   category: EventCategory
   status: EventStatus
-  visibility: 'public' | 'private'
+  visibility?: EventVisibility
   startDate: string
   endDate: string
+  locationType?: LocationType
+  venueName?: string | null
+  address?: string | null
+  city?: string | null
+  onlineUrl?: string | null
+  organizationName?: string | null
+  company?: string | null
+  ticketTiers?: TicketTier[]
+  createdAt?: string
+  updatedAt?: string
+
+  // UI convenience mappings
   location: EventLocation
-  organizationId: string
-  organizationName: string
-  university: string
-  ticketTiers: TicketTier[]
-  tags: string[]
   attendeeCount: number
   totalCapacity: number
-  requiresApproval?: boolean
-  certificateAvailable?: boolean
+  tags?: string[]
+  organizationId?: string
   myRole?: string
   myCustomTitle?: string
 }
@@ -61,15 +71,18 @@ export interface CreateEventInput {
   shortDescription?: string
   bannerUrl?: string
   category: EventCategory
+  status?: EventStatus
+  visibility?: EventVisibility
   startDate: string
   endDate: string
-  locationType?: 'offline' | 'online' | 'hybrid'
+  locationType: LocationType
   venueName?: string
   address?: string
   city?: string
   onlineUrl?: string
   organizationName?: string
-  university?: string
+  company?: string
+  ticketTiers?: TicketTier[]
 }
 
 export interface CreateEventResponse {
@@ -79,9 +92,21 @@ export interface CreateEventResponse {
 
 export interface EventFilterParams {
   category?: string
-  university?: string
+  company?: string
   city?: string
   status?: string
   search?: string
   priceType?: 'all' | 'free' | 'paid'
+}
+
+export interface RegisterTicketInput {
+  name: string
+  email: string
+  studentId?: string
+}
+
+export interface RegisterTicketResponse {
+  registrationId: string
+  qrCode: string
+  status: string
 }

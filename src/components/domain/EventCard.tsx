@@ -11,10 +11,13 @@ export interface EventCardProps {
 }
 
 export const EventCard: React.FC<EventCardProps> = ({ event }) => {
-  const lowestPrice = event.ticketTiers.reduce(
-    (min, tier) => (tier.price < min ? tier.price : min),
-    event.ticketTiers[0]?.price ?? 0
-  )
+  const ticketTiers = event.ticketTiers ?? []
+  const lowestPrice = ticketTiers.length > 0
+    ? ticketTiers.reduce(
+        (min, tier) => (tier.price < min ? tier.price : min),
+        ticketTiers[0].price
+      )
+    : 0
 
   const formattedDate = new Date(event.startDate).toLocaleDateString('id-ID', {
     weekday: 'short',
@@ -28,7 +31,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
       {/* Banner image with dark overlay */}
       <div className="relative h-[190px] overflow-hidden bg-[#202020]">
         <img
-          src={event.bannerUrl}
+          src={event.bannerUrl || ''}
           alt={event.title}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
@@ -54,7 +57,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
         {/* Organizer & Campus */}
         <div className="flex items-center justify-between text-xs font-semibold text-[#9C9C9C] mb-1.5">
           <span className="truncate">{event.organizationName}</span>
-          <span className="text-[#CFFE06] font-bold shrink-0 ml-2">{event.university}</span>
+          <span className="text-[#CFFE06] font-bold shrink-0 ml-2">{event.company}</span>
         </div>
 
         {/* Title */}

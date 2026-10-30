@@ -12,7 +12,7 @@ export const mockCurrentUser: User = {
   role: 'admin',
   organizationId: 'org-hmif-itb',
   avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-  university: 'Institut Teknologi Bandung',
+  company: 'Institut Teknologi Bandung',
   studentId: '13522045',
 }
 
@@ -21,7 +21,7 @@ export const mockOrganizations: Organization[] = [
     id: 'org-hmif-itb',
     name: 'Himpunan Mahasiswa Informatika ITB',
     shortName: 'HMIF ITB',
-    university: 'Institut Teknologi Bandung',
+    company: 'Institut Teknologi Bandung',
     description: 'Wadah kemahasiswaan bagi mahasiswa Teknik Informatika dan Sistem dan Teknologi Informasi ITB.',
     verified: true,
     memberCount: 380,
@@ -41,7 +41,7 @@ export const mockOrganizations: Organization[] = [
     id: 'org-bem-ui',
     name: 'Badan Eksekutif Mahasiswa Universitas Indonesia',
     shortName: 'BEM UI',
-    university: 'Universitas Indonesia',
+    company: 'Universitas Indonesia',
     description: 'Lembaga eksekutif mahasiswa tertinggi di tingkat Universitas Indonesia yang aktif mengabdi dan berkarya.',
     verified: true,
     memberCount: 520,
@@ -60,6 +60,63 @@ export const mockOrganizations: Organization[] = [
 
 export const mockEvents: Event[] = [
   {
+    id: 'evt-global-tech-summit',
+    title: 'Global Tech Innovators Summit 2026 Tel-U',
+    slug: 'global-tech-innovators-summit-2026-tel-u',
+    description: 'Konferensi internasional inovasi teknologi terdepan bersama para pakar Silicon Valley, pemimpin startup Asia, dan akademisi riset. Menghadirkan sesi keynote, workshop kecerdasan buatan, dan pameran prototipe masa depan.',
+    shortDescription: 'Premier international tech summit featuring world-class keynotes, deep-dive workshops, and breakthrough innovations.',
+    bannerUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop&q=80',
+    category: 'conference',
+    status: 'published',
+    visibility: 'public',
+    startDate: '2026-11-28T08:30:00+07:00',
+    endDate: '2026-11-29T17:00:00+07:00',
+    location: {
+      type: 'offline',
+      venueName: 'Telkom University Convention Hall',
+      address: 'Jl. Telekomunikasi No. 1, Buahbatu, Bandung',
+      city: 'Bandung',
+
+
+    },
+    organizationId: 'org-telu-bem',
+    organizationName: 'BEM Kema Telkom University',
+    company: 'Telkom University',
+    tags: ['Tech', 'AI', 'Innovation', 'Summit'],
+    attendeeCount: 450,
+    totalCapacity: 800,
+
+    ticketTiers: [
+      {
+        id: 'tkt-vip-workshop',
+        name: 'VIP All-Access + Workshop',
+        price: 350000,
+        quota: 200,
+        sold: 142,
+        benefits: ['All-Stage VIP Access', 'Hands-on AI Lab Workshop', 'Exclusive Networking Dinner', 'Verified Digital Certificate', 'Official Summit Goodie Bag'],
+        isAvailable: true,
+      },
+      {
+        id: 'tkt-regular-summit',
+        name: 'General Delegate Pass',
+        price: 150000,
+        quota: 400,
+        sold: 260,
+        benefits: ['Main Hall Access', 'Digital Summit Certificate', 'Coffee Break & Lunch'],
+        isAvailable: true,
+      },
+      {
+        id: 'tkt-virtual-pass',
+        name: 'Virtual Stream Pass',
+        price: 50000,
+        quota: 500,
+        sold: 380,
+        benefits: ['Full 1080p Live Stream', 'Q&A Chat Access', 'Digital Certificate'],
+        isAvailable: true,
+      },
+    ],
+  },
+  {
     id: 'evt-arkavidia-2026',
     title: 'Arkavidia 9.0: National Tech Festival & Hackathon',
     slug: 'arkavidia-9-national-tech-festival',
@@ -76,16 +133,16 @@ export const mockEvents: Event[] = [
       venueName: 'Aula Barat ITB',
       address: 'Jl. Ganesha No. 10, Bandung',
       city: 'Bandung',
-      lat: -6.8915,
-      lng: 107.6107,
+
+
     },
     organizationId: 'org-hmif-itb',
     organizationName: 'HMIF ITB',
-    university: 'Institut Teknologi Bandung',
+    company: 'Institut Teknologi Bandung',
     tags: ['Tech', 'Hackathon', 'AI', 'Competition'],
     attendeeCount: 420,
     totalCapacity: 600,
-    certificateAvailable: true,
+
     ticketTiers: [
       {
         id: 'tkt-early',
@@ -137,11 +194,11 @@ export const mockEvents: Event[] = [
     },
     organizationId: 'org-bem-ui',
     organizationName: 'BEM UI',
-    university: 'Universitas Indonesia',
+    company: 'Universitas Indonesia',
     tags: ['Leadership', 'Policy', 'Youth', 'NationBuilding'],
     attendeeCount: 780,
     totalCapacity: 1000,
-    certificateAvailable: true,
+
     ticketTiers: [
       {
         id: 'tkt-online',
@@ -181,11 +238,11 @@ export const mockEvents: Event[] = [
     },
     organizationId: 'org-hmif-itb',
     organizationName: 'HMIF ITB',
-    university: 'Institut Teknologi Bandung',
+    company: 'Institut Teknologi Bandung',
     tags: ['AI', 'Python', 'Coding', 'Agents'],
     attendeeCount: 150,
     totalCapacity: 150,
-    certificateAvailable: true,
+
     ticketTiers: [
       {
         id: 'tkt-full-ws',
@@ -356,13 +413,31 @@ export const mockExpenses: ExpenseRecord[] = [
 ]
 
 export const mockCertificates: Record<string, Certificate> = {
+  'TS-9482': {
+    id: 'cert-ts-9482',
+    certificateNumber: 'TS-9482',
+    recipientName: 'Arya Pratama',
+    recipientEmail: 'arya@student.telkomuniversity.ac.id',
+    studentId: '1301223045',
+    company: 'Telkom University',
+    eventId: 'evt-global-tech-summit',
+    eventTitle: 'Global Tech Innovators Summit 2026 Tel-U',
+    organizationName: 'BEM Kema Telkom University',
+    issueDate: '2026-11-29',
+    role: 'attendee',
+    verified: true,
+    signatories: [
+      { name: 'Prof. Ir. Suyanto, S.T., M.Sc., Ph.D.', title: 'Rektor Telkom University' },
+      { name: 'Arya Pratama', title: 'President of Innovators Summit' },
+    ],
+  },
   'CNV-2026-ITB-8821': {
     id: 'cert-8821',
     certificateNumber: 'CNV-2026-ITB-8821',
     recipientName: 'Muhammad Rizky Ramadhan',
     recipientEmail: 'mrizky@student.itb.ac.id',
     studentId: '13522019',
-    university: 'Institut Teknologi Bandung',
+    company: 'Institut Teknologi Bandung',
     eventId: 'evt-arkavidia-2026',
     eventTitle: 'Arkavidia 9.0: National Tech Festival & Hackathon',
     organizationName: 'HMIF ITB',
@@ -380,7 +455,7 @@ export const mockCertificates: Record<string, Certificate> = {
     recipientName: 'Jessica Aurelia Siregar',
     recipientEmail: 'jessica.aurelia@ui.ac.id',
     studentId: '2206819201',
-    university: 'Universitas Indonesia',
+    company: 'Universitas Indonesia',
     eventId: 'evt-ui-leadership-summit',
     eventTitle: 'UI Youth Leadership & Policy Forum 2026',
     organizationName: 'BEM UI',

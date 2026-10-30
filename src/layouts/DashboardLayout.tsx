@@ -11,13 +11,11 @@ import {
   ChevronLeft,
   Menu,
   X,
-  PlusCircle,
 } from 'lucide-react'
 import { authService } from '../services/auth.service.ts'
 import type { User } from '../types/user.ts'
 import { BrandLogo } from '../components/common/BrandLogo.tsx'
 import { Badge } from '../components/common/Badge.tsx'
-import { Button } from '../components/common/Button.tsx'
 
 export const DashboardLayout: React.FC = () => {
   const location = useLocation()
@@ -52,72 +50,64 @@ export const DashboardLayout: React.FC = () => {
     { label: 'Validasi Sertifikat', path: '/dashboard/verify', icon: <ShieldCheck size={18} /> },
   ]
 
-  const isCurrent = (path: string) => {
-    if (path === '/dashboard') return location.pathname === '/dashboard'
-    return location.pathname === path || location.pathname.startsWith(`${path}/`)
+  const handleLogout = async () => {
+    await authService.logout()
+    navigate('/')
   }
 
-  const handleLogout = () => {
-    authService.logout()
-    navigate('/login')
+  const isCurrent = (path: string) => {
+    if (path === '/dashboard') {
+      return location.pathname === '/dashboard'
+    }
+    return location.pathname.startsWith(path)
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#000000] flex items-center justify-center font-['Montserrat',sans-serif] text-white">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-2 border-[#CFFE06] border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-[#9C9C9C]">Memuat Admin Workspace...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-[#000000] text-white font-['Montserrat',sans-serif]">
+        <div className="w-8 h-8 border-2 border-[#CFFE06] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#000000] text-white font-['Montserrat',sans-serif] flex flex-col md:flex-row">
+    <div className="min-h-screen bg-[#000000] text-white flex flex-col md:flex-row font-['Montserrat',sans-serif]">
       {/* Mobile Top Bar */}
       <div className="md:hidden flex items-center justify-between p-4 bg-[#151515] border-b border-[#202020] sticky top-0 z-40">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-full bg-[#202020] text-[#9C9C9C] hover:text-white"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-1.5 rounded-lg bg-[#202020] text-white border border-[#3D3D3D] cursor-pointer"
+            aria-label="Toggle menu"
           >
-            <Menu size={20} />
+            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <BrandLogo size="sm" />
+          <BrandLogo />
         </div>
-        <Badge variant="accent" className="text-[10px]">ADMIN</Badge>
+        <Badge variant="accent">Admin</Badge>
       </div>
 
-      {/* Admin Sidebar */}
+      {/* Sidebar Navigation */}
       <aside
-        className={`fixed md:sticky top-0 left-0 z-50 h-screen w-[270px] bg-[#151515] border-r border-[#202020] flex flex-col justify-between p-5 transition-transform duration-200 ease-in-out ${
+        className={`fixed md:sticky top-0 left-0 h-screen z-50 w-72 bg-[#151515] border-r border-[#202020] flex flex-col justify-between p-5 transition-transform duration-200 ease-in-out md:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
-        <div>
-          {/* Workspace Header */}
-          <div className="flex items-center justify-between pb-5 border-b border-[#202020]">
-            <Link to="/" className="no-underline">
-              <BrandLogo size="sm" />
-            </Link>
-            <div className="flex items-center gap-2">
-              <Badge variant="accent" className="text-[10px] py-0.5 px-2">
-                WORKSPACE
-              </Badge>
-              <button
-                type="button"
-                onClick={() => setSidebarOpen(false)}
-                className="md:hidden text-[#9C9C9C] hover:text-white"
-              >
-                <X size={18} />
-              </button>
+        <div className="flex flex-col gap-6">
+          {/* Logo & Workspace Title */}
+          <div className="flex items-center justify-between pb-4 border-b border-[#202020]">
+            <div>
+              <BrandLogo />
+              <div className="text-[11px] font-semibold text-[#9C9C9C] mt-1">
+                Workspace
+              </div>
             </div>
+            <span className="w-2.5 h-2.5 rounded-full bg-[#CFFE06] shadow-[0_0_8px_#CFFE06]" />
           </div>
 
-          {/* Navigation Links */}
-          <div className="pt-5">
+          {/* Nav Items */}
+          <div className="pt-2">
             <div className="text-[11px] font-bold text-[#9C9C9C] uppercase tracking-wider mb-3 px-3">
               Admin Menu
             </div>
@@ -155,7 +145,7 @@ export const DashboardLayout: React.FC = () => {
           </div>
 
           {/* Quick Assistant Card */}
-          <div className="mt-6 p-4 bg-[#202020] border border-[#3D3D3D]/50 rounded-xl">
+          <div className="mt-4 p-4 bg-[#202020] border border-[#3D3D3D]/50 rounded-xl">
             <div className="flex items-center gap-2 text-xs font-bold text-[#CFFE06] mb-1">
               <Sparkles size={14} />
               <span>AI LPJ & SPJ Ready</span>
@@ -185,7 +175,7 @@ export const DashboardLayout: React.FC = () => {
                 {currentUser?.name || 'Arya Pratama'}
               </div>
               <div className="text-[10px] text-[#9C9C9C] truncate">
-                {currentUser?.company || currentUser?.university || 'Telkom University'}
+                {currentUser?.company || 'Telkom University'}
               </div>
             </div>
           </div>
@@ -232,7 +222,7 @@ export const DashboardLayout: React.FC = () => {
               <ChevronLeft size={18} />
             </Link>
             <div>
-              <h1 className="font-bold text-white tracking-tight m-0">
+              <h1 className="text-lg font-bold text-white tracking-tight m-0">
                 Workspace
               </h1>
               <p className="text-xs text-[#9C9C9C] m-0">

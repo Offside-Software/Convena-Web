@@ -18,7 +18,6 @@ export interface User {
   company?: string
   organizationId?: string
   avatarUrl?: string
-  university?: string
   studentId?: string
   createdAt?: string
   updatedAt?: string

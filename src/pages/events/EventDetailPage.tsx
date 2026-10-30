@@ -11,7 +11,7 @@ import {
   Plus,
   Landmark,
   Wallet,
-  Download,
+  ArrowDown,
   ShieldCheck,
 } from 'lucide-react'
 import { Button } from '../../components/common/Button.tsx'
@@ -44,6 +44,15 @@ export const EventDetailPage: React.FC = () => {
         }
         setLoading(false)
       })
+    } else {
+      // Default to premier event if no id
+      eventsService.getEventById('evt-global-tech-summit').then((res) => {
+        setEvent(res || null)
+        if (res?.ticketTiers?.length) {
+          setSelectedTier(res.ticketTiers[0])
+        }
+        setLoading(false)
+      })
     }
   }, [id])
 
@@ -68,7 +77,7 @@ export const EventDetailPage: React.FC = () => {
     )
   }
 
-  // Price calculations
+  // Price calculations matching Image 4
   const basePricePerTicket = selectedTier ? selectedTier.price : 350000
   const subtotal = basePricePerTicket * ticketQuantity
   const discountAmount = memberDiscountActive ? Math.round(subtotal * 0.15) : 0
@@ -86,18 +95,18 @@ export const EventDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-[1280px] mx-auto py-8 px-4 sm:px-6 pb-20 font-['Montserrat',sans-serif] bg-[#000000] text-white">
-      {/* Top Header with circular back button as seen in Image 1 */}
-      <div className="flex items-center gap-3.5 mb-8">
+    <div className="max-w-[1280px] mx-auto py-6 px-4 sm:px-6 pb-20 font-['Montserrat',sans-serif] bg-[#000000] text-white">
+      {/* Top Header with circular back button as seen in Image 1 & Image 4 */}
+      <div className="flex items-center gap-3.5 mb-6">
         <Link
           to="/events"
-          className="w-9 h-9 rounded-full bg-[#151515] border border-[#3D3D3D] flex items-center justify-center text-white hover:text-[#CFFE06] hover:border-[#CFFE06] transition-colors no-underline shrink-0"
+          className="w-10 h-10 rounded-full bg-[#1c1c1c] hover:bg-[#252525] flex items-center justify-center text-white hover:text-[#CFFE06] transition-colors no-underline shrink-0"
           title="Kembali ke Event"
         >
           <ArrowLeft size={18} />
         </Link>
-        <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight m-0">
-          Dashboard Event
+        <h1 className="font-bold text-white tracking-tight m-0">
+          Event
         </h1>
       </div>
 
@@ -105,20 +114,20 @@ export const EventDetailPage: React.FC = () => {
         {/* Left Column: Event Overview & Content */}
         <div className="space-y-6">
           {/* Banner container */}
-          <div className="bg-[#151515] border border-[#3D3D3D]/50 rounded-xl overflow-hidden">
+          <div className="bg-[#141414] border border-[#262626] rounded-xl overflow-hidden">
             <div className="h-[280px] sm:h-[360px] relative overflow-hidden bg-[#202020]">
               <img
-                src={event.bannerUrl}
+                src={event.bannerUrl || ''}
                 alt={event.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-transparent to-black/30" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-transparent to-black/30" />
               <div className="absolute top-4 left-4 flex gap-2">
                 <Badge variant="accent">
                   {event.category.toUpperCase()}
                 </Badge>
                 <Badge variant="dark">
-                  {event.university}
+                  {event.company || 'Telkom University'}
                 </Badge>
               </div>
             </div>
@@ -138,7 +147,7 @@ export const EventDetailPage: React.FC = () => {
 
               {/* Tag pills */}
               <div className="flex gap-2 flex-wrap mb-6">
-                {event.tags.map((t) => (
+                {(event.tags ?? []).map((t) => (
                   <Badge key={t} variant="dark">
                     #{t}
                   </Badge>
@@ -146,7 +155,7 @@ export const EventDetailPage: React.FC = () => {
               </div>
 
               {/* Quick Info Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-[#202020] border border-[#3D3D3D]/60 rounded-xl mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl mb-6">
                 <div>
                   <div className="flex items-center gap-1.5 text-[#CFFE06] font-bold text-xs uppercase tracking-wider">
                     <Calendar size={15} /> Waktu & Tanggal
@@ -190,21 +199,21 @@ export const EventDetailPage: React.FC = () => {
                   <Clock size={16} className="text-[#CFFE06]" /> Susunan Acara (Rundown)
                 </h3>
                 <div className="flex flex-col gap-2.5">
-                  <div className="flex gap-4 p-3 border border-[#3D3D3D]/50 rounded-xl bg-[#202020]">
+                  <div className="flex gap-4 p-3 border border-[#262626] rounded-xl bg-[#181818]">
                     <span className="font-mono font-bold text-[#CFFE06] text-xs min-w-[85px]">08:30 - 09:00</span>
                     <div>
                       <strong className="text-xs text-white">Registrasi Ulang & Check-in QR</strong>
                       <p className="text-[11px] m-0 text-[#9C9C9C] mt-0.5">Pemeriksaan e-tiket dan pembagian welcome kit peserta.</p>
                     </div>
                   </div>
-                  <div className="flex gap-4 p-3 border border-[#3D3D3D]/50 rounded-xl bg-[#202020]">
+                  <div className="flex gap-4 p-3 border border-[#262626] rounded-xl bg-[#181818]">
                     <span className="font-mono font-bold text-[#CFFE06] text-xs min-w-[85px]">09:00 - 12:00</span>
                     <div>
                       <strong className="text-xs text-white">Opening Ceremony & Keynote Session</strong>
-                      <p className="text-[11px] m-0 text-[#9C9C9C] mt-0.5">Pemaparan materi inovasi oleh pembicara industri teknologi.</p>
+                      <p className="text-[11px] m-0 text-[#9C9C9C] mt-0.5">Pemaparan materi inovasi oleh pembicara industri teknologi terkemuka.</p>
                     </div>
                   </div>
-                  <div className="flex gap-4 p-3 border border-[#3D3D3D]/50 rounded-xl bg-[#202020]">
+                  <div className="flex gap-4 p-3 border border-[#262626] rounded-xl bg-[#181818]">
                     <span className="font-mono font-bold text-[#CFFE06] text-xs min-w-[85px]">13:00 - 16:30</span>
                     <div>
                       <strong className="text-xs text-white">Hands-on Workshop & Networking</strong>
@@ -220,7 +229,7 @@ export const EventDetailPage: React.FC = () => {
         {/* Right Column: Checkout & Ticketing (Images 2, 3, 4 Redesign) */}
         <div className="space-y-4 sticky top-[80px]">
           {/* Card 1: Verified Ticket Card (Image 3) */}
-          <div className="bg-[#151515] border border-[#3D3D3D]/60 rounded-xl p-5">
+          <div className="bg-[#141414] border border-[#262626] rounded-xl p-5">
             <div className="flex items-center justify-between mb-3">
               {/* Verified Ticket Badge */}
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#CFFE06]/15 text-[#CFFE06] font-bold text-xs">
@@ -231,23 +240,23 @@ export const EventDetailPage: React.FC = () => {
               </span>
             </div>
 
-            <h3 className="text-base sm:text-lg font-extrabold text-white leading-snug mb-2">
+            <h3 className="text-base sm:text-lg font-bold text-white leading-snug mb-2">
               {event.title}
             </h3>
 
             <div className="flex items-center gap-2 text-xs text-[#9C9C9C] mb-4">
-              <MapPin size={14} className="text-[#CFFE06] shrink-0" />
+              <MapPin size={15} className="text-[#CFFE06] shrink-0 fill-[#CFFE06]" />
               <span>{event.location.venueName || 'Telkom University Convention Hall'}</span>
             </div>
 
             {/* Selected Tier Selector */}
-            <div className="border-t border-[#3D3D3D]/50 pt-3">
+            <div className="border-t border-[#262626] pt-3">
               <div className="flex items-center justify-between text-xs mb-2">
                 <span className="text-[#9C9C9C]">Selected Tier:</span>
                 <span className="font-bold text-white">{selectedTier?.name || 'VIP All-Access + Workshop'}</span>
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                {event.ticketTiers.map((tier) => (
+              <div className="grid grid-cols-2 gap-2 mt-2">
+                {(event.ticketTiers ?? []).map((tier) => (
                   <button
                     key={tier.id}
                     type="button"
@@ -255,7 +264,7 @@ export const EventDetailPage: React.FC = () => {
                     className={`p-2 rounded-lg text-left text-xs transition-colors cursor-pointer border ${
                       selectedTier?.id === tier.id
                         ? 'border-[#CFFE06] bg-[#202020] text-white'
-                        : 'border-[#3D3D3D] bg-[#151515] text-[#9C9C9C] hover:text-white'
+                        : 'border-[#262626] bg-[#0c0c0c] text-[#9C9C9C] hover:text-white'
                     }`}
                   >
                     <div className="font-bold truncate">{tier.name}</div>
@@ -269,17 +278,18 @@ export const EventDetailPage: React.FC = () => {
           </div>
 
           {/* Card 2: Quantity, Discount, Payment Method (Image 2) */}
-          <div className="bg-[#151515] border border-[#3D3D3D]/60 rounded-xl p-5 space-y-4">
+          <div className="bg-[#141414] border border-[#262626] rounded-xl p-5 space-y-4">
             {/* Ticket Quantity Stepper */}
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-white">
                 Ticket Quantity
               </span>
-              <div className="flex items-center gap-4 bg-[#000000] border border-[#3D3D3D] rounded-full py-1 px-3">
+              <div className="flex items-center gap-5 bg-[#0a0a0a] border border-[#262626] rounded-full py-1.5 px-4">
                 <button
                   type="button"
                   onClick={() => setTicketQuantity(Math.max(1, ticketQuantity - 1))}
-                  className="text-white hover:text-[#CFFE06] cursor-pointer"
+                  className="text-white hover:text-[#CFFE06] cursor-pointer transition-colors"
+                  aria-label="Decrease quantity"
                 >
                   <Minus size={14} />
                 </button>
@@ -289,9 +299,10 @@ export const EventDetailPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setTicketQuantity(ticketQuantity + 1)}
-                  className="text-[#CFFE06] hover:brightness-110 cursor-pointer"
+                  className="text-[#CFFE06] hover:brightness-110 cursor-pointer transition-colors"
+                  aria-label="Increase quantity"
                 >
-                  <Plus size={14} />
+                  <Plus size={16} />
                 </button>
               </div>
             </div>
@@ -304,44 +315,55 @@ export const EventDetailPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setMemberDiscountActive(!memberDiscountActive)}
-                className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
-                  memberDiscountActive ? 'bg-[#CFFE06]' : 'bg-[#3D3D3D]'
+                className={`w-12 h-6.5 rounded-full p-0.5 transition-colors relative cursor-pointer border-none ${
+                  memberDiscountActive ? 'bg-[#CFFE06]' : 'bg-[#2a2a2a]'
                 }`}
+                aria-label="Toggle member discount"
               >
                 <span
-                  className={`w-4 h-4 rounded-full bg-white absolute top-1 transition-transform ${
-                    memberDiscountActive ? 'right-1' : 'left-1'
+                  className={`w-5.5 h-5.5 rounded-full bg-white block shadow transition-transform ${
+                    memberDiscountActive ? 'translate-x-5.5' : 'translate-x-0'
                   }`}
                 />
               </button>
             </div>
 
             {/* Attendee Details */}
-            <div className="pt-2 border-t border-[#3D3D3D]/50 space-y-2">
+            <div className="pt-2 border-t border-[#262626] space-y-2">
               <span className="block text-xs font-semibold text-[#9C9C9C]">
                 Data Pemilik Tiket
               </span>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <input
-                  type="text"
-                  placeholder="Nama Lengkap"
-                  value={attendeeName}
-                  onChange={(e) => setAttendeeName(e.target.value)}
-                  className="w-full bg-[#000000] border border-[#3D3D3D] rounded-lg py-1.5 px-3 text-xs text-white outline-none focus:border-[#CFFE06]"
-                />
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={attendeeEmail}
-                  onChange={(e) => setAttendeeEmail(e.target.value)}
-                  className="w-full bg-[#000000] border border-[#3D3D3D] rounded-lg py-1.5 px-3 text-xs text-white outline-none focus:border-[#CFFE06]"
-                />
+              <div className="grid grid-rows-1 gap-2">
+                <div>
+                  <span className='my-1.5 block text-xs font-semibold text-[#9C9C9C]'>
+                    Nama
+                  </span>
+                  <input
+                    type="text"
+                    placeholder="Nama Lengkap"
+                    value={attendeeName}
+                    onChange={(e) => setAttendeeName(e.target.value)}
+                    className="w-full bg-[#0a0a0a] border border-[#262626] rounded-lg py-1.5 px-3 text-xs text-white outline-none focus:border-[#CFFE06]"
+                  />
+                </div>
+                <div>
+                  <span className='my-1.5 block text-xs font-semibold text-[#9C9C9C]'>
+                    Email
+                  </span>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={attendeeEmail}
+                    onChange={(e) => setAttendeeEmail(e.target.value)}
+                    className="w-full bg-[#0a0a0a] border border-[#262626] rounded-lg py-1.5 px-3 text-xs text-white outline-none focus:border-[#CFFE06]"
+                  />
+                </div>
               </div>
             </div>
 
-            {/* Payment Method Selector */}
+            {/* Payment Method Selector (Image 2) */}
             <div className="pt-2">
-              <span className="block text-xs font-semibold text-[#9C9C9C] mb-2.5">
+              <span className="block text-xs font-medium text-[#9C9C9C] mb-2.5">
                 Payment Method
               </span>
               <div className="grid grid-cols-3 gap-2.5">
@@ -349,104 +371,110 @@ export const EventDetailPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('qris')}
-                  className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`py-3 px-2 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     paymentMethod === 'qris'
-                      ? 'border-[#CFFE06] bg-[#000000] text-[#CFFE06]'
-                      : 'border-[#3D3D3D] bg-[#000000] text-white hover:border-[#9C9C9C]'
+                      ? 'border-2 border-[#CFFE06] bg-[#1a2205] text-[#CFFE06]'
+                      : 'border border-[#262626] bg-[#0c0c0c] text-white hover:border-[#3D3D3D]'
                   }`}
                 >
-                  <QrCode size={20} className={paymentMethod === 'qris' ? 'text-[#CFFE06]' : 'text-white'} />
-                  <span className="text-xs font-bold">QRIS</span>
+                  <QrCode size={22} className={paymentMethod === 'qris' ? 'text-[#CFFE06]' : 'text-white'} />
+                  <span className="text-xs font-bold text-white">QRIS</span>
                 </button>
 
                 {/* Bank */}
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('bank')}
-                  className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`py-3 px-2 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     paymentMethod === 'bank'
-                      ? 'border-[#CFFE06] bg-[#000000] text-[#CFFE06]'
-                      : 'border-[#3D3D3D] bg-[#000000] text-white hover:border-[#9C9C9C]'
+                      ? 'border-2 border-[#CFFE06] bg-[#1a2205] text-[#CFFE06]'
+                      : 'border border-[#262626] bg-[#0c0c0c] text-white hover:border-[#3D3D3D]'
                   }`}
                 >
-                  <Landmark size={20} className={paymentMethod === 'bank' ? 'text-[#CFFE06]' : 'text-white'} />
-                  <span className="text-xs font-bold">Bank</span>
+                  <Landmark size={22} className={paymentMethod === 'bank' ? 'text-[#CFFE06]' : 'text-white'} />
+                  <span className="text-xs font-bold text-white">Bank</span>
                 </button>
 
                 {/* E-Wallet */}
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('ewallet')}
-                  className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`py-3 px-2 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     paymentMethod === 'ewallet'
-                      ? 'border-[#CFFE06] bg-[#000000] text-[#CFFE06]'
-                      : 'border-[#3D3D3D] bg-[#000000] text-white hover:border-[#9C9C9C]'
+                      ? 'border-2 border-[#CFFE06] bg-[#1a2205] text-[#CFFE06]'
+                      : 'border border-[#262626] bg-[#0c0c0c] text-white hover:border-[#3D3D3D]'
                   }`}
                 >
-                  <Wallet size={20} className={paymentMethod === 'ewallet' ? 'text-[#CFFE06]' : 'text-white'} />
-                  <span className="text-xs font-bold">E-Wallet</span>
+                  <Wallet size={22} className={paymentMethod === 'ewallet' ? 'text-[#CFFE06]' : 'text-white'} />
+                  <span className="text-xs font-bold text-white">E-Wallet</span>
                 </button>
               </div>
             </div>
           </div>
 
           {/* Card 3: Order Price Summary (Image 4) */}
-          <div className="bg-[#151515] border border-[#3D3D3D]/60 rounded-xl p-5">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-3">
-              Order Price Summary
+          <div className="bg-[#141414] border border-[#262626] rounded-xl p-5">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-3.5">
+              ORDER PRICE SUMMARY
             </h4>
 
             <div className="space-y-2 text-xs">
               <div className="flex justify-between text-[#9C9C9C]">
                 <span>Base Ticket Price ({ticketQuantity}x)</span>
-                <span className="text-white">Rp {subtotal.toLocaleString('id-ID')}</span>
+                <span className="text-white font-medium">Rp {subtotal.toLocaleString('id-ID')}</span>
               </div>
               {memberDiscountActive && (
-                <div className="flex justify-between text-[#CFFE06]">
+                <div className="flex justify-between text-[#9C9C9C]">
                   <span>Member Discount (15%)</span>
-                  <span>-Rp {discountAmount.toLocaleString('id-ID')}</span>
+                  <span className="text-[#CFFE06] font-bold">-Rp {discountAmount.toLocaleString('id-ID')}</span>
                 </div>
               )}
               <div className="flex justify-between text-[#9C9C9C]">
                 <span>Gateway Fee & Service</span>
-                <span className="text-white">Rp {gatewayFee.toLocaleString('id-ID')}</span>
+                <span className="text-white font-medium">Rp {gatewayFee.toLocaleString('id-ID')}</span>
               </div>
             </div>
 
-            <div className="border-t border-[#3D3D3D]/50 pt-3 mt-3 flex items-baseline justify-between">
+            <div className="border-t border-[#262626] pt-3.5 mt-3.5 flex items-baseline justify-between">
               <div>
-                <span className="text-[11px] text-[#9C9C9C] block">Est. To Be Paid</span>
-                <span className="text-lg font-black text-white">
+                <span className="text-[11px] font-medium text-[#9C9C9C] block mb-0.5">Est. To Be Paid</span>
+                <span className="text-xl font-black text-white">
                   Rp {totalToPay.toLocaleString('id-ID')}
                 </span>
               </div>
-              <span className="text-[11px] text-[#9C9C9C]">Expires in 15:00</span>
+              <span className="text-[11px] font-medium text-[#9C9C9C]">Expires in 15:00</span>
             </div>
           </div>
 
-          {/* Card 4: QRIS Scan Card (Image 4) */}
-          <div className="bg-[#151515] border border-[#3D3D3D]/60 rounded-xl p-5 text-center">
-            <div className="flex items-center justify-between text-xs text-white font-semibold mb-4">
+          {/* Card 4: QRIS Scan Card with Stylized Corner Reticle (Image 4) */}
+          <div className="bg-[#141414] border border-[#262626] rounded-xl p-5 text-center">
+            <div className="flex items-center justify-between text-xs text-white font-semibold mb-3">
               <span>Scan via GoPay, OVO, BCA, QRIS</span>
               <button
                 type="button"
-                className="inline-flex items-center gap-1 text-[11px] text-[#CFFE06] hover:underline cursor-pointer bg-transparent border-none"
+                className="flex flex-col items-center gap-0.5 text-[10px] font-semibold text-[#CFFE06] hover:brightness-110 cursor-pointer bg-transparent border-none p-0"
               >
-                <Download size={13} />
+                <div className="w-5 h-5 rounded-full border border-[#CFFE06] flex items-center justify-center">
+                  <ArrowDown size={11} className="text-[#CFFE06]" />
+                </div>
                 <span>Unduh</span>
               </button>
             </div>
 
-            {/* Glowing Lime QR Frame as seen in Image 4 */}
-            <div className="my-3 py-4 flex flex-col items-center justify-center">
-              <div className="w-32 h-32 rounded-2xl border-2 border-[#CFFE06] flex items-center justify-center relative shadow-[0_0_25px_rgba(207,254,6,0.2)] bg-[#000000]">
-                <QrCode size={80} className="text-[#CFFE06]" />
-                {/* Corner accents */}
-                <span className="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-[#CFFE06]" />
-                <span className="absolute -top-1 -right-1 w-3 h-3 border-t-2 border-r-2 border-[#CFFE06]" />
-                <span className="absolute -bottom-1 -left-1 w-3 h-3 border-b-2 border-l-2 border-[#CFFE06]" />
-                <span className="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-[#CFFE06]" />
-              </div>
+            {/* Stylized Reticle matching Image 4 */}
+            <div className="my-2 py-2 flex flex-col items-center justify-center">
+              <svg width="104" height="104" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Top Left Corner */}
+                <path d="M 12 30 V 20 C 12 15.5 15.5 12 20 12 H 30" stroke="#CFFE06" strokeWidth="4.5" strokeLinecap="round" />
+                {/* Top Right Corner */}
+                <path d="M 70 12 H 80 C 84.5 12 88 15.5 88 20 V 30" stroke="#CFFE06" strokeWidth="4.5" strokeLinecap="round" />
+                {/* Bottom Left Corner */}
+                <path d="M 12 70 V 80 C 12 84.5 15.5 88 20 88 H 30" stroke="#CFFE06" strokeWidth="4.5" strokeLinecap="round" />
+                {/* Bottom Right Corner */}
+                <path d="M 70 88 H 80 C 84.5 88 88 84.5 88 80 V 70" stroke="#CFFE06" strokeWidth="4.5" strokeLinecap="round" />
+                {/* Center Reticle Square */}
+                <rect x="36" y="36" width="28" height="28" rx="7" stroke="#CFFE06" strokeWidth="4.5" />
+              </svg>
             </div>
 
             <p className="text-[11px] text-[#9C9C9C] m-0 max-w-[240px] mx-auto leading-relaxed">
@@ -458,7 +486,7 @@ export const EventDetailPage: React.FC = () => {
           <button
             type="button"
             onClick={handlePay}
-            className="w-full py-4 px-6 bg-[#CFFE06] hover:bg-[#bde805] text-[#000000] font-black text-sm rounded-full transition-all duration-200 cursor-pointer shadow-[0_0_20px_rgba(207,254,6,0.3)] hover:shadow-[0_0_30px_rgba(207,254,6,0.5)] active:scale-[0.99] flex items-center justify-center gap-2 select-none"
+            className="w-full py-4 px-6 bg-[#CFFE06] hover:bg-[#bde805] text-[#000000] font-medium text-sm rounded-full transition-all duration-200 cursor-pointer shadow-[0_0_20px_rgba(207,254,6,0.3)] hover:shadow-[0_0_30px_rgba(207,254,6,0.5)] active:scale-[0.99] flex items-center justify-center gap-2 select-none"
           >
             <span>Pay</span>
           </button>
@@ -469,7 +497,7 @@ export const EventDetailPage: React.FC = () => {
       <Modal
         isOpen={isSuccessModalOpen}
         onClose={() => setIsSuccessModalOpen(false)}
-        title="Pembayaran Berhasil! 🎉"
+        title="Pembayaran Berhasil!"
       >
         <div className="text-center py-2 font-['Montserrat',sans-serif]">
           <div className="inline-block p-4 bg-[#000000] border border-[#CFFE06] rounded-xl mb-4 shadow-[0_0_20px_rgba(207,254,6,0.2)]">
