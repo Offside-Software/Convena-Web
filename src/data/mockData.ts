@@ -60,6 +60,63 @@ export const mockOrganizations: Organization[] = [
 
 export const mockEvents: Event[] = [
   {
+    id: 'evt-global-tech-summit',
+    title: 'Global Tech Innovators Summit 2026 Tel-U',
+    slug: 'global-tech-innovators-summit-2026-tel-u',
+    description: 'Konferensi internasional inovasi teknologi terdepan bersama para pakar Silicon Valley, pemimpin startup Asia, dan akademisi riset. Menghadirkan sesi keynote, workshop kecerdasan buatan, dan pameran prototipe masa depan.',
+    shortDescription: 'Premier international tech summit featuring world-class keynotes, deep-dive workshops, and breakthrough innovations.',
+    bannerUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop&q=80',
+    category: 'conference',
+    status: 'published',
+    visibility: 'public',
+    startDate: '2026-11-28T08:30:00+07:00',
+    endDate: '2026-11-29T17:00:00+07:00',
+    location: {
+      type: 'offline',
+      venueName: 'Telkom University Convention Hall',
+      address: 'Jl. Telekomunikasi No. 1, Buahbatu, Bandung',
+      city: 'Bandung',
+      lat: -6.9744,
+      lng: 107.6303,
+    },
+    organizationId: 'org-telu-bem',
+    organizationName: 'BEM Kema Telkom University',
+    university: 'Telkom University',
+    tags: ['Tech', 'AI', 'Innovation', 'Summit'],
+    attendeeCount: 450,
+    totalCapacity: 800,
+    certificateAvailable: true,
+    ticketTiers: [
+      {
+        id: 'tkt-vip-workshop',
+        name: 'VIP All-Access + Workshop',
+        price: 350000,
+        quota: 200,
+        sold: 142,
+        benefits: ['All-Stage VIP Access', 'Hands-on AI Lab Workshop', 'Exclusive Networking Dinner', 'Verified Digital Certificate', 'Official Summit Goodie Bag'],
+        isAvailable: true,
+      },
+      {
+        id: 'tkt-regular-summit',
+        name: 'General Delegate Pass',
+        price: 150000,
+        quota: 400,
+        sold: 260,
+        benefits: ['Main Hall Access', 'Digital Summit Certificate', 'Coffee Break & Lunch'],
+        isAvailable: true,
+      },
+      {
+        id: 'tkt-virtual-pass',
+        name: 'Virtual Stream Pass',
+        price: 50000,
+        quota: 500,
+        sold: 380,
+        benefits: ['Full 1080p Live Stream', 'Q&A Chat Access', 'Digital Certificate'],
+        isAvailable: true,
+      },
+    ],
+  },
+  {
     id: 'evt-arkavidia-2026',
     title: 'Arkavidia 9.0: National Tech Festival & Hackathon',
     slug: 'arkavidia-9-national-tech-festival',
@@ -356,6 +413,24 @@ export const mockExpenses: ExpenseRecord[] = [
 ]
 
 export const mockCertificates: Record<string, Certificate> = {
+  'TS-9482': {
+    id: 'cert-ts-9482',
+    certificateNumber: 'TS-9482',
+    recipientName: 'Arya Pratama',
+    recipientEmail: 'arya@student.telkomuniversity.ac.id',
+    studentId: '1301223045',
+    university: 'Telkom University',
+    eventId: 'evt-global-tech-summit',
+    eventTitle: 'Global Tech Innovators Summit 2026 Tel-U',
+    organizationName: 'BEM Kema Telkom University',
+    issueDate: '2026-11-29',
+    role: 'attendee',
+    verified: true,
+    signatories: [
+      { name: 'Prof. Ir. Suyanto, S.T., M.Sc., Ph.D.', title: 'Rektor Telkom University' },
+      { name: 'Arya Pratama', title: 'President of Innovators Summit' },
+    ],
+  },
   'CNV-2026-ITB-8821': {
     id: 'cert-8821',
     certificateNumber: 'CNV-2026-ITB-8821',

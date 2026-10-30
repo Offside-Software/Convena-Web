@@ -11,10 +11,13 @@ export interface EventCardProps {
 }
 
 export const EventCard: React.FC<EventCardProps> = ({ event }) => {
-  const lowestPrice = event.ticketTiers.reduce(
-    (min, tier) => (tier.price < min ? tier.price : min),
-    event.ticketTiers[0]?.price ?? 0
-  )
+  const ticketTiers = event.ticketTiers ?? []
+  const lowestPrice = ticketTiers.length > 0
+    ? ticketTiers.reduce(
+        (min, tier) => (tier.price < min ? tier.price : min),
+        ticketTiers[0].price
+      )
+    : 0
 
   const formattedDate = new Date(event.startDate).toLocaleDateString('id-ID', {
     weekday: 'short',

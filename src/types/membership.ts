@@ -39,6 +39,10 @@ export interface EventWithRole {
   createdAt: string
   myRole: EventRole
   myCustomTitle?: string
+  ticketTiers?: import('./event.ts').TicketTier[]
+  tags?: string[]
+  attendeeCount?: number
+  totalCapacity?: number
 }
 
 export interface InviteMemberPayload {
