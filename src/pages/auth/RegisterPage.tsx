@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { User as UserIcon, Mail, Lock, Building, ArrowRight, Eye, EyeOff, Sparkles, Check } from 'lucide-react'
+import { Eye, EyeOff, AlertCircle, Sparkles } from 'lucide-react'
 import { authService } from '../../services/auth.service.ts'
-import { MemphisShape } from '../../components/shapes/MemphisShape.tsx'
 
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate()
@@ -12,7 +11,7 @@ export const RegisterPage: React.FC = () => {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [company, setCompany] = useState('')
-  const [agreeTerms, setAgreeTerms] = useState(false)
+  const [agreeTerms, setAgreeTerms] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -31,7 +30,7 @@ export const RegisterPage: React.FC = () => {
     }
 
     if (!agreeTerms) {
-      setErrorMessage('Harap menyetujui syarat & ketentuan layanan Convena')
+      setErrorMessage('Harap menyetujui syarat & ketentuan layanan')
       return
     }
 
@@ -54,239 +53,169 @@ export const RegisterPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-[calc(100vh-140px)] flex items-center justify-center p-4 bg-[#FFE600]/10 relative overflow-hidden">
-      {/* Decorative Floating Memphis Shapes */}
-      <div className="absolute top-8 left-24 md:left-4 pointer-events-none select-none">
-        <MemphisShape type="zigzag" size={80} color="#FF4B91" animate="slow" />
-      </div>
-      <div className="absolute bottom-16 right-8 md:right-28 pointer-events-none select-none">
-        <MemphisShape type="starburst" size={64} color="#00F5D4" animate="fast" />
-      </div>
-      <div className="absolute top-1/3 right-12 hidden lg:block pointer-events-none select-none">
-        <MemphisShape type="ring" size={48} color="#01CDFE" />
-      </div>
-      <div className="absolute bottom-1/4 left-14 hidden lg:block pointer-events-none select-none">
-        <MemphisShape type="cross" size={36} color="#845EC2" />
-      </div>
-
-      <div className="grid lg:grid-cols-2 sm:grid-cols-1 items-center space-between lg:gap-12 max-w-[1280px] relative z-10 relative z-10">
-        <div className="col-span-1 m-3 text-center">
-          <div className="inline-flex items-center gap-2 bg-[#FFE600] border-2 border-[#121215] rounded-full px-4 py-1 font-['Space_Grotesk',sans-serif] font-black text-xs uppercase tracking-wider text-[#121215] -rotate-2 shadow-[2px_2px_0px_0px_#121215] mb-3">
-            <span>Selamat Datang di Convena</span>
-          </div>
-
-          <h1 className="font-['Space_Grotesk',sans-serif] font-black text-3xl sm:text-4xl text-[#121215] mb-2 tracking-tight">
-            Mulai Kelola & Ikuti Event
+    <div className="min-h-[calc(100vh-70px)] w-full flex flex-col justify-between items-center px-4 py-10 relative overflow-hidden bg-[#000000] font-['Montserrat',sans-serif]">
+      {/* Centered Register Container */}
+      <div className="w-full max-w-[420px] z-10 my-auto">
+        {/* Header Title */}
+        <div className="text-center mb-8">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-0.5">
+            Create Account
+          </h2>
+          <h1 className="text-3xl sm:text-4xl font-black text-[#CFFE06] tracking-tight leading-tight">
+            Convena
           </h1>
-          <p className="text-sm text-gray-600 font-medium max-w-xl">
-            Buat satu akun untuk mengatur event, menjadi panitia, atau membeli tiket di seluruh kampus
+          <p className="text-xs text-[#9C9C9C] mt-1">
+            Bergabung ke ekosistem manajemen kegiatan & ormawa
           </p>
         </div>
 
-        {/* Registration Card */}
-        <div className="col-span-1 bg-white border-4 border-[#121215] m-3 rounded-2xl shadow-[8px_8px_0px_0px_#121215] overflow-hidden">
-          {/* Card Header Bar */}
-          <div className="bg-[#00F5D4] border-b-4 border-[#121215] px-6 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="w-3.5 h-3.5 rounded-full bg-[#FF4B91] border-2 border-[#121215]" />
-              <span className="w-3.5 h-3.5 rounded-full bg-[#FFE600] border-2 border-[#121215]" />
-              <span className="w-3.5 h-3.5 rounded-full bg-[#01CDFE] border-2 border-[#121215]" />
-              <span className="font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] ml-2">
-                Daftar Akun Baru
-              </span>
+        {/* Register Form */}
+        <form onSubmit={handleSubmit} className="space-y-3.5">
+          {errorMessage && (
+            <div className="bg-[#202020] border border-[#DF00D0] text-[#DF00D0] rounded-xl p-3 text-xs font-semibold flex items-center gap-2">
+              <AlertCircle size={16} className="shrink-0" />
+              <span>{errorMessage}</span>
             </div>
-            <div className="flex items-center gap-1.5 bg-white/70 px-2.5 py-1 rounded-full border-2 border-[#121215] text-[11px] font-bold text-[#121215]">
-              <Sparkles size={12} className="text-[#FF4B91]" />
-              Multi-Event Ready
+          )}
+
+          {/* Full Name */}
+          <div>
+            <label htmlFor="name" className="block font-medium text-xs text-[#9C9C9C] mb-1.5">
+              Nama Lengkap
+            </label>
+            <input
+              id="name"
+              type="text"
+              required
+              placeholder="e.g. Arya Pratama"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full bg-[#1c1c1c] border border-[#333333] rounded-xl py-2.5 px-4 text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06] transition-colors"
+            />
+          </div>
+
+          {/* Username & Email */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="reg-username" className="block font-medium text-xs text-[#9C9C9C] mb-1.5">
+                Username
+              </label>
+              <input
+                id="reg-username"
+                type="text"
+                required
+                placeholder="aryapratama"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full bg-[#1c1c1c] border border-[#333333] rounded-xl py-2.5 px-4 text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06] transition-colors"
+              />
+            </div>
+            <div>
+              <label htmlFor="reg-email" className="block font-medium text-xs text-[#9C9C9C] mb-1.5">
+                Email Kampus
+              </label>
+              <input
+                id="reg-email"
+                type="email"
+                required
+                placeholder="nama@kampus.ac.id"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-[#1c1c1c] border border-[#333333] rounded-xl py-2.5 px-4 text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06] transition-colors"
+              />
             </div>
           </div>
 
-          <div className="p-6 md:p-8">
-            {errorMessage && (
-              <div className="mb-6 p-3.5 bg-[#FF4B91]/15 border-2 border-[#FF4B91] rounded-xl text-xs font-bold text-[#121215] flex items-center gap-2 shadow-[2px_2px_0px_0px_#FF4B91]">
-                <span className="w-2 h-2 rounded-full bg-[#FF4B91] shrink-0" />
-                <span>{errorMessage}</span>
-              </div>
-            )}
+          {/* Organisasi / Kampus */}
+          <div>
+            <label htmlFor="company" className="block font-medium text-xs text-[#9C9C9C] mb-1.5">
+              Himpunan / BEM / Kampus
+            </label>
+            <input
+              id="company"
+              type="text"
+              placeholder="e.g. HMIF Telkom University / ITB"
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              className="w-full bg-[#1c1c1c] border border-[#333333] rounded-xl py-2.5 px-4 text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06] transition-colors"
+            />
+          </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-2"
-                  >
-                    Nama Lengkap <span className="text-[#FF4B91]">*</span>
-                  </label>
-                  <div className="flex items-center w-full bg-white border-2 border-[#121215] rounded-xl shadow-[3px_3px_0px_0px_#121215] focus-within:border-[#01CDFE] focus-within:shadow-[4px_4px_0px_0px_#01CDFE] transition-all">
-                    <span className="pl-3.5 text-gray-400 shrink-0 select-none">
-                      <UserIcon size={18} />
-                    </span>
-                    <input
-                      id="name"
-                      type="text"
-                      required
-                      placeholder="e.g. Arya Pratama"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="!border-none !shadow-none !bg-transparent w-full py-3 pr-4 text-sm font-medium text-[#121215] placeholder:text-gray-400 !outline-none focus:!ring-0"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="username"
-                    className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-2"
-                  >
-                    Username <span className="text-[#FF4B91]">*</span>
-                  </label>
-                  <div className="flex items-center w-full bg-white border-2 border-[#121215] rounded-xl shadow-[3px_3px_0px_0px_#121215] focus-within:border-[#01CDFE] focus-within:shadow-[4px_4px_0px_0px_#01CDFE] transition-all">
-                    <span className="pl-3.5 text-gray-400 shrink-0 select-none">
-                      <UserIcon size={18} />
-                    </span>
-                    <input
-                      id="username"
-                      type="text"
-                      required
-                      placeholder="aryapratama"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-                      className="!border-none !shadow-none !bg-transparent w-full py-3 pr-4 text-sm font-medium text-[#121215] placeholder:text-gray-400 !outline-none focus:!ring-0"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-2"
-                >
-                  Alamat Email <span className="text-[#FF4B91]">*</span>
-                </label>
-                <div className="flex items-center w-full bg-white border-2 border-[#121215] rounded-xl shadow-[3px_3px_0px_0px_#121215] focus-within:border-[#01CDFE] focus-within:shadow-[4px_4px_0px_0px_#01CDFE] transition-all">
-                  <span className="pl-3.5 text-gray-400 shrink-0 select-none">
-                    <Mail size={18} />
-                  </span>
-                  <input
-                    id="email"
-                    type="email"
-                    required
-                    placeholder="nama@kampus.ac.id"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="!border-none !shadow-none !bg-transparent w-full py-3 pr-4 text-sm font-medium text-[#121215] placeholder:text-gray-400 !outline-none focus:!ring-0"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-2"
-                >
-                  Kata Sandi <span className="text-[#FF4B91]">*</span>
-                </label>
-                <div className="flex items-center w-full bg-white border-2 border-[#121215] rounded-xl shadow-[3px_3px_0px_0px_#121215] focus-within:border-[#01CDFE] focus-within:shadow-[4px_4px_0px_0px_#01CDFE] transition-all">
-                  <span className="pl-3.5 text-gray-400 shrink-0 select-none">
-                    <Lock size={18} />
-                  </span>
-                  <input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    required
-                    placeholder="Minimal 6 karakter"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="!border-none !shadow-none !bg-transparent w-full py-3 pr-2 text-sm font-medium text-[#121215] placeholder:text-gray-400 !outline-none focus:!ring-0"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="pr-3.5 pl-2 text-gray-400 hover:text-[#121215] shrink-0 cursor-pointer focus:outline-none"
-                    aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="company"
-                  className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-2"
-                >
-                  Instansi / Organisasi / Kampus (Opsional)
-                </label>
-                <div className="flex items-center w-full bg-white border-2 border-[#121215] rounded-xl shadow-[3px_3px_0px_0px_#121215] focus-within:border-[#01CDFE] focus-within:shadow-[4px_4px_0px_0px_#01CDFE] transition-all">
-                  <span className="pl-3.5 text-gray-400 shrink-0 select-none">
-                    <Building size={18} />
-                  </span>
-                  <input
-                    id="company"
-                    type="text"
-                    placeholder="e.g. Institut Teknologi Bandung / BEM FT"
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                    className="!border-none !bg-transparent w-full py-3 pr-3.5 text-sm font-medium text-[#121215] placeholder-gray-400 bg-transparent border-none outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* Terms Checkbox */}
-              <div className="pt-2">
-                <label className="flex items-start gap-3 cursor-pointer select-none">
-                  <div className="relative flex items-center justify-center mt-0.5">
-                    <input
-                      type="checkbox"
-                      checked={agreeTerms}
-                      onChange={(e) => setAgreeTerms(e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className="w-5 h-5 bg-white border-2 border-[#121215] rounded-md shadow-[2px_2px_0px_0px_#121215] peer-checked:bg-[#00F5D4] transition-all flex items-center justify-center">
-                      {agreeTerms && <Check size={14} className="text-[#121215] stroke-[3]" />}
-                    </div>
-                  </div>
-                  <span className="text-xs text-gray-600 leading-snug">
-                    Saya menyetujui{' '}
-                    <span className="font-bold text-[#121215] underline">Ketentuan Layanan</span> dan{' '}
-                    <span className="font-bold text-[#121215] underline">Kebijakan Privasi</span> Convena.
-                  </span>
-                </label>
-              </div>
-
-              {/* Submit Button */}
+          {/* Password */}
+          <div>
+            <label htmlFor="reg-password" className="block font-medium text-xs text-[#9C9C9C] mb-1.5">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                id="reg-password"
+                type={showPassword ? 'text' : 'password'}
+                required
+                placeholder="Minimal 6 karakter"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-[#1c1c1c] border border-[#333333] rounded-xl py-2.5 pl-4 pr-11 text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06] transition-colors"
+              />
               <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full mt-4 py-3.5 px-6 bg-[#00F5D4] hover:bg-[#00F5D4]/90 text-[#121215] font-['Space_Grotesk',sans-serif] font-bold text-base border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] hover:shadow-[2px_2px_0px_0px_#121215] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9C9C9C] hover:text-white transition-colors cursor-pointer"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
-                {isLoading ? (
-                  <span>Mendaftarkan akun...</span>
-                ) : (
-                  <>
-                    <span>Daftar Akun Convena</span>
-                    <ArrowRight size={18} />
-                  </>
-                )}
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
-            </form>
-
-            <div className="mt-8 pt-6 border-t-2 border-gray-100 text-center">
-              <p className="text-xs text-gray-600">
-                Sudah memiliki akun?{' '}
-                <Link
-                  to="/login"
-                  className="font-['Space_Grotesk',sans-serif] font-bold text-[#121215] hover:text-[#01CDFE] underline decoration-2 transition-colors"
-                >
-                  Masuk di sini
-                </Link>
-              </p>
             </div>
           </div>
-        </div>
+
+          {/* Terms checkbox */}
+          <div className="flex items-center gap-2 pt-1 text-xs text-[#9C9C9C]">
+            <input
+              type="checkbox"
+              id="terms"
+              checked={agreeTerms}
+              onChange={(e) => setAgreeTerms(e.target.checked)}
+              className="accent-[#CFFE06] w-4 h-4 rounded cursor-pointer"
+            />
+            <label htmlFor="terms" className="cursor-pointer">
+              Saya menyetujui syarat & kebijakan privasi Convena
+            </label>
+          </div>
+
+          {/* Rounded Pill Button: Register */}
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-3.5 px-6 bg-[#CFFE06] hover:bg-[#bde805] text-[#000000] font-bold text-sm rounded-full transition-all duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(207,254,6,0.25)] hover:shadow-[0_0_25px_rgba(207,254,6,0.4)] active:scale-[0.99] flex items-center justify-center gap-2"
+            >
+              {isLoading ? (
+                <>
+                  <Sparkles size={16} className="animate-spin text-black" />
+                  <span>Mendaftarkan Akun...</span>
+                </>
+              ) : (
+                <span>Register</span>
+              )}
+            </button>
+          </div>
+
+          {/* Back to Login */}
+          <div className="text-center pt-3 text-xs font-medium">
+            <span className="text-[#9C9C9C]">Sudah memiliki akun? </span>
+            <Link to="/login" className="text-[#CFFE06] font-semibold hover:underline">
+              Login di sini
+            </Link>
+          </div>
+        </form>
       </div>
+
+      {/* Subtle Purple to Neon-Green Gradient Ambient Glow at Bottom */}
+      <div
+        className="pointer-events-none absolute bottom-0 left-0 right-0 h-[220px] opacity-75 blur-[70px]"
+        style={{
+          background: 'radial-gradient(ellipse at bottom, #CFFE06 0%, #DF00D0 50%, transparent 80%)',
+        }}
+      />
     </div>
   )
 }

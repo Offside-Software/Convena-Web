@@ -44,20 +44,19 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Catat Pengeluaran & SPJ Baru"
-      headerColor="yellow"
+      title="Catat Pengeluaran & Kuitansi SPJ"
       footer={
         <>
           <Button variant="outline" size="sm" onClick={onClose}>
             Batal
           </Button>
-          <Button variant="yellow" size="sm" onClick={handleSubmit}>
+          <Button variant="accent" size="sm" onClick={handleSubmit}>
             Simpan Kuitansi
           </Button>
         </>
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 font-['Montserrat',sans-serif]">
         <Input
           label="Nama Transaksi / Pengeluaran"
           placeholder="Contoh: Cetak Spanduk Promosi Kampus"
@@ -102,15 +101,15 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         />
 
         <div>
-          <label className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5">
-            Keterangan Nota / Bukti Kuitansi SPJ
+          <label className="block font-semibold text-xs text-[#9C9C9C] mb-1.5">
+            Keterangan Kuitansi / Bukti Pembayaran
           </label>
           <textarea
             rows={3}
-            placeholder="Nomor nota, nama toko/vendor, dan kelengkapan materai..."
+            placeholder="Nomor nota kuitansi, nama toko/rekanan penyedia..."
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="w-full p-3 bg-white border-2 border-[#121215] rounded-xl text-sm font-medium text-[#121215] shadow-[2px_2px_0px_0px_#121215] focus:outline-none focus:border-[#FFE600] transition-all"
+            className="w-full p-3 bg-[#1c1c1c] border border-[#333333] rounded-xl text-xs font-medium text-white focus:outline-none focus:border-[#CFFE06] transition-all"
           />
         </div>
       </form>

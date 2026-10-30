@@ -1,256 +1,136 @@
 @theme {
-  --color-mem-yellow: #FFE600;
-  --color-mem-yellow-light: #FFF585;
-  --color-mem-pink: #FF4B91;
-  --color-mem-pink-light: #FF94BE;
-  --color-mem-cyan: #01CDFE;
-  --color-mem-cyan-light: #70E7FF;
-  --color-mem-purple: #845EC2;
-  --color-mem-purple-light: #BD93F9;
-  --color-mem-coral: #FF6F59;
-  --color-mem-mint: #00F5D4;
-  --color-mem-mint-dark: #00C4AA;
-  --color-mem-orange: #FF9671;
+  --color-convena-accent: #CFFE06;
+  --color-convena-accent-hover: #bde805;
+  --color-convena-grey: #9C9C9C;
+  --color-convena-bg-grey: #3D3D3D;
+  --color-convena-bg-dark: #151515;
+  --color-convena-bg-secondary: #202020;
+  --color-convena-black: #000000;
+  --color-convena-purple: #DF00D0;
 
-  --color-mem-bg: #FAF9F6;
-  --color-mem-surface: #FFFFFF;
-  --color-mem-dark: #121215;
+  --font-montserrat: 'Montserrat', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Montserrat', system-ui, -apple-system, sans-serif;
+  --font-display: 'Montserrat', system-ui, -apple-system, sans-serif;
+  --font-body: 'Montserrat', system-ui, -apple-system, sans-serif;
 
-  --font-display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
-  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-
-  --shadow-mem-sm: 3px 3px 0px #121215;
-  --shadow-mem-md: 5px 5px 0px #121215;
-  --shadow-mem-lg: 8px 8px 0px #121215;
-  --shadow-mem-yellow: 5px 5px 0px #FFE600;
-  --shadow-mem-pink: 5px 5px 0px #FF4B91;
-  --shadow-mem-cyan: 5px 5px 0px #01CDFE;
+  --radius-btn: 9999px;
+  --radius-card: 16px;
+  --radius-modal: 16px;
+  --radius-input: 12px;
 }
 
 :root {
-  /* Memphis Vibrant Color Palette */
-  --mem-yellow: #FFE600;
-  --mem-yellow-light: #FFF585;
-  --mem-pink: #FF4B91;
-  --mem-pink-light: #FF94BE;
-  --mem-cyan: #01CDFE;
-  --mem-cyan-light: #70E7FF;
-  --mem-purple: #845EC2;
-  --mem-purple-light: #BD93F9;
-  --mem-coral: #FF6F59;
-  --mem-mint: #00F5D4;
-  --mem-mint-dark: #00C4AA;
-  --mem-orange: #FF9671;
+  /* Convena Dark Neon Color Tokens */
+  --accent: #CFFE06;
+  --accent-hover: #bde805;
+  --accent-glow: rgba(207, 254, 6, 0.18);
+  --grey: #9C9C9C;
+  --bg-grey: #3D3D3D;
+  --bg-dark: #151515;
+  --bg-secondary: #202020;
+  --black: #000000;
+  --purple: #DF00D0;
+  --purple-glow: rgba(223, 0, 208, 0.25);
 
-  /* Neutrals & Surfaces */
-  --mem-bg: #FAF9F6;
-  --mem-surface: #FFFFFF;
-  --mem-dark: #121215;
-  --mem-gray-100: #F3F4F6;
-  --mem-gray-200: #E5E7EB;
-  --mem-gray-500: #6B7280;
-  --mem-gray-800: #1F2937;
-
-  /* Borders & Shadows */
-  --mem-border-width: 3px;
-  --mem-border: 3px solid var(--mem-dark);
-  --mem-border-sm: 2px solid var(--mem-dark);
-  --mem-border-thick: 4px solid var(--mem-dark);
-  --mem-radius-sm: 6px;
-  --mem-radius-md: 10px;
-  --mem-radius-lg: 16px;
-  --mem-radius-pill: 9999px;
-
-  /* Hard Drop Shadows */
-  --mem-shadow-sm: 3px 3px 0px var(--mem-dark);
-  --mem-shadow-md: 5px 5px 0px var(--mem-dark);
-  --mem-shadow-lg: 8px 8px 0px var(--mem-dark);
-  --mem-shadow-yellow: 5px 5px 0px var(--mem-yellow);
-  --mem-shadow-pink: 5px 5px 0px var(--mem-pink);
-  --mem-shadow-cyan: 5px 5px 0px var(--mem-cyan);
+  /* Borders & Radii */
+  --border-subtle: #2A2A2A;
+  --border-card: #333333;
+  --border-active: #CFFE06;
+  
+  --radius-card: 16px;
+  --radius-modal: 16px;
+  --radius-btn: 9999px;
+  --radius-input: 12px;
+  --radius-badge: 9999px;
 
   /* Typography */
-  --font-display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
-  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+  --font-display: 'Montserrat', system-ui, -apple-system, sans-serif;
+  --font-body: 'Montserrat', system-ui, -apple-system, sans-serif;
 
-  /* Transitions */
-  --mem-transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Smooth Transitions */
+  --transition-fast: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Memphis Background Patterns */
-.memphis-pattern-dots {
-  background-color: var(--mem-bg);
-  background-image: radial-gradient(var(--mem-yellow) 1.5px, transparent 1.5px);
-  background-size: 24px 24px;
+/* Card & Surface Classes */
+.convena-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-card);
+  transition: var(--transition-fast);
 }
 
-.memphis-pattern-dots-colored {
-  background-color: var(--mem-bg);
-  background-image:
-    radial-gradient(var(--mem-pink) 2px, transparent 2px),
-    radial-gradient(var(--mem-cyan) 2px, transparent 2px);
-  background-size: 32px 32px;
-  background-position: 0 0, 16px 16px;
+.convena-card:hover {
+  border-color: rgba(207, 254, 6, 0.35);
 }
 
-.memphis-pattern-grid {
-  background-image:
-    linear-gradient(to right, rgba(18, 18, 21, 0.08) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(18, 18, 21, 0.08) 1px, transparent 1px);
-  background-size: 28px 28px;
+.convena-card-dark {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-card);
+  transition: var(--transition-fast);
 }
 
-.memphis-stripes {
-  background: repeating-linear-gradient(45deg,
-      var(--mem-yellow),
-      var(--mem-yellow) 12px,
-      var(--mem-dark) 12px,
-      var(--mem-dark) 24px);
-}
-
-.memphis-stripes-subtle {
-  background: repeating-linear-gradient(-45deg,
-      transparent,
-      transparent 10px,
-      rgba(18, 18, 21, 0.06) 10px,
-      rgba(18, 18, 21, 0.06) 20px);
-}
-
-/* Card & Container Utility Classes */
-.memphis-card {
-  background: var(--mem-surface);
-  border: var(--mem-border);
-  box-shadow: var(--mem-shadow-md);
-  border-radius: var(--mem-radius-md);
-  transition: var(--mem-transition);
-}
-
-.memphis-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: var(--mem-shadow-lg);
-}
-
-.memphis-box {
-  background: var(--mem-surface);
-  border: var(--mem-border);
-  box-shadow: var(--mem-shadow-md);
-  border-radius: var(--mem-radius-md);
-}
-
-/* Tactile Button Utilities */
-.memphis-btn {
+/* Rounded Pill Button Class */
+.convena-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  font-family: var(--font-display);
+  font-family: var(--font-family);
   font-weight: 700;
-  text-decoration: none;
+  border-radius: var(--radius-btn);
+  padding: 0.75rem 1.75rem;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  transition: var(--transition-fast);
   cursor: pointer;
-  border: var(--mem-border);
-  box-shadow: var(--mem-shadow-sm);
-  border-radius: var(--mem-radius-sm);
-  transition: var(--mem-transition);
-  user-select: none;
+  border: none;
+  text-decoration: none;
 }
 
-.memphis-btn:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: var(--mem-shadow-md);
+.convena-btn-accent {
+  background-color: var(--accent);
+  color: var(--black);
 }
 
-.memphis-btn:active {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px var(--mem-dark);
+.convena-btn-accent:hover {
+  background-color: var(--accent-hover);
+  box-shadow: 0 0 20px var(--accent-glow);
+  transform: translateY(-1px);
 }
 
-.memphis-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none !important;
-  box-shadow: var(--mem-shadow-sm) !important;
+.convena-btn-secondary {
+  background-color: var(--bg-secondary);
+  color: #FFFFFF;
+  border: 1px solid var(--border-card);
 }
 
-/* Badges */
-.memphis-badge {
+.convena-btn-secondary:hover {
+  background-color: var(--bg-grey);
+  border-color: var(--grey);
+}
+
+/* Ambient Purple to Green Glow for Auth / Hero */
+.convena-auth-glow {
+  background: radial-gradient(circle at 50% 100%, rgba(223, 0, 208, 0.35) 0%, rgba(207, 254, 6, 0.25) 55%, transparent 75%);
+}
+
+.convena-hero-glow {
+  background: radial-gradient(circle at 50% 20%, rgba(207, 254, 6, 0.12) 0%, transparent 60%);
+}
+
+/* Verified Ticket Badge */
+.convena-verified-badge {
+  background-color: rgba(207, 254, 6, 0.15);
+  color: var(--accent);
+  border-radius: var(--radius-badge);
+  font-family: var(--font-family);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  padding: 0.25rem 0.75rem;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 0.25rem 0.65rem;
-  border: var(--mem-border-sm);
-  box-shadow: 2px 2px 0px var(--mem-dark);
-  border-radius: var(--mem-radius-pill);
-}
-
-/* Tilt accents */
-.memphis-tilt-left {
-  transform: rotate(-2deg);
-}
-
-.memphis-tilt-right {
-  transform: rotate(2deg);
-}
-
-.memphis-tilt-sm-left {
-  transform: rotate(-1deg);
-}
-
-.memphis-tilt-sm-right {
-  transform: rotate(1deg);
-}
-
-/* Floating animations */
-@keyframes memphis-float-slow {
-
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-
-  50% {
-    transform: translateY(-8px) rotate(4deg);
-  }
-}
-
-@keyframes memphis-float-fast {
-
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-
-  50% {
-    transform: translateY(-6px) rotate(-3deg);
-  }
-}
-
-@keyframes memphis-pulse-scale {
-
-  0%,
-  100% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.05);
-  }
-}
-
-.animate-float-slow {
-  animation: memphis-float-slow 4s ease-in-out infinite;
-}
-
-.animate-float-fast {
-  animation: memphis-float-fast 2.8s ease-in-out infinite;
-}
-
-.animate-pulse-scale {
-  animation: memphis-pulse-scale 3s ease-in-out infinite;
 }

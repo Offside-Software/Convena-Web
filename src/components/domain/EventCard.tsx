@@ -23,40 +23,26 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
     year: 'numeric',
   })
 
-  const getCategoryColor = (): 'yellow' | 'pink' | 'cyan' | 'purple' | 'mint' => {
-    switch (event.category) {
-      case 'festival':
-        return 'pink'
-      case 'competition':
-        return 'yellow'
-      case 'workshop':
-        return 'cyan'
-      case 'seminar':
-        return 'purple'
-      default:
-        return 'mint'
-    }
-  }
-
   return (
-    <div className="flex flex-col h-full bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_#121215] transition-all overflow-hidden group">
-      {/* Banner image with Memphis frame */}
-      <div className="relative h-[180px] overflow-hidden border-b-2 border-[#121215] bg-[#FFF585]">
+    <div className="flex flex-col h-full bg-[#151515] border border-[#3D3D3D]/60 rounded-xl hover:border-[#CFFE06]/40 hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)] transition-all duration-200 overflow-hidden group">
+      {/* Banner image with dark overlay */}
+      <div className="relative h-[190px] overflow-hidden bg-[#202020]">
         <img
           src={event.bannerUrl}
           alt={event.title}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-transparent to-black/30" />
 
         {/* Category Pill Tag */}
-        <div className="absolute top-2.5 left-2.5">
-          <Badge variant={getCategoryColor()} tilt="left">
+        <div className="absolute top-3 left-3">
+          <Badge variant="accent">
             {event.category}
           </Badge>
         </div>
 
         {/* Location Type Tag */}
-        <div className="absolute top-2.5 right-2.5">
+        <div className="absolute top-3 right-3">
           <Badge variant="dark" className="uppercase text-[11px]">
             {event.location.type}
           </Badge>
@@ -66,31 +52,31 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
       {/* Card Content */}
       <div className="p-5 flex flex-col grow">
         {/* Organizer & Campus */}
-        <div className="flex items-center justify-between text-xs font-mono font-bold text-gray-500 mb-1">
-          <span>{event.organizationName}</span>
-          <span className="text-[#FF4B91] font-black">{event.university}</span>
+        <div className="flex items-center justify-between text-xs font-semibold text-[#9C9C9C] mb-1.5">
+          <span className="truncate">{event.organizationName}</span>
+          <span className="text-[#CFFE06] font-bold shrink-0 ml-2">{event.university}</span>
         </div>
 
         {/* Title */}
-        <h3 className="text-lg font-['Space_Grotesk',sans-serif] font-black leading-snug mb-2 text-[#121215]">
-          <Link to={`/events/${event.id}`} className="no-underline text-inherit hover:text-[#FF4B91] transition-colors">
+        <h3 className="text-base font-['Montserrat',sans-serif] font-bold leading-snug mb-2 text-white line-clamp-2">
+          <Link to={`/events/${event.id}`} className="no-underline text-inherit hover:text-[#CFFE06] transition-colors">
             {event.title}
           </Link>
         </h3>
 
         {/* Short description */}
-        <p className="text-sm text-gray-600 mb-4 line-clamp-2 grow leading-relaxed">
+        <p className="text-xs text-[#9C9C9C] mb-4 line-clamp-2 grow leading-relaxed">
           {event.shortDescription}
         </p>
 
         {/* Meta details */}
         <div className="flex flex-col gap-1.5 mb-4 text-xs">
-          <div className="flex items-center gap-1.5 text-[#121215] font-semibold">
-            <Calendar size={15} className="text-[#FF4B91] shrink-0" />
-            <span>{formattedDate}</span>
+          <div className="flex items-center gap-2 text-[#9C9C9C]">
+            <Calendar size={14} className="text-[#CFFE06] shrink-0" />
+            <span className="text-white font-medium">{formattedDate}</span>
           </div>
-          <div className="flex items-center gap-1.5 text-gray-500">
-            <MapPin size={15} className="text-[#01CDFE] shrink-0" />
+          <div className="flex items-center gap-2 text-[#9C9C9C]">
+            <MapPin size={14} className="text-[#CFFE06] shrink-0" />
             <span className="truncate">
               {event.location.venueName ? `${event.location.venueName}, ${event.location.city || ''}` : 'Online Event'}
             </span>
@@ -99,38 +85,41 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
 
         {/* Capacity Quota Progress */}
         <div className="mb-4">
-          <div className="flex justify-between text-xs font-bold mb-1 text-gray-700">
+          <div className="flex justify-between text-xs font-medium mb-1.5 text-[#9C9C9C]">
             <span className="flex items-center gap-1">
-              <Users size={12} /> Terisi
+              <Users size={12} className="text-[#CFFE06]" /> Terisi
             </span>
             <span>
-              {event.attendeeCount} / {event.totalCapacity} Peserta
+              {event.attendeeCount} / {event.totalCapacity}
             </span>
           </div>
           <ProgressBar
             value={event.attendeeCount}
             max={event.totalCapacity}
-            color={getCategoryColor()}
-            striped
+            color="accent"
             showPercentage={false}
-            height={10}
+            height={6}
           />
         </div>
 
         {/* Price & Action Button Footer */}
-        <div className="flex items-center justify-between border-t-2 border-dashed border-gray-200 pt-3.5 mt-auto">
+        <div className="flex items-center justify-between border-t border-[#3D3D3D]/50 pt-3.5 mt-auto">
           <div>
-            <span className="block text-[11px] text-gray-500 uppercase font-bold tracking-wider">
+            <span className="block text-[11px] text-[#9C9C9C] uppercase font-medium">
               Mulai Dari
             </span>
-            <span className="font-['Space_Grotesk',sans-serif] font-black text-base text-[#121215]">
-              {lowestPrice === 0 ? 'GRATIS' : `Rp ${lowestPrice.toLocaleString('id-ID')}`}
+            <span className="font-['Montserrat',sans-serif] font-bold text-base text-white">
+              {lowestPrice === 0 ? (
+                <span className="text-[#CFFE06]">GRATIS</span>
+              ) : (
+                `Rp ${lowestPrice.toLocaleString('id-ID')}`
+              )}
             </span>
           </div>
 
           <Link to={`/events/${event.id}`} className="no-underline">
-            <Button variant={lowestPrice === 0 ? 'mint' : 'yellow'} size="sm">
-              Detail Tiket →
+            <Button variant="accent" size="sm">
+              Detail Tiket
             </Button>
           </Link>
         </div>

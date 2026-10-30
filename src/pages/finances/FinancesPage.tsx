@@ -66,27 +66,27 @@ export const FinancesPage: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="font-['Montserrat',sans-serif] bg-[#000000] text-white">
       {/* Header */}
       <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
         <div>
-          <div className="mb-1.5">
-            <Badge variant="mint" tilt="left">
-              TRANSPARANSI KEUANGAN
+          <div className="mb-2">
+            <Badge variant="accent">
+              TRANSPARANSI KEUANGAN ORMAWA
             </Badge>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] m-0">
-            Budget, Expense & SPJ Tracking
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight m-0">
+            Anggaran RAB & SPJ Kuitansi
           </h1>
-          <p className="text-gray-500 text-sm sm:text-base mt-1">
-            Pelacakan anggaran RAB, pencatatan pengeluaran, dan verifikasi kuitansi SPJ.
+          <p className="text-xs sm:text-sm text-[#9C9C9C] mt-1">
+            Pelacakan anggaran pos biaya, pencatatan pengeluaran, dan audit verifikasi bukti SPJ.
           </p>
         </div>
 
         <Button
-          variant="pink"
+          variant="accent"
           size="md"
-          icon={<Plus size={18} />}
+          icon={<Plus size={16} />}
           onClick={() => setIsModalOpen(true)}
         >
           Catat Pengeluaran Baru

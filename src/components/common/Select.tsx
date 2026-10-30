@@ -29,7 +29,7 @@ export const Select: React.FC<SelectProps> = ({
       {label && (
         <label
           htmlFor={selectId}
-          className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5"
+          className="block font-['Montserrat',sans-serif] font-semibold text-xs tracking-wide text-[#9C9C9C] mb-1.5"
         >
           {label}
         </label>
@@ -37,19 +37,21 @@ export const Select: React.FC<SelectProps> = ({
       <select
         id={selectId}
         style={style}
-        className={`w-full py-2.5 px-3.5 bg-white border-2 rounded-xl text-sm font-medium text-[#121215] cursor-pointer shadow-[2px_2px_0px_0px_#121215] focus:outline-none focus:border-[#01CDFE] focus:shadow-[3px_3px_0px_0px_#01CDFE] transition-all ${
-          error ? 'border-[#FF4B91] shadow-[2px_2px_0px_0px_#FF4B91]' : 'border-[#121215]'
+        className={`w-full py-2.5 px-3.5 bg-[#202020] border rounded-xl text-sm font-medium text-white cursor-pointer transition-all duration-200 focus:outline-none ${
+          error
+            ? 'border-[#DF00D0] focus:border-[#DF00D0]'
+            : 'border-[#3D3D3D] focus:border-[#CFFE06] focus:ring-1 focus:ring-[#CFFE06]/40'
         }`}
         {...props}
       >
         {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
+          <option key={opt.value} value={opt.value} className="bg-[#151515] text-white">
             {opt.label}
           </option>
         ))}
       </select>
       {error && (
-        <span className="block text-[#FF4B91] text-xs font-bold mt-1">
+        <span className="block text-[#DF00D0] text-xs font-medium mt-1.5">
           {error}
         </span>
       )}

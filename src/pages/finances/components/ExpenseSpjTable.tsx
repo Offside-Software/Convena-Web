@@ -18,8 +18,8 @@ export const ExpenseSpjTable: React.FC<ExpenseSpjTableProps> = ({ expenses, onVe
   )
 
   return (
-    <Card headerColor="cyan" headerTitle="Daftar Pengeluaran & Verifikasi Kuitansi SPJ">
-      {/* Filter Tab Sederhana */}
+    <Card headerColor="dark" headerTitle="Daftar Pengeluaran & Audit Kuitansi SPJ" className="font-['Montserrat',sans-serif]">
+      {/* Filter Tabs */}
       <div className="flex gap-2 flex-wrap mb-4">
         {(
           [
@@ -35,10 +35,10 @@ export const ExpenseSpjTable: React.FC<ExpenseSpjTableProps> = ({ expenses, onVe
               key={tab.id}
               type="button"
               onClick={() => setStatusFilter(tab.id)}
-              className={`font-['Space_Grotesk',sans-serif] font-bold text-xs py-1.5 px-3.5 rounded-full border-2 border-[#121215] cursor-pointer transition-all ${
+              className={`font-semibold text-xs py-1.5 px-3.5 rounded-full cursor-pointer transition-all ${
                 active
-                  ? 'bg-[#FFE600] shadow-[2px_2px_0px_0px_#121215]'
-                  : 'bg-white hover:bg-gray-100 shadow-none'
+                  ? 'bg-[#CFFE06] text-black shadow-[0_0_10px_rgba(207,254,6,0.2)]'
+                  : 'bg-[#151515] text-[#9C9C9C] hover:text-white border border-[#3D3D3D]'
               }`}
             >
               {tab.label}
@@ -49,40 +49,40 @@ export const ExpenseSpjTable: React.FC<ExpenseSpjTableProps> = ({ expenses, onVe
 
       {/* Tabel SPJ */}
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-left text-sm">
+        <table className="w-full border-collapse text-left text-xs sm:text-sm">
           <thead>
-            <tr className="border-b-2 border-[#121215] font-['Space_Grotesk',sans-serif] text-[#121215]">
-              <th className="py-3 px-2 font-bold">Item Pengeluaran</th>
-              <th className="py-3 px-2 font-bold">Divisi</th>
-              <th className="py-3 px-2 font-bold">Nominal (Rp)</th>
-              <th className="py-3 px-2 font-bold">Status SPJ</th>
-              <th className="py-3 px-2 font-bold">Keterangan Kuitansi</th>
-              <th className="py-3 px-2 text-right font-bold">Aksi Bendahara</th>
+            <tr className="border-b border-[#3D3D3D] text-[#9C9C9C]">
+              <th className="py-3 px-3 font-semibold">Item Pengeluaran</th>
+              <th className="py-3 px-3 font-semibold">Divisi</th>
+              <th className="py-3 px-3 font-semibold">Nominal (Rp)</th>
+              <th className="py-3 px-3 font-semibold">Status SPJ</th>
+              <th className="py-3 px-3 font-semibold">Keterangan Kuitansi</th>
+              <th className="py-3 px-3 text-right font-semibold">Aksi Bendahara</th>
             </tr>
           </thead>
           <tbody>
             {filteredExpenses.map((exp) => (
-              <tr key={exp.id} className="border-b border-gray-200 hover:bg-gray-50/50">
-                <td className="py-3 px-2 font-bold text-[#121215]">
+              <tr key={exp.id} className="border-b border-[#202020] hover:bg-[#151515]/60 transition-colors">
+                <td className="py-3 px-3 font-bold text-white">
                   <div>{exp.title}</div>
-                  <span className="text-xs text-gray-500 font-normal">
+                  <span className="text-[11px] text-[#9C9C9C] font-normal">
                     {exp.receiptDate} • Oleh: {exp.submittedBy}
                   </span>
                 </td>
-                <td className="py-3 px-2 text-[#121215]">{exp.division}</td>
-                <td className="py-3 px-2 font-mono font-extrabold text-[#121215]">
+                <td className="py-3 px-3 text-[#9C9C9C]">{exp.division}</td>
+                <td className="py-3 px-3 font-mono font-bold text-white">
                   Rp {exp.amount.toLocaleString('id-ID')}
                 </td>
-                <td className="py-3 px-2">
+                <td className="py-3 px-3">
                   <Badge
                     variant={
                       exp.spjStatus === 'verified'
-                        ? 'mint'
+                        ? 'accent'
                         : exp.spjStatus === 'rejected'
-                          ? 'coral'
-                          : 'yellow'
+                          ? 'pink'
+                          : 'grey'
                     }
-                    className="text-[11px]"
+                    className="text-[10px]"
                   >
                     {exp.spjStatus === 'verified'
                       ? 'TERVERIFIKASI'
@@ -91,16 +91,16 @@ export const ExpenseSpjTable: React.FC<ExpenseSpjTableProps> = ({ expenses, onVe
                         : 'MENUNGGU'}
                   </Badge>
                 </td>
-                <td className="py-3 px-2 text-xs text-gray-600 max-w-[280px]">
+                <td className="py-3 px-3 text-xs text-[#9C9C9C] max-w-[260px]">
                   {exp.notes || '-'}
                 </td>
-                <td className="py-3 px-2 text-right">
+                <td className="py-3 px-3 text-right">
                   {exp.spjStatus === 'submitted' ? (
                     <div className="inline-flex gap-1.5">
                       <Button
-                        variant="mint"
+                        variant="accent"
                         size="sm"
-                        icon={<CheckCircle size={14} />}
+                        icon={<CheckCircle size={13} />}
                         onClick={() => onVerify(exp.id, true)}
                       >
                         Setuju
@@ -108,15 +108,15 @@ export const ExpenseSpjTable: React.FC<ExpenseSpjTableProps> = ({ expenses, onVe
                       <Button
                         variant="outline"
                         size="sm"
-                        icon={<XCircle size={14} />}
+                        icon={<XCircle size={13} />}
                         onClick={() => onVerify(exp.id, false)}
                       >
                         Tolak
                       </Button>
                     </div>
                   ) : (
-                    <span className="text-xs text-gray-500 font-semibold">
-                      {exp.spjStatus === 'verified' ? 'Sudah Diaudit' : 'Perlu Revisi'}
+                    <span className="text-xs text-[#9C9C9C]">
+                      {exp.spjStatus === 'verified' ? '✓ Sudah Diaudit' : 'Perlu Revisi'}
                     </span>
                   )}
                 </td>

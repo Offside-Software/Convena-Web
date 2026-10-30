@@ -82,20 +82,9 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
 
       onEventCreated(created)
       onClose()
-      // Reset form
-      setTitle('')
-      setShortDescription('')
-      setDescription('')
-      setStartDate('')
-      setEndDate('')
-      setVenueName('')
-      setCity('')
-      setOnlineUrl('')
-      setOrganizationName('')
-      setUniversity('')
     } catch (err: unknown) {
       const error = err as { message?: string }
-      setErrorMessage(error?.message || 'Gagal membuat event. Pastikan Anda telah masuk.')
+      setErrorMessage(error?.message || 'Gagal menyimpan event. Periksa data kembali.')
     } finally {
       setIsLoading(false)
     }
@@ -105,102 +94,93 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Buat Event Baru Ormawa"
-      headerColor="pink"
-      maxWidth="max-w-2xl"
+      title="Buat Event Baru"
+      maxWidth="max-w-[620px]"
     >
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4 font-['Montserrat',sans-serif]">
         {errorMessage && (
-          <div className="p-3 bg-[#FF4B91]/15 border-2 border-[#FF4B91] rounded-xl flex items-center gap-2 text-xs font-bold text-[#121215]">
-            <AlertCircle size={16} className="text-[#FF4B91] shrink-0" />
+          <div className="bg-[#202020] border border-[#DF00D0] text-[#DF00D0] rounded-xl p-3 text-xs font-semibold flex items-center gap-2">
+            <AlertCircle size={16} className="shrink-0" />
             <span>{errorMessage}</span>
           </div>
         )}
 
-        {/* Section: Basic Info */}
+        {/* Section: Title */}
         <div>
-          <label className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5">
-            Judul Kegiatan / Event <span className="text-[#FF4B91]">*</span>
+          <label className="block font-semibold text-xs text-[#9C9C9C] mb-1.5">
+            Judul Kegiatan / Acara *
           </label>
           <input
             type="text"
             required
-            placeholder="e.g. Arkavidia 10.0: National Tech Festival"
+            placeholder="e.g. Arkavidia 9.0: National Tech Festival"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-3.5 py-2.5 bg-white border-2 border-[#121215] rounded-xl text-sm font-semibold text-[#121215] shadow-[3px_3px_0px_0px_#121215] focus:outline-none focus:border-[#01CDFE] focus:shadow-[4px_4px_0px_0px_#01CDFE] transition-all"
+            className="w-full px-3.5 py-2.5 bg-[#1c1c1c] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06]"
           />
         </div>
 
+        {/* Section: Category & Location Type */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5">
-              Kategori Acara <span className="text-[#FF4B91]">*</span>
+            <label className="block font-semibold text-xs text-[#9C9C9C] mb-1.5">
+              Kategori Event
             </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as EventCategory)}
-              className="w-full px-3.5 py-2.5 bg-white border-2 border-[#121215] rounded-xl text-sm font-semibold text-[#121215] shadow-[3px_3px_0px_0px_#121215] focus:outline-none focus:border-[#01CDFE] cursor-pointer"
+              className="w-full px-3.5 py-2.5 bg-[#1c1c1c] border border-[#333333] rounded-xl text-sm font-medium text-white outline-none focus:border-[#CFFE06] cursor-pointer"
             >
-              <option value="festival">Festival & Expo</option>
-              <option value="seminar">Seminar / Talkshow</option>
-              <option value="workshop">Workshop & Pelatihan</option>
-              <option value="competition">Kompetisi & Hackathon</option>
-              <option value="conference">Konferensi Ilmiah</option>
-              <option value="gathering">Gathering & Musyawarah</option>
+              <option value="festival" className="bg-[#151515]">Festival & Expo</option>
+              <option value="seminar" className="bg-[#151515]">Seminar / Talkshow</option>
+              <option value="workshop" className="bg-[#151515]">Hands-on Workshop</option>
+              <option value="competition" className="bg-[#151515]">Kompetisi & Hackathon</option>
             </select>
           </div>
 
           <div>
-            <label className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5">
-              Format Lokasi <span className="text-[#FF4B91]">*</span>
+            <label className="block font-semibold text-xs text-[#9C9C9C] mb-1.5">
+              Format Penyelenggaraan
             </label>
-            <div className="grid grid-cols-3 gap-2">
-              {(['offline', 'online', 'hybrid'] as const).map((mode) => (
-                <button
-                  key={mode}
-                  type="button"
-                  onClick={() => setLocationType(mode)}
-                  className={`py-2 px-1 text-xs font-['Space_Grotesk',sans-serif] font-bold capitalize rounded-lg border-2 border-[#121215] transition-all cursor-pointer ${
-                    locationType === mode
-                      ? 'bg-[#FFE600] shadow-[2px_2px_0px_0px_#121215]'
-                      : 'bg-white hover:bg-gray-100'
-                  }`}
-                >
-                  {mode}
-                </button>
-              ))}
-            </div>
+            <select
+              value={locationType}
+              onChange={(e) => setLocationType(e.target.value as 'offline' | 'online' | 'hybrid')}
+              className="w-full px-3.5 py-2.5 bg-[#1c1c1c] border border-[#333333] rounded-xl text-sm font-medium text-white outline-none focus:border-[#CFFE06] cursor-pointer"
+            >
+              <option value="offline" className="bg-[#151515]">Tatap Muka (Offline)</option>
+              <option value="online" className="bg-[#151515]">Daring Penuh (Online)</option>
+              <option value="hybrid" className="bg-[#151515]">Campuran (Hybrid)</option>
+            </select>
           </div>
         </div>
 
         {/* Section: Dates */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5">
-              <Calendar size={14} className="inline mr-1 text-gray-500" />
-              Waktu Mulai <span className="text-[#FF4B91]">*</span>
+            <label className="block font-semibold text-xs text-[#9C9C9C] mb-1.5">
+              <Calendar size={13} className="inline mr-1 text-[#CFFE06]" />
+              Waktu Mulai *
             </label>
             <input
               type="datetime-local"
               required
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-white border-2 border-[#121215] rounded-xl text-sm font-medium text-[#121215] shadow-[3px_3px_0px_0px_#121215] focus:outline-none focus:border-[#01CDFE]"
+              className="w-full px-3.5 py-2.5 bg-[#1c1c1c] border border-[#333333] rounded-xl text-sm font-medium text-white outline-none focus:border-[#CFFE06]"
             />
           </div>
 
           <div>
-            <label className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5">
-              <Calendar size={14} className="inline mr-1 text-gray-500" />
-              Waktu Selesai <span className="text-[#FF4B91]">*</span>
+            <label className="block font-semibold text-xs text-[#9C9C9C] mb-1.5">
+              <Calendar size={13} className="inline mr-1 text-[#CFFE06]" />
+              Waktu Selesai *
             </label>
             <input
               type="datetime-local"
               required
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-white border-2 border-[#121215] rounded-xl text-sm font-medium text-[#121215] shadow-[3px_3px_0px_0px_#121215] focus:outline-none focus:border-[#01CDFE]"
+              className="w-full px-3.5 py-2.5 bg-[#1c1c1c] border border-[#333333] rounded-xl text-sm font-medium text-white outline-none focus:border-[#CFFE06]"
             />
           </div>
         </div>
@@ -210,21 +190,21 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
           {locationType !== 'online' && (
             <>
               <div>
-                <label className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5">
-                  <MapPin size={14} className="inline mr-1 text-gray-500" />
+                <label className="block font-semibold text-xs text-[#9C9C9C] mb-1.5">
+                  <MapPin size={13} className="inline mr-1 text-[#CFFE06]" />
                   Gedung / Tempat
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Aula Barat ITB"
+                  placeholder="e.g. Telkom University Convention Hall"
                   value={venueName}
                   onChange={(e) => setVenueName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-white border-2 border-[#121215] rounded-xl text-sm font-medium text-[#121215] shadow-[3px_3px_0px_0px_#121215] focus:outline-none focus:border-[#01CDFE]"
+                  className="w-full px-3.5 py-2.5 bg-[#1c1c1c] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06]"
                 />
               </div>
 
               <div>
-                <label className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5">
+                <label className="block font-semibold text-xs text-[#9C9C9C] mb-1.5">
                   Kota
                 </label>
                 <input
@@ -232,7 +212,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                   placeholder="e.g. Bandung"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-white border-2 border-[#121215] rounded-xl text-sm font-medium text-[#121215] shadow-[3px_3px_0px_0px_#121215] focus:outline-none focus:border-[#01CDFE]"
+                  className="w-full px-3.5 py-2.5 bg-[#1c1c1c] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06]"
                 />
               </div>
             </>
@@ -240,7 +220,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
 
           {locationType !== 'offline' && (
             <div className={locationType === 'online' ? 'sm:col-span-2' : ''}>
-              <label className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5">
+              <label className="block font-semibold text-xs text-[#9C9C9C] mb-1.5">
                 Tautan Online / Zoom
               </label>
               <input
@@ -248,7 +228,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                 placeholder="https://zoom.us/j/..."
                 value={onlineUrl}
                 onChange={(e) => setOnlineUrl(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-white border-2 border-[#121215] rounded-xl text-sm font-medium text-[#121215] shadow-[3px_3px_0px_0px_#121215] focus:outline-none focus:border-[#01CDFE]"
+                className="w-full px-3.5 py-2.5 bg-[#1c1c1c] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06]"
               />
             </div>
           )}
@@ -257,36 +237,36 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
         {/* Section: Organizing Body */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5">
-              <Building size={14} className="inline mr-1 text-gray-500" />
+            <label className="block font-semibold text-xs text-[#9C9C9C] mb-1.5">
+              <Building size={13} className="inline mr-1 text-[#CFFE06]" />
               Nama Organisasi / BEM
             </label>
             <input
               type="text"
-              placeholder="e.g. HMIF ITB"
+              placeholder="e.g. BEM Kema Tel-U"
               value={organizationName}
               onChange={(e) => setOrganizationName(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-white border-2 border-[#121215] rounded-xl text-sm font-medium text-[#121215] shadow-[3px_3px_0px_0px_#121215] focus:outline-none focus:border-[#01CDFE]"
+              className="w-full px-3.5 py-2.5 bg-[#1c1c1c] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06]"
             />
           </div>
 
           <div>
-            <label className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5">
+            <label className="block font-semibold text-xs text-[#9C9C9C] mb-1.5">
               Universitas / Kampus
             </label>
             <input
               type="text"
-              placeholder="e.g. Institut Teknologi Bandung"
+              placeholder="e.g. Telkom University"
               value={university}
               onChange={(e) => setUniversity(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-white border-2 border-[#121215] rounded-xl text-sm font-medium text-[#121215] shadow-[3px_3px_0px_0px_#121215] focus:outline-none focus:border-[#01CDFE]"
+              className="w-full px-3.5 py-2.5 bg-[#1c1c1c] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06]"
             />
           </div>
         </div>
 
         {/* Section: Short Description */}
         <div>
-          <label className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5">
+          <label className="block font-semibold text-xs text-[#9C9C9C] mb-1.5">
             Ringkasan Singkat (1-2 Kalimat)
           </label>
           <input
@@ -294,21 +274,35 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
             placeholder="Festival teknologi tahunan terbesar mahasiswa informatika"
             value={shortDescription}
             onChange={(e) => setShortDescription(e.target.value)}
-            className="w-full px-3.5 py-2.5 bg-white border-2 border-[#121215] rounded-xl text-sm font-medium text-[#121215] shadow-[3px_3px_0px_0px_#121215] focus:outline-none focus:border-[#01CDFE]"
+            className="w-full px-3.5 py-2.5 bg-[#1c1c1c] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06]"
+          />
+        </div>
+
+        {/* Section: Full Description */}
+        <div>
+          <label className="block font-semibold text-xs text-[#9C9C9C] mb-1.5">
+            Deskripsi Lengkap Kegiatan
+          </label>
+          <textarea
+            rows={3}
+            placeholder="Jelaskan detail susunan kegiatan, pembicara, dan syarat peserta..."
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full px-3.5 py-2.5 bg-[#1c1c1c] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06]"
           />
         </div>
 
         {/* Section: Banner Image Picker */}
         <div>
           <div className="flex justify-between items-center mb-1.5">
-            <label className="font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] flex items-center gap-1">
-              <Image size={14} className="text-gray-500" />
-              Pilih Gambar Sampul / Banner
+            <label className="font-semibold text-xs text-[#9C9C9C] flex items-center gap-1">
+              <Image size={13} className="text-[#CFFE06]" />
+              Pilih Banner Sampul
             </label>
             <button
               type="button"
               onClick={() => setCustomBanner(!customBanner)}
-              className="text-xs font-bold text-[#01CDFE] hover:underline cursor-pointer"
+              className="text-xs font-semibold text-[#CFFE06] hover:underline cursor-pointer bg-transparent border-none"
             >
               {customBanner ? 'Pilih Template' : 'Gunakan URL Sendiri'}
             </button>
@@ -320,7 +314,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
               placeholder="https://example.com/banner.jpg"
               value={bannerUrl}
               onChange={(e) => setBannerUrl(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-white border-2 border-[#121215] rounded-xl text-sm font-medium text-[#121215] shadow-[3px_3px_0px_0px_#121215]"
+              className="w-full px-3.5 py-2.5 bg-[#1c1c1c] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/40 outline-none focus:border-[#CFFE06]"
             />
           ) : (
             <div className="grid grid-cols-4 gap-2">
@@ -329,16 +323,16 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                   key={i}
                   type="button"
                   onClick={() => setBannerUrl(url)}
-                  className={`relative rounded-lg overflow-hidden border-2 cursor-pointer transition-all h-16 ${
+                  className={`relative rounded-lg overflow-hidden border cursor-pointer transition-all h-16 ${
                     bannerUrl === url
-                      ? 'border-[#121215] ring-2 ring-[#FF4B91] shadow-[2px_2px_0px_0px_#121215]'
-                      : 'border-gray-200 opacity-60 hover:opacity-100'
+                      ? 'border-[#CFFE06] ring-1 ring-[#CFFE06]'
+                      : 'border-[#3D3D3D] opacity-60 hover:opacity-100'
                   }`}
                 >
                   <img src={url} alt={`Banner ${i}`} className="w-full h-full object-cover" />
                   {bannerUrl === url && (
-                    <div className="absolute top-1 right-1 bg-[#00F5D4] rounded-full p-0.5 border border-[#121215]">
-                      <Check size={10} className="text-[#121215] stroke-[3]" />
+                    <div className="absolute top-1 right-1 bg-[#CFFE06] text-black rounded-full p-0.5">
+                      <Check size={10} className="stroke-[3]" />
                     </div>
                   )}
                 </button>
@@ -348,18 +342,18 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="pt-4 border-t-2 border-[#121215] flex justify-end gap-3">
+        <div className="pt-4 border-t border-[#3D3D3D]/60 flex justify-end gap-2.5">
           <Button type="button" variant="outline" size="md" onClick={onClose} disabled={isLoading}>
             Batal
           </Button>
           <Button
             type="submit"
-            variant="pink"
+            variant="accent"
             size="md"
             icon={<Sparkles size={16} />}
             disabled={isLoading}
           >
-            {isLoading ? 'Menyimpan ke Basis Data...' : 'Buat Event Sekarang'}
+            {isLoading ? 'Menyimpan...' : 'Buat Event'}
           </Button>
         </div>
       </form>

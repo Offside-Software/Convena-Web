@@ -65,12 +65,12 @@ export const SponsorshipPage: React.FC = () => {
     setTimeout(() => setIsCopied(false), 2000)
   }
 
-  const stages: { stage: PipelineStage; title: string; colorClass: string }[] = [
-    { stage: 'prospect', title: 'Target Prospek', colorClass: 'bg-gray-200' },
-    { stage: 'proposal_sent', title: 'Proposal Terkirim', colorClass: 'bg-[#70E7FF]' },
-    { stage: 'negotiating', title: 'Negosiasi MOU', colorClass: 'bg-[#FFF585]' },
-    { stage: 'committed', title: 'Komitmen Deal', colorClass: 'bg-[#FF94BE]' },
-    { stage: 'paid', title: 'Lunas / Transfer', colorClass: 'bg-[#00F5D4]' },
+  const stages: { stage: PipelineStage; title: string; color: string }[] = [
+    { stage: 'prospect', title: 'Target Prospek', color: '#9C9C9C' },
+    { stage: 'proposal_sent', title: 'Proposal Terkirim', color: '#CFFE06' },
+    { stage: 'negotiating', title: 'Negosiasi MOU', color: '#DF00D0' },
+    { stage: 'committed', title: 'Komitmen Deal', color: '#CFFE06' },
+    { stage: 'paid', title: 'Lunas / Transfer', color: '#CFFE06' },
   ]
 
   const totalCommitted = leads
@@ -78,31 +78,31 @@ export const SponsorshipPage: React.FC = () => {
     .reduce((sum, l) => sum + l.value, 0)
 
   return (
-    <div>
+    <div className="font-['Montserrat',sans-serif] bg-[#000000] text-white">
       {/* Header */}
       <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
         <div>
-          <div className="mb-1.5">
-            <Badge variant="pink" tilt="left">
+          <div className="mb-2">
+            <Badge variant="accent">
               CRM PIPELINE & MITRA
             </Badge>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] m-0">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight m-0">
             Sponsorship CRM
           </h1>
-          <p className="text-gray-500 text-sm sm:text-base mt-1">
-            Kelola tahapan penawaran sponsor, kuota paket, dan buat draf penawaran proposal resmi dengan bantuan AI.
+          <p className="text-xs sm:text-sm text-[#9C9C9C] mt-1">
+            Kelola tahapan penawaran sponsor, kuota paket, dan buat draf proposal dengan asisten AI.
           </p>
         </div>
 
         <Button
-          variant="pink"
+          variant="accent"
           size="md"
           icon={<Bot size={18} />}
           onClick={() => {
             setIsAiModalOpen(true)
-            setAiCompany('PT Shopee International')
-            setAiContact('Bpk. Andi Wijaya')
+            setAiCompany('PT Telkom Indonesia')
+            setAiContact('Bpk. Hendra Gunawan')
           }}
         >
           Asisten Proposal AI
@@ -114,29 +114,19 @@ export const SponsorshipPage: React.FC = () => {
         {packages.map((pkg) => (
           <div
             key={pkg.id}
-            className="p-5 bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] relative overflow-hidden flex flex-col"
+            className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl relative overflow-hidden flex flex-col hover:border-[#CFFE06]/40 transition-colors"
           >
-            <div
-              className={`absolute top-0 left-0 w-full h-1.5 ${
-                pkg.color === '#FFE600'
-                  ? 'bg-[#FFE600]'
-                  : pkg.color === '#01CDFE'
-                    ? 'bg-[#01CDFE]'
-                    : pkg.color === '#FF4B91'
-                      ? 'bg-[#FF4B91]'
-                      : 'bg-[#FFE600]'
-              }`}
-            />
+            <div className="absolute top-0 left-0 w-full h-1 bg-[#CFFE06]" />
             <div className="flex justify-between items-center mb-2">
-              <h3 className="text-lg font-['Space_Grotesk',sans-serif] font-black text-[#121215] m-0">{pkg.name}</h3>
-              <Badge variant="dark" className="text-[11px]">
+              <h3 className="text-base font-bold text-white m-0">{pkg.name}</h3>
+              <Badge variant="accent" className="text-[10px]">
                 {pkg.slotsFilled} / {pkg.slotLimit} Terisi
               </Badge>
             </div>
-            <div className="font-['Space_Grotesk',sans-serif] font-black text-2xl text-[#121215] mb-3">
+            <div className="font-extrabold text-xl text-[#CFFE06] mb-3">
               Rp {pkg.price.toLocaleString('id-ID')}
             </div>
-            <ul className="pl-5 m-0 text-xs text-gray-600 space-y-1">
+            <ul className="pl-4 m-0 text-xs text-[#9C9C9C] space-y-1">
               {pkg.deliverables.slice(0, 3).map((d, i) => (
                 <li key={i}>{d}</li>
               ))}
@@ -146,47 +136,50 @@ export const SponsorshipPage: React.FC = () => {
       </div>
 
       {/* Pipeline Kanban Columns */}
-      <h2 className="text-xl sm:text-2xl font-['Space_Grotesk',sans-serif] font-black text-[#121215] mb-4 flex items-center gap-2 flex-wrap">
-        <Sparkles size={20} className="text-[#FF4B91]" /> Tahapan Pipeline Sponsorship
-        <span className="text-sm text-gray-500 font-semibold">
+      <h2 className="text-lg sm:text-xl font-bold text-white mb-4 flex items-center gap-2 flex-wrap">
+        <Sparkles size={18} className="text-[#CFFE06]" /> Tahapan Pipeline Sponsorship
+        <span className="text-xs text-[#9C9C9C] font-medium ml-2">
           (Total Masuk: Rp {totalCommitted.toLocaleString('id-ID')})
         </span>
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-start">
+      {/* Pipeline Kanban Columns - Horizontally Scrollable on all screen sizes */}
+      <div className="flex gap-4 items-start overflow-x-auto pb-6 pt-1 scroll-smooth">
         {stages.map((stg) => {
           const stageLeads = leads.filter((l) => l.stage === stg.stage)
           return (
             <div
               key={stg.stage}
-              className="bg-white border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] p-3.5 flex flex-col gap-3 min-h-[380px]"
+              className="bg-[#151515] border border-[#3D3D3D]/50 rounded-xl p-3.5 flex flex-col gap-3 min-h-[380px] w-[280px] min-w-[280px] shrink-0"
             >
               {/* Column Header */}
               <div
-                className={`p-2 border-2 border-[#121215] rounded-lg flex justify-between items-center font-extrabold text-xs ${stg.colorClass} text-[#121215]`}
+                className="p-2.5 bg-[#202020] border border-[#3D3D3D] rounded-lg flex justify-between items-center font-bold text-xs text-white"
               >
                 <span>{stg.title}</span>
-                <span className="font-mono">{stageLeads.length}</span>
+                <span className="font-mono text-[#CFFE06] bg-[#000000] px-2 py-0.5 rounded-full text-[11px]">
+                  {stageLeads.length}
+                </span>
               </div>
 
               {/* Lead Cards */}
               {stageLeads.map((lead) => (
                 <div
                   key={lead.id}
-                  className="p-3.5 border-2 border-[#121215] rounded-lg bg-[#FAF9F6] shadow-[2px_2px_0px_0px_#121215]"
+                  className="p-3.5 border border-[#3D3D3D]/60 rounded-xl bg-[#202020] hover:border-[#CFFE06]/40 transition-colors"
                 >
-                  <div className="font-black text-sm text-[#121215] mb-1">
+                  <div className="font-bold text-sm text-white mb-0.5">
                     {lead.companyName}
                   </div>
-                  <div className="text-xs text-gray-500 mb-2">
+                  <div className="text-xs text-[#9C9C9C] mb-2">
                     {lead.contactPerson}
                   </div>
 
-                  <div className="font-['Space_Grotesk',sans-serif] font-black text-sm text-[#121215] mb-2">
+                  <div className="font-bold text-sm text-[#CFFE06] mb-2">
                     Rp {lead.value.toLocaleString('id-ID')}
                   </div>
 
-                  <p className="text-xs text-gray-600 m-0 mb-3 leading-relaxed">
+                  <p className="text-xs text-[#9C9C9C] m-0 mb-3 leading-relaxed">
                     {lead.notes}
                   </p>
 
@@ -194,13 +187,13 @@ export const SponsorshipPage: React.FC = () => {
                   <select
                     value={lead.stage}
                     onChange={(e) => handleStageChange(lead.id, e.target.value as PipelineStage)}
-                    className="w-full text-xs py-1 px-2 rounded-md border border-[#121215] bg-white cursor-pointer font-semibold shadow-xs"
+                    className="w-full text-xs py-1.5 px-2.5 rounded-lg border border-[#3D3D3D] bg-[#151515] text-white cursor-pointer font-medium focus:border-[#CFFE06] outline-none"
                   >
-                    <option value="prospect">Pindah: Prospek</option>
-                    <option value="proposal_sent">Pindah: Proposal Sent</option>
-                    <option value="negotiating">Pindah: Negosiasi</option>
-                    <option value="committed">Pindah: Komitmen</option>
-                    <option value="paid">Pindah: Lunas</option>
+                    <option value="prospect">Pindah: Target Prospek</option>
+                    <option value="proposal_sent">Pindah: Proposal Terkirim</option>
+                    <option value="negotiating">Pindah: Negosiasi MOU</option>
+                    <option value="committed">Pindah: Komitmen Deal</option>
+                    <option value="paid">Pindah: Lunas / Transfer</option>
                   </select>
                 </div>
               ))}
@@ -213,24 +206,12 @@ export const SponsorshipPage: React.FC = () => {
       <Modal
         isOpen={isAiModalOpen}
         onClose={() => setIsAiModalOpen(false)}
-        title="Asisten Surat Proposal AI 🤖"
-        headerColor="pink"
-        footer={
-          <>
-            <Button variant="outline" size="sm" onClick={() => setIsAiModalOpen(false)}>
-              Tutup
-            </Button>
-            {generatedDraft && (
-              <Button variant="yellow" size="sm" onClick={copyToClipboard} icon={<Check size={16} />}>
-                {isCopied ? 'Tersalin!' : 'Salin Draf Surat'}
-              </Button>
-            )}
-          </>
-        }
+        title="Asisten Proposal Sponsorship AI"
+        maxWidth="max-w-[560px]"
       >
-        <div className="space-y-4">
-          <p className="text-xs text-gray-500">
-            Generate draf penawaran sponsorship resmi berstandar korporat Indonesia secara otomatis menggunakan LLM.
+        <div className="space-y-4 font-['Montserrat',sans-serif]">
+          <p className="text-xs text-[#9C9C9C] m-0">
+            Generate draf penawaran sponsorship resmi berstandar korporat Indonesia secara otomatis menggunakan kecerdasan buatan.
           </p>
 
           <Input
@@ -249,7 +230,7 @@ export const SponsorshipPage: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Select
-              label="Kategori Paket Ditawarkan"
+              label="Paket Sponsorship Ditawarkan"
               options={[
                 { label: 'Platinum Sponsor (Rp 35 jt)', value: 'Platinum Sponsor' },
                 { label: 'Gold Sponsor (Rp 20 jt)', value: 'Gold Sponsor' },
@@ -268,27 +249,31 @@ export const SponsorshipPage: React.FC = () => {
           </div>
 
           <Button
-            variant="pink"
+            variant="accent"
             fullWidth
             onClick={handleGenerateAi}
             disabled={isGenerating || !aiCompany || !aiContact}
             icon={<Sparkles size={16} />}
-            className="mt-2"
           >
-            {isGenerating ? 'Menyusun Surat dengan AI...' : 'Buat Draf Surat Penawaran'}
+            {isGenerating ? 'Menyusun Surat dengan AI...' : 'Generate Draf Surat Penawaran'}
           </Button>
 
           {generatedDraft && (
             <div className="pt-2">
-              <label className="block font-['Space_Grotesk',sans-serif] font-bold text-xs uppercase tracking-wider text-[#121215] mb-1.5">
-                Hasil Draf Surat (Siap Dikirim / Disunting):
+              <label className="block font-bold text-xs text-[#9C9C9C] mb-1.5">
+                Hasil Draf Surat:
               </label>
               <textarea
                 rows={8}
                 value={generatedDraft}
                 onChange={(e) => setGeneratedDraft(e.target.value)}
-                className="w-full p-3 bg-white border-2 border-[#121215] rounded-xl text-xs sm:text-sm font-mono leading-relaxed shadow-[2px_2px_0px_0px_#121215] focus:outline-none focus:border-[#FF4B91] transition-all"
+                className="w-full p-3 bg-[#1c1c1c] border border-[#333333] rounded-xl text-xs font-mono leading-relaxed text-white focus:outline-none focus:border-[#CFFE06] transition-all"
               />
+              <div className="mt-3 flex justify-end">
+                <Button variant="accent" size="sm" onClick={copyToClipboard} icon={<Check size={15} />}>
+                  {isCopied ? 'Tersalin ke Clipboard!' : 'Salin Draf Surat'}
+                </Button>
+              </div>
             </div>
           )}
         </div>

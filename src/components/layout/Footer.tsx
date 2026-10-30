@@ -1,128 +1,98 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { MemphisShape } from '../shapes/MemphisShape.tsx'
-import { Badge } from '../common/Badge.tsx'
 import { BrandLogo } from '../common/BrandLogo.tsx'
+import { Badge } from '../common/Badge.tsx'
 
 export const Footer: React.FC = () => {
-  return (
-    <footer className="bg-white border-t-4 border-[#121215] mt-auto relative overflow-hidden">
-      {/* Decorative Memphis top colored stripes */}
-      <div className="grid grid-cols-5 h-2.5 border-b-2 border-[#121215]">
-        <div className="bg-[#FFE600]" />
-        <div className="bg-[#FF4B91]" />
-        <div className="bg-[#01CDFE]" />
-        <div className="bg-[#845EC2]" />
-        <div className="bg-[#00F5D4]" />
-      </div>
+  const currentYear = 2026
 
-      <div className="max-w-[1280px] mx-auto py-12 px-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+  return (
+    <footer className="bg-[#000000] border-t border-[#202020] mt-auto">
+      <div className="max-w-[1280px] mx-auto py-12 px-4 sm:px-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
           {/* Brand info */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <BrandLogo/>
-            </div>
-            <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-              Event Management terintegrasi untuk organisasi mahasiswa Indonesia: manajemen acara, proposal, LPJ/SPJ, sponsorship CRM, dan sertifikat digital tervalidasi.
+          <div className="space-y-4">
+            <BrandLogo />
+            <p className="text-xs text-[#9C9C9C] leading-relaxed">
+              Integrated event & student organization management platform: ticketing, sponsorship CRM, budgeting, and verified digital certificates.
             </p>
-            <div className="flex gap-2 flex-wrap">
-              <Badge variant="pink">TEL-U</Badge>
-              <Badge variant="yellow">ITB</Badge>
-              <Badge variant="cyan">UI</Badge>
-              <Badge variant="pink">UGM</Badge>
-              <Badge variant="mint">ITS</Badge>
-              <Badge variant="purple">UNAIR</Badge>
+            <div className="flex gap-1.5 flex-wrap">
+              <Badge variant="dark">TEL-U</Badge>
+              <Badge variant="dark">ITB</Badge>
+              <Badge variant="dark">UI</Badge>
+              <Badge variant="dark">UGM</Badge>
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Public Features */}
           <div>
-            <h4 className="font-['Space_Grotesk',sans-serif] font-black text-base uppercase mb-4 flex items-center gap-1.5 text-[#121215]">
-              <MemphisShape type="triangle" size={14} color="#FFE600" />
-              <span>Fitur Utama</span>
+            <h4 className="font-['Montserrat',sans-serif] font-bold text-xs uppercase tracking-wider text-white mb-4">
+              Explore
             </h4>
-            <ul className="list-none p-0 m-0 flex flex-col gap-2.5">
+            <ul className="list-none p-0 m-0 space-y-2.5">
               <li>
-                <Link to="/events" className="text-sm text-[#121215] font-semibold hover:text-[#FF4B91] transition-colors">
-                  Katalog Event Kampus
+                <Link to="/events" className="text-xs text-[#9C9C9C] hover:text-[#CFFE06] transition-colors">
+                  Explore Events
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard/sponsorship" className="text-sm text-[#121215] font-semibold hover:text-[#FF4B91] transition-colors">
+                <Link to="/verify" className="text-xs text-[#9C9C9C] hover:text-[#CFFE06] transition-colors">
+                  Verify Certificate
+                </Link>
+              </li>
+              <li>
+                <Link to="/login" className="text-xs text-[#9C9C9C] hover:text-[#CFFE06] transition-colors">
+                  Admin Login
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Admin Workspace Features */}
+          <div>
+            <h4 className="font-['Montserrat',sans-serif] font-bold text-xs uppercase tracking-wider text-white mb-4">
+              Admin Workspace
+            </h4>
+            <ul className="list-none p-0 m-0 space-y-2.5">
+              <li>
+                <Link to="/dashboard" className="text-xs text-[#9C9C9C] hover:text-[#CFFE06] transition-colors">
+                  Dashboard Overview
+                </Link>
+              </li>
+              <li>
+                <Link to="/dashboard/sponsorship" className="text-xs text-[#9C9C9C] hover:text-[#CFFE06] transition-colors">
                   Sponsorship Pipeline CRM
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard/finances" className="text-sm text-[#121215] font-semibold hover:text-[#FF4B91] transition-colors">
-                  Manajemen Anggaran & SPJ
-                </Link>
-              </li>
-              <li>
-                <Link to="/verify" className="text-sm text-[#121215] font-semibold hover:text-[#FF4B91] transition-colors">
-                  Verifikasi E-Certificate
+                <Link to="/dashboard/finances" className="text-xs text-[#9C9C9C] hover:text-[#CFFE06] transition-colors">
+                  Anggaran & SPJ Kuitansi
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Guidelines & LPJ */}
+          {/* Information & Security */}
           <div>
-            <h4 className="font-['Space_Grotesk',sans-serif] font-black text-base uppercase mb-4 flex items-center gap-1.5 text-[#121215]">
-              <MemphisShape type="cross" size={14} color="#01CDFE" />
-              <span>Operasional Ormawa</span>
+            <h4 className="font-['Montserrat',sans-serif] font-bold text-xs uppercase tracking-wider text-white mb-4">
+              Security & Compliance
             </h4>
-            <ul className="list-none p-0 m-0 flex flex-col gap-2.5">
-              <li>
-                <a href="#lpj" className="text-sm text-[#121215] font-semibold hover:text-[#01CDFE] transition-colors">
-                  Format Template LPJ Resmi
-                </a>
-              </li>
-              <li>
-                <a href="#spj" className="text-sm text-[#121215] font-semibold hover:text-[#01CDFE] transition-colors">
-                  Standar Audit Kuitansi & SPJ
-                </a>
-              </li>
-              <li>
-                <a href="#payment" className="text-sm text-[#121215] font-semibold hover:text-[#01CDFE] transition-colors">
-                  Integrasi QRIS & Virtual Account
-                </a>
-              </li>
-              <li>
-                <a href="#security" className="text-sm text-[#121215] font-semibold hover:text-[#01CDFE] transition-colors">
-                  Keamanan & Hak Akses Panitia
-                </a>
-              </li>
+            <ul className="list-none p-0 m-0 space-y-2.5 text-xs text-[#9C9C9C]">
+              <li>QRIS & Payment Gateway Ready</li>
+              <li>Encrypted Digital Credentials</li>
+              <li>Audited Student Org Workflows</li>
+              <li className="text-[#CFFE06] font-medium pt-1">Telkom University & National Campus Network</li>
             </ul>
-          </div>
-
-          {/* Memphis Decorative Badge Box */}
-          <div className="p-5 bg-[#FFF585] border-2 border-[#121215] rounded-xl shadow-[4px_4px_0px_0px_#121215] flex flex-col justify-center relative">
-            <div className="absolute -top-2.5 right-2.5">
-              <MemphisShape type="starburst" size={28} color="#FF4B91" animate="slow" />
-            </div>
-            <h5 className="font-['Space_Grotesk',sans-serif] font-black text-sm mb-1 text-[#121215]">
-              Siap Mengangkat Ormawa Anda?
-            </h5>
-            <p className="text-xs text-gray-700 mb-3 leading-relaxed">
-              Bergabung bersama ratusan BEM dan Himpunan yang mengotomatisasi ticketing dan LPJ tanpa pusing.
-            </p>
-            <Link to="/events" className="no-underline">
-              <span className="font-['Space_Grotesk',sans-serif] font-black text-xs underline text-[#121215] hover:text-[#FF4B91] transition-colors">
-                Jelajahi Demo Convena →
-              </span>
-            </Link>
           </div>
         </div>
 
-        {/* Bottom copyright */}
-        <div className="border-t-2 border-dashed border-[#121215] pt-6 flex items-center justify-between flex-wrap gap-4 text-xs font-semibold text-gray-500">
+        <div className="border-t border-[#202020] pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[#9C9C9C] gap-3">
           <div>
-            © 2026 Convena.
+            © {currentYear} Convena. All rights reserved.
           </div>
-          <div className="flex gap-4 font-mono">
-            <span>v1.0.0-rc</span>
-            <span>Axum</span>
+          <div className="flex items-center gap-4">
+            <span className="hover:text-white cursor-pointer transition-colors">Privacy Policy</span>
+            <span className="hover:text-white cursor-pointer transition-colors">Terms of Service</span>
           </div>
         </div>
       </div>
