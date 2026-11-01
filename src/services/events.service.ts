@@ -1,5 +1,4 @@
 import { apiClient } from './api/client.ts'
-import { mockEvents } from '../data/mockData.ts'
 import type {
   Event,
   EventFilterParams,
@@ -19,24 +18,6 @@ export function normalizeEvent(raw: any): Event {
   let ticketTiers: TicketTier[] = []
   if (Array.isArray(raw.ticketTiers) && raw.ticketTiers.length > 0) {
     ticketTiers = raw.ticketTiers
-  } else {
-    // Check if mockEvents has predefined tiers for this event
-    const matchedMock = mockEvents.find((m) => m.id === String(raw.id) || m.slug === raw.slug)
-    if (matchedMock?.ticketTiers && matchedMock.ticketTiers.length > 0) {
-      ticketTiers = matchedMock.ticketTiers
-    } else {
-      ticketTiers = [
-        {
-          id: `tier-std-${raw.id || 'default'}`,
-          name: 'Standard',
-          price: 0,
-          quota: 250,
-          sold: 0,
-          benefits: ['Akses Acara Penuh', 'Sertifikat Digital', 'Materi Pembicara'],
-          isAvailable: true,
-        },
-      ]
-    }
   }
 
   const validCategories: EventCategory[] = [
@@ -119,41 +100,17 @@ export function normalizeEvent(raw: any): Event {
 
 export class EventsService {
   async getEvents(params?: EventFilterParams): Promise<Event[]> {
-    try {
-      const queryParams: Record<string, string | undefined> = {
-        category: params?.category,
-        company: params?.company,
-        status: params?.status,
-        search: params?.search,
-      }
-      const rawEvents = await apiClient.get<any[]>('/events', queryParams)
-      if (Array.isArray(rawEvents)) {
-        return rawEvents.map(normalizeEvent)
-      }
-      return []
-    } catch {
-      // Graceful fallback to rich mock data
-      let filtered = [...mockEvents]
-      if (params?.category && params.category !== 'all') {
-        filtered = filtered.filter((e) => e.category === params.category)
-      }
-      if (params?.company && params.company !== 'all') {
-        filtered = filtered.filter((e) =>
-          e.company?.toLowerCase().includes(params.company!.toLowerCase())
-        )
-      }
-      if (params?.search) {
-        const query = params.search.toLowerCase()
-        filtered = filtered.filter(
-          (e) =>
-            e.title.toLowerCase().includes(query) ||
-            (e.description && e.description.toLowerCase().includes(query)) ||
-            (e.organizationName && e.organizationName.toLowerCase().includes(query)) ||
-            (e.company && e.company.toLowerCase().includes(query))
-        )
-      }
-      return filtered
+    const queryParams: Record<string, string | undefined> = {
+      category: params?.category,
+      company: params?.company,
+      status: params?.status,
+      search: params?.search,
     }
+    const rawEvents = await apiClient.get<any[]>('/events', queryParams)
+    if (Array.isArray(rawEvents)) {
+      return rawEvents.map(normalizeEvent)
+    }
+    return []
   }
 
   async getMyEvents(): Promise<Event[]> {
@@ -177,7 +134,7 @@ export class EventsService {
     } catch {
       // Fallback
     }
-    return mockEvents.find((e) => e.id === id)
+    return undefined
   }
 
   async createEvent(eventData: CreateEventInput): Promise<Event> {

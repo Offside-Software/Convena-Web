@@ -16,19 +16,33 @@ export const ManageEventsPage: React.FC = () => {
 
   useEffect(() => {
     let isMounted = true
-    eventsService.getMyEvents().then((myEvents) => {
-      if (!isMounted) return
-      if (myEvents && myEvents.length > 0) {
-        setEvents(myEvents)
-        setLoading(false)
-      } else {
-        eventsService.getEvents().then((allEvents) => {
-          if (!isMounted) return
-          setEvents(allEvents)
+    eventsService
+      .getMyEvents()
+      .then((myEvents) => {
+        if (!isMounted) return
+        if (myEvents && myEvents.length > 0) {
+          setEvents(myEvents)
           setLoading(false)
-        })
-      }
-    })
+        } else {
+          eventsService
+            .getEvents()
+            .then((allEvents) => {
+              if (!isMounted) return
+              setEvents(allEvents)
+              setLoading(false)
+            })
+            .catch(() => {
+              if (!isMounted) return
+              setEvents([])
+              setLoading(false)
+            })
+        }
+      })
+      .catch(() => {
+        if (!isMounted) return
+        setEvents([])
+        setLoading(false)
+      })
     return () => {
       isMounted = false
     }
@@ -149,7 +163,6 @@ export const ManageEventsPage: React.FC = () => {
               month: 'short',
               year: 'numeric',
             })
-
             return (
               <div
                 key={evt.id}

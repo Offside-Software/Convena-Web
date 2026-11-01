@@ -39,14 +39,23 @@ export const EventsPage: React.FC = () => {
     let isMounted = true
     const fetchEvents = async () => {
       setLoading(true)
-      const data = await eventsService.getEvents({
-        search: search || undefined,
-        category: selectedCategory !== 'all' ? selectedCategory : undefined,
-        company: selectedCampus !== 'all' ? selectedCampus : undefined,
-      })
-      if (isMounted) {
-        setEvents(data)
-        setLoading(false)
+      try {
+        const data = await eventsService.getEvents({
+          search: search || undefined,
+          category: selectedCategory !== 'all' ? selectedCategory : undefined,
+          company: selectedCampus !== 'all' ? selectedCampus : undefined,
+        })
+        if (isMounted) {
+          setEvents(data)
+        }
+      } catch {
+        if (isMounted) {
+          setEvents([])
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false)
+        }
       }
     }
 

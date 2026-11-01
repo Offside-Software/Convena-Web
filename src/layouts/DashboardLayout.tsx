@@ -7,7 +7,7 @@ import {
   Calendar,
   ShieldCheck,
   LogOut,
-  ExternalLink,
+
   ChevronLeft,
   Menu,
   X,
@@ -178,24 +178,14 @@ export const DashboardLayout: React.FC = () => {
                 {currentUser?.company || 'Telkom University'}
               </div>
             </div>
-          </div>
 
-          <div className="flex items-center gap-2">
-            <Link
-              to="/events"
-              className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-full bg-[#202020] text-[11px] text-[#9C9C9C] hover:text-white hover:bg-[#3D3D3D] transition-colors no-underline"
-            >
-              <ExternalLink size={13} />
-              <span>Lihat Publik</span>
-            </Link>
             <button
               type="button"
               onClick={handleLogout}
               title="Keluar Akun"
-              className="py-2 px-3 rounded-full bg-[#202020] text-[11px] text-[#9C9C9C] hover:text-[#DF00D0] hover:bg-[#DF00D0]/10 transition-colors flex items-center gap-1 cursor-pointer"
+              className="py-2 px-2 rounded-full bg-[#202020] text-[11px] text-[#9C9C9C] hover:text-[#DF00D0] hover:bg-[#DF00D0]/10 transition-colors flex items-center gap-1 cursor-pointer"
             >
               <LogOut size={13} />
-              <span>Keluar</span>
             </button>
           </div>
         </div>
@@ -222,23 +212,13 @@ export const DashboardLayout: React.FC = () => {
               <ChevronLeft size={18} />
             </Link>
             <div>
-              <h1 className="text-lg font-bold text-white tracking-tight m-0">
+              <p className="text-m font-bold !text-white tracking-tight m-0">
                 Workspace
-              </h1>
+              </p>
               <p className="text-xs text-[#9C9C9C] m-0">
                 Pusat kendali kegiatan, sponsorship, dan keuangan organisasi
               </p>
             </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Link
-              to="/events"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#151515] border border-[#3D3D3D] text-xs font-semibold text-[#9C9C9C] hover:text-white transition-colors no-underline"
-            >
-              <ExternalLink size={13} />
-              <span>Portal Publik</span>
-            </Link>
           </div>
         </header>
 
