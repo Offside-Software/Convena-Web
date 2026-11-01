@@ -1,21 +1,106 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, CheckCircle2, DollarSign, FileText, ShieldCheck, Trophy, Users, ArrowRight } from 'lucide-react'
+import {
+  Calendar,
+  CheckCircle2,
+  DollarSign,
+  FileText,
+  ShieldCheck,
+  Trophy,
+  Users,
+  ArrowRight,
+  WifiOff,
+  RefreshCw,
+} from 'lucide-react'
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
+import { Toast } from '../../components/common/Toast.tsx'
 import { EventCard } from '../../components/domain/EventCard.tsx'
 import { eventsService } from '../../services/events.service.ts'
 import type { Event } from '../../types/event.ts'
 
 export const HomePage: React.FC = () => {
-  const [featuredEvents, setFeaturedEvents] = useState<Event[]>([]);
+  const [featuredEvents, setFeaturedEvents] = useState<Event[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [toastOpen, setToastOpen] = useState(false)
+  const isMountedRef = useRef(true)
+
+  const loadFeaturedEvents = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const events = await eventsService.getEvents()
+      if (!isMountedRef.current) return
+      setFeaturedEvents(events)
+      setToastOpen(false)
+    } catch (err: unknown) {
+      if (!isMountedRef.current) return
+      const message =
+        err && typeof err === 'object' && 'message' in err && typeof (err as any).message === 'string'
+          ? (err as any).message
+          : 'Tidak dapat terhubung ke server API. Pastikan server aktif.'
+      setError(message)
+      setToastOpen(true)
+    } finally {
+      if (isMountedRef.current) {
+        setLoading(false)
+      }
+    }
+  }, [])
 
   useEffect(() => {
-    eventsService.getEvents().then(setFeaturedEvents);
-  }, []);
+    isMountedRef.current = true
+    let active = true
+
+    eventsService
+      .getEvents()
+      .then((events) => {
+        if (!active) return
+        setFeaturedEvents(events)
+        setToastOpen(false)
+        setError(null)
+      })
+      .catch((err: unknown) => {
+        if (!active) return
+        const message =
+          err && typeof err === 'object' && 'message' in err && typeof (err as any).message === 'string'
+            ? (err as any).message
+            : 'Tidak dapat terhubung ke server API. Pastikan server aktif.'
+        setError(message)
+        setToastOpen(true)
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false)
+        }
+      })
+
+    return () => {
+      active = false
+      isMountedRef.current = false
+    }
+  }, [])
 
   return (
     <div className="relative overflow-hidden bg-[#000000] text-white font-['Montserrat',sans-serif]">
+      {/* ERROR TOAST NOTIFICATION */}
+      <Toast
+        open={toastOpen}
+        onClose={() => setToastOpen(false)}
+        type="error"
+        title="Gagal Memuat Event"
+        message={error || 'Tidak dapat terhubung ke server API.'}
+        action={{
+          label: 'Coba Lagi',
+          onClick: loadFeaturedEvents,
+          loading: loading,
+          icon: <RefreshCw size={12} />,
+        }}
+        autoCloseMs={7000}
+        position="bottom-right"
+      />
+
       {/* HERO SECTION */}
       <section className="py-24 px-4 sm:px-6 relative overflow-hidden">
         {/* Ambient Top Glow */}
@@ -101,18 +186,77 @@ export const HomePage: React.FC = () => {
             </p>
           </div>
 
-          <Link to="/events" className="no-underline">
-            <Button variant="outline" size="sm" icon={<ArrowRight size={15} />} iconPosition="right">
-              Lihat Semua Event ({featuredEvents.length})
-            </Button>
-          </Link>
+          {!loading && !error && (
+            <Link to="/events" className="no-underline">
+              <Button variant="outline" size="sm" icon={<ArrowRight size={15} />} iconPosition="right">
+                Lihat Semua Event ({featuredEvents.length})
+              </Button>
+            </Link>
+          )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredEvents.slice(0, 3).map((event) => (
-            <EventCard key={event.id} event={event} />
-          ))}
-        </div>
+        {/* LOADING SKELETON STATE */}
+        {loading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="bg-[#151515] border border-[#202020] rounded-2xl overflow-hidden p-4 animate-pulse flex flex-col gap-4"
+              >
+                <div className="w-full h-44 bg-[#202020] rounded-xl" />
+                <div className="h-4 bg-[#202020] rounded w-1/3" />
+                <div className="h-6 bg-[#202020] rounded w-3/4" />
+                <div className="h-4 bg-[#202020] rounded w-full" />
+                <div className="mt-4 pt-4 border-t border-[#202020] flex justify-between">
+                  <div className="h-4 bg-[#202020] rounded w-1/4" />
+                  <div className="h-4 bg-[#202020] rounded w-1/4" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ERROR STATE WITH TRY AGAIN BUTTON */}
+        {!loading && error && (
+          <div className="bg-[#151515] border border-[#DF00D0]/40 rounded-2xl p-8 sm:p-12 text-center max-w-xl mx-auto">
+            <div className="w-14 h-14 rounded-full bg-[#DF00D0]/10 border border-[#DF00D0]/30 text-[#DF00D0] flex items-center justify-center mx-auto mb-4">
+              <WifiOff size={28} />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">
+              Koneksi ke Server Terputus
+            </h3>
+            <p className="text-sm text-[#9C9C9C] mb-6 leading-relaxed max-w-md mx-auto">
+              {error}
+            </p>
+            <div className="flex items-center justify-center gap-3">
+              <Button
+                variant="accent"
+                size="md"
+                icon={<RefreshCw size={16} />}
+                onClick={loadFeaturedEvents}
+              >
+                Coba Lagi
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* EMPTY STATE */}
+        {!loading && !error && featuredEvents.length === 0 && (
+          <div className="bg-[#151515] border border-[#3D3D3D] rounded-2xl p-10 text-center max-w-md mx-auto">
+            <Calendar size={32} className="text-[#9C9C9C] mx-auto mb-3" />
+            <p className="text-sm text-[#9C9C9C] m-0">Belum ada event tersedia saat ini.</p>
+          </div>
+        )}
+
+        {/* EVENT CARDS */}
+        {!loading && !error && featuredEvents.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredEvents.slice(0, 3).map((event) => (
+              <EventCard key={event.id} event={event} />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* CONVENA PILLARS */}

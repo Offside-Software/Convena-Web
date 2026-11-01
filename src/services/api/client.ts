@@ -71,7 +71,26 @@ class ApiClient {
 
       return (await response.json()) as T
     } catch (err: unknown) {
-      const error = err as ApiError
+      let error: ApiError
+      if (err && typeof err === 'object' && 'message' in err && typeof (err as any).message === 'string') {
+        const msg = (err as any).message
+        const isNetworkFailure =
+          msg.toLowerCase().includes('fetch') ||
+          msg.toLowerCase().includes('network') ||
+          msg.toLowerCase().includes('connect')
+        error = {
+          message: isNetworkFailure
+            ? 'Tidak dapat terhubung ke server API. Pastikan server aktif.'
+            : (err as any).message,
+          code: (err as any).code || (isNetworkFailure ? 'CONNECTION_REFUSED' : 'REQUEST_FAILED'),
+          details: (err as any).details,
+        }
+      } else {
+        error = {
+          message: 'Terjadi kesalahan jaringan atau server API tidak dapat dijangkau.',
+          code: 'CONNECTION_REFUSED',
+        }
+      }
       console.warn(`[ApiClient] Request failed for ${path}:`, error)
       throw error
     }

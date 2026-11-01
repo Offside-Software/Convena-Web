@@ -40,16 +40,22 @@ export const DashboardPage: React.FC = () => {
       setAuthLoading(false)
 
       if (user) {
-        eventsService.getMyEvents().then((myEvents) => {
-          if (!isMounted) return
-          if (myEvents.length > 0) {
-            setEvents(myEvents)
-          } else {
-            eventsService.getEvents().then((allEvts) => {
-              if (isMounted) setEvents(allEvts.slice(0, 3))
-            })
-          }
-        })
+        eventsService
+          .getMyEvents()
+          .then((myEvents) => {
+            if (!isMounted) return
+            if (myEvents.length > 0) {
+              setEvents(myEvents)
+            } else {
+              eventsService
+                .getEvents()
+                .then((allEvts) => {
+                  if (isMounted) setEvents(allEvts.slice(0, 3))
+                })
+                .catch(() => {})
+            }
+          })
+          .catch(() => {})
 
         financeService.getBudgetSummary('evt-arkavidia-2026').then((b) => {
           if (isMounted) setBudget(b)
