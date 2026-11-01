@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, CheckCircle2, DollarSign, FileText, ShieldCheck, Sparkles, Trophy, Users, ArrowRight } from 'lucide-react'
+import { Calendar, CheckCircle2, DollarSign, FileText, ShieldCheck, Trophy, Users, ArrowRight } from 'lucide-react'
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
 import { EventCard } from '../../components/domain/EventCard.tsx'
@@ -17,7 +17,7 @@ export const HomePage: React.FC = () => {
   return (
     <div className="relative overflow-hidden bg-[#000000] text-white font-['Montserrat',sans-serif]">
       {/* HERO SECTION */}
-      <section className="py-20 px-4 sm:px-6 relative overflow-hidden">
+      <section className="py-24 px-4 sm:px-6 relative overflow-hidden">
         {/* Ambient Top Glow */}
         <div
           className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] opacity-40 blur-[100px]"
@@ -27,12 +27,6 @@ export const HomePage: React.FC = () => {
         />
 
         <div className="max-w-[1080px] mx-auto text-center relative z-10">
-          <div className="inline-flex mb-4">
-            <Badge variant="accent" icon={<Sparkles size={14} />}>
-              #1 PLATFORM EVENT & ORMAWA MAHASISWA
-            </Badge>
-          </div>
-
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-[1.15] mb-5 text-white tracking-tight">
             Kelola Acara Kampus & Ormawa{' '}
             <span className="text-[#CFFE06] inline-block">

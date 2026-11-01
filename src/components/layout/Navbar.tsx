@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Calendar, CheckCircle, LayoutDashboard, Menu, X, LogIn, LogOut } from 'lucide-react'
 import { Button } from '../common/Button.tsx'
-import { Badge } from '../common/Badge.tsx'
 import { authService } from '../../services/auth.service.ts'
 import type { User } from '../../types/user.ts'
 import { BrandLogo } from '../common/BrandLogo.tsx'
@@ -82,38 +81,45 @@ export const Navbar: React.FC = () => {
         {/* Right Actions */}
         <div className="flex items-center gap-3">
           {isLoggedIn ? (
-            <div className="flex items-center gap-3">
-              {/* Dedicated Workspace Button */}
-              <Link to="/dashboard" className="no-underline">
-                <Button
-                  variant="accent"
-                  size="sm"
-                  icon={<LayoutDashboard size={15} />}
-                  className="hidden sm:inline-flex"
-                >
-                  Workspace
-                </Button>
-              </Link>
-
-              {/* Profile Chip */}
-              <Link to="/dashboard" className="no-underline hidden md:flex items-center gap-2.5 px-2.5 py-1 bg-[#151515] border border-[#3D3D3D] rounded-full hover:border-[#CFFE06]/40 transition-colors">
-                {user?.avatarUrl ? (
-                  <img
-                    src={user.avatarUrl}
-                    alt={user.name}
-                    className="w-6 h-6 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="w-6 h-6 rounded-full bg-[#202020] text-[#CFFE06] flex items-center justify-center font-bold text-xs">
-                    {(user?.name || user?.username || 'A').charAt(0).toUpperCase()}
+            <div className="flex items-center gap-2.5">
+              {/* Combined Workspace & Username Pill: Shows Username normally, transforms to Workspace on hover */}
+              <Link
+                to="/dashboard"
+                title="Buka Workspace"
+                className="group relative inline-flex items-center gap-2 py-1.5 pl-2 pr-3.5 bg-[#151515] border border-[#3D3D3D] hover:border-[#CFFE06] hover:bg-[#CFFE06] rounded-full transition-all duration-200 no-underline cursor-pointer hover:shadow-[0_0_15px_rgba(207,254,6,0.3)] select-none"
+              >
+                {/* Avatar / Dashboard Icon Badge */}
+                <div className="relative w-6 h-6 rounded-full overflow-hidden shrink-0 flex items-center justify-center bg-[#202020] text-[#CFFE06] font-bold text-xs group-hover:bg-black transition-colors">
+                  <div className="absolute inset-0 flex items-center justify-center transition-opacity duration-150 group-hover:opacity-0">
+                    {user?.avatarUrl ? (
+                      <img
+                        src={user.avatarUrl}
+                        alt={user.name || user.username || 'User'}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span>
+                        {(user?.name || user?.username || 'U').charAt(0).toUpperCase()}
+                      </span>
+                    )}
                   </div>
-                )}
-                <span className="font-['Montserrat',sans-serif] font-semibold text-xs text-white max-w-[110px] truncate">
-                  {user?.name || user?.username || 'Admin'}
-                </span>
-                <Badge variant="accent" className="text-[10px] py-0 px-2">
-                  ADMIN
-                </Badge>
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+                    <LayoutDashboard size={13} className="text-[#CFFE06]" />
+                  </div>
+                </div>
+
+                {/* Shared Grid Cell for Username & Workspace: Preserves max width across hover states */}
+                <div className="grid grid-cols-1 grid-rows-1 min-w-0 items-center">
+                  {/* Default state: Username */}
+                  <span className="col-start-1 row-start-1 font-['Montserrat',sans-serif] font-semibold text-xs text-white transition-opacity duration-150 group-hover:opacity-0 truncate max-w-[150px] pointer-events-none select-none">
+                    {user?.name || user?.username || 'User'}
+                  </span>
+
+                  {/* Hover state: Workspace */}
+                  <span className="col-start-1 row-start-1 font-['Montserrat',sans-serif] font-bold text-xs text-black transition-opacity duration-150 opacity-0 group-hover:opacity-100 flex items-center justify-center pointer-events-none select-none whitespace-nowrap">
+                    Workspace
+                  </span>
+                </div>
               </Link>
 
               {/* Logout Button */}
@@ -121,7 +127,7 @@ export const Navbar: React.FC = () => {
                 type="button"
                 onClick={handleLogout}
                 title="Keluar"
-                className="p-2 rounded-full bg-[#151515] border border-[#3D3D3D] text-[#9C9C9C] hover:text-[#DF00D0] hover:border-[#DF00D0]/50 transition-colors cursor-pointer"
+                className="p-2 rounded-full bg-[#151515] border border-[#3D3D3D] text-[#9C9C9C] hover:text-[#DF00D0] hover:border-[#DF00D0]/50 transition-colors cursor-pointer hidden sm:flex items-center justify-center"
               >
                 <LogOut size={15} />
               </button>
