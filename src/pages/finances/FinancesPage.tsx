@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Plus } from 'lucide-react'
-import { Badge } from '../../components/common/Badge.tsx'
 import { Button } from '../../components/common/Button.tsx'
 import { financeService } from '../../services/finance.service.ts'
 import type {
@@ -70,11 +69,6 @@ export const FinancesPage: React.FC = () => {
       {/* Header */}
       <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
         <div>
-          <div className="mb-2">
-            <Badge variant="accent">
-              TRANSPARANSI KEUANGAN ORMAWA
-            </Badge>
-          </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight m-0">
             Anggaran RAB & SPJ Kuitansi
           </h1>
