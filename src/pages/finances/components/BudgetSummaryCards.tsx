@@ -33,7 +33,7 @@ export const BudgetSummaryCards: React.FC<BudgetSummaryCardsProps> = ({ budget }
           Rp {budget.totalExpenseRealized.toLocaleString('id-ID')}
         </div>
         <span className="text-xs text-[#9C9C9C]">
-          {usagePercent}% dari total pagu
+          {usagePercent}% dari total anggaran
         </span>
       </div>
 
