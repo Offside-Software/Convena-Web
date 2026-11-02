@@ -33,6 +33,7 @@ export const EventsPage: React.FC = () => {
     { label: 'UI', value: 'UI' },
     { label: 'UGM', value: 'UGM' },
     { label: 'ITS', value: 'ITS' },
+    { label: 'Unpad', value: 'Unpad' },
   ]
 
   useEffect(() => {
