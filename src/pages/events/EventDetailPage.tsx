@@ -20,6 +20,10 @@ import { Modal } from '../../components/common/Modal.tsx'
 import { eventsService } from '../../services/events.service.ts'
 import type { Event, TicketTier } from '../../types/event.ts'
 
+const TicketQRCode = React.lazy(() =>
+  import('qrcode.react').then(({ QRCodeSVG }) => ({ default: QRCodeSVG }))
+)
+
 export const EventDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const [event, setEvent] = useState<Event | null>(null)
@@ -33,6 +37,8 @@ export const EventDetailPage: React.FC = () => {
   const [attendeeName, setAttendeeName] = useState('Arya Pratama')
   const [attendeeEmail, setAttendeeEmail] = useState('arya@student.telkomuniversity.ac.id')
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false)
+  const [isRegistering, setIsRegistering] = useState(false)
+  const [registrationError, setRegistrationError] = useState('')
   const [registrationResult, setRegistrationResult] = useState<{ registrationId: string; qrCode: string } | null>(null)
 
   useEffect(() => {
@@ -83,15 +89,55 @@ export const EventDetailPage: React.FC = () => {
   const discountAmount = memberDiscountActive ? Math.round(subtotal * 0.15) : 0
   const gatewayFee = subtotal > 0 ? 4500 : 0
   const totalToPay = Math.max(0, subtotal - discountAmount + gatewayFee)
+  const availableTicketQuantity = selectedTier
+    ? Math.max(selectedTier.quota - selectedTier.sold, 0)
+    : 0
 
   const handlePay = async () => {
-    if (!selectedTier) return
-    const res = await eventsService.registerTicket(event.id, selectedTier.id, {
-      name: attendeeName,
-      email: attendeeEmail,
-    })
-    setRegistrationResult(res)
-    setIsSuccessModalOpen(true)
+    if (!selectedTier || isRegistering) return
+    if (!attendeeName.trim() || !attendeeEmail.trim() || !attendeeEmail.includes('@')) {
+      setRegistrationError('Masukkan nama lengkap dan email yang valid.')
+      return
+    }
+    if (!selectedTier.isAvailable || availableTicketQuantity < ticketQuantity) {
+      setRegistrationError('Jumlah tiket melebihi sisa kuota untuk kategori ini.')
+      return
+    }
+
+    setIsRegistering(true)
+    setRegistrationError('')
+    try {
+      const res = await eventsService.registerTicket(event.id, selectedTier.id, {
+        name: attendeeName.trim(),
+        email: attendeeEmail.trim(),
+        quantity: ticketQuantity,
+      })
+      if (!res.qrCode || !res.registrationId) {
+        throw new Error('API tidak mengembalikan kode tiket yang valid.')
+      }
+      setRegistrationResult(res)
+      setIsSuccessModalOpen(true)
+    } catch (error: unknown) {
+      setRegistrationError(
+        error && typeof error === 'object' && 'message' in error
+          ? String(error.message)
+          : 'Registrasi tiket gagal. Silakan coba kembali.',
+      )
+    } finally {
+      setIsRegistering(false)
+    }
+  }
+
+  const downloadTicketQr = () => {
+    const qrSvg = document.getElementById('ticket-qr-code')
+    if (!qrSvg || !registrationResult) return
+    const svg = new XMLSerializer().serializeToString(qrSvg)
+    const url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml;charset=utf-8' }))
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `tiket-${registrationResult.registrationId}.svg`
+    link.click()
+    URL.revokeObjectURL(url)
   }
 
   return (
@@ -260,7 +306,10 @@ export const EventDetailPage: React.FC = () => {
                   <button
                     key={tier.id}
                     type="button"
-                    onClick={() => setSelectedTier(tier)}
+                    onClick={() => {
+                      setSelectedTier(tier)
+                      setTicketQuantity((quantity) => Math.min(quantity, Math.max(1, tier.quota - tier.sold)))
+                    }}
                     className={`p-2 rounded-lg text-left text-xs transition-colors cursor-pointer border ${
                       selectedTier?.id === tier.id
                         ? 'border-[#CFFE06] bg-[#202020] text-white'
@@ -299,7 +348,8 @@ export const EventDetailPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setTicketQuantity(ticketQuantity + 1)}
-                  className="text-[#CFFE06] hover:brightness-110 cursor-pointer transition-colors"
+                  disabled={ticketQuantity >= availableTicketQuantity}
+                  className="text-[#CFFE06] hover:brightness-110 cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-40"
                   aria-label="Increase quantity"
                 >
                   <Plus size={16} />
@@ -486,10 +536,12 @@ export const EventDetailPage: React.FC = () => {
           <button
             type="button"
             onClick={handlePay}
-            className="w-full py-4 px-6 bg-[#CFFE06] hover:bg-[#bde805] text-[#000000] font-medium text-sm rounded-full transition-all duration-200 cursor-pointer shadow-[0_0_20px_rgba(207,254,6,0.3)] hover:shadow-[0_0_30px_rgba(207,254,6,0.5)] active:scale-[0.99] flex items-center justify-center gap-2 select-none"
+            disabled={isRegistering || !selectedTier || availableTicketQuantity === 0}
+            className="w-full py-4 px-6 bg-[#CFFE06] hover:bg-[#bde805] text-[#000000] font-medium text-sm rounded-full transition-all duration-200 cursor-pointer shadow-[0_0_20px_rgba(207,254,6,0.3)] hover:shadow-[0_0_30px_rgba(207,254,6,0.5)] active:scale-[0.99] flex items-center justify-center gap-2 select-none disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <span>Pay</span>
+            <span>{isRegistering ? 'Memproses...' : 'Pay'}</span>
           </button>
+          {registrationError && <p role="alert" className="m-0 rounded-lg border border-red-900 bg-red-950/40 p-3 text-xs text-red-300">{registrationError}</p>}
         </div>
       </div>
 
@@ -501,7 +553,11 @@ export const EventDetailPage: React.FC = () => {
       >
         <div className="text-center py-2 font-['Montserrat',sans-serif]">
           <div className="inline-block p-4 bg-[#000000] border border-[#CFFE06] rounded-xl mb-4 shadow-[0_0_20px_rgba(207,254,6,0.2)]">
-            <QrCode size={160} className="text-[#CFFE06] mx-auto block" />
+            {registrationResult && (
+              <React.Suspense fallback={<div className="h-40 w-40 bg-white" />}>
+                <TicketQRCode id="ticket-qr-code" value={registrationResult.qrCode} size={160} level="H" includeMargin />
+              </React.Suspense>
+            )}
             <div className="font-mono font-bold text-xs mt-2 text-white bg-[#202020] py-1 px-3 rounded-full border border-[#3D3D3D]">
               {registrationResult?.registrationId || 'TS-9482-CONFIRMED'}
             </div>
@@ -526,9 +582,9 @@ export const EventDetailPage: React.FC = () => {
             <Button
               variant="accent"
               fullWidth
-              onClick={() => setIsSuccessModalOpen(false)}
+              onClick={downloadTicketQr}
             >
-              Simpan Tiket ke Perangkat
+              Unduh QR Tiket
             </Button>
           </div>
         </div>

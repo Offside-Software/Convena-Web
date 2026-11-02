@@ -7,7 +7,9 @@ import {
   Calendar,
   ShieldCheck,
   LogOut,
-
+  Users,
+  ClipboardList,
+  ScanLine,
   ChevronLeft,
   Menu,
   X,
@@ -45,6 +47,9 @@ export const DashboardLayout: React.FC = () => {
   const sidebarLinks = [
     { label: 'Dashboard Overview', path: '/dashboard', icon: <LayoutDashboard size={18} /> },
     { label: 'Kelola Event', path: '/dashboard/events', icon: <Calendar size={18} /> },
+    { label: 'Daftar Peserta', path: '/dashboard/attendees', icon: <Users size={18} /> },
+    { label: 'Tugas Panitia', path: '/dashboard/tasks', icon: <ClipboardList size={18} /> },
+    { label: 'QR Check-in', path: '/dashboard/check-in', icon: <ScanLine size={18} /> },
     { label: 'Sponsorship Pipeline', path: '/dashboard/sponsorship', icon: <Sparkles size={18} /> },
     { label: 'Anggaran & SPJ', path: '/dashboard/finances', icon: <DollarSign size={18} /> },
     { label: 'Validasi Sertifikat', path: '/dashboard/verify', icon: <ShieldCheck size={18} /> },

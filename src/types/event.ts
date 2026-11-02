@@ -103,6 +103,7 @@ export interface RegisterTicketInput {
   name: string
   email: string
   studentId?: string
+  quantity: number
 }
 
 export interface RegisterTicketResponse {
