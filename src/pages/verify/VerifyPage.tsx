@@ -167,7 +167,7 @@ export const VerifyPage: React.FC = () => {
             <div className="max-w-[600px] mx-auto py-12 px-6 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl text-center">
               <XCircle size={44} className="text-[#DF00D0] mx-auto mb-3" />
               <h3 className="text-lg font-bold text-white mb-2">
-                Sertifikat Tidak Ditemukan
+                Maaf, Sertifikat Tidak Ditemukan
               </h3>
               <p className="text-xs text-[#9C9C9C] mb-6 leading-relaxed">
                 Kode <strong>"{code}"</strong> tidak terdaftar dalam catatan sertifikat resmi ormawa Convena. Mohon periksa kembali ejaan kode Anda.
