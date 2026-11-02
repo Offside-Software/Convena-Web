@@ -11,6 +11,7 @@ import type { SponsorLead, SponsorPackage, PipelineStage } from '../../types/spo
 export const SponsorshipPage: React.FC = () => {
   const [packages, setPackages] = useState<SponsorPackage[]>([])
   const [leads, setLeads] = useState<SponsorLead[]>([])
+  const [searchQuery, setSearchQuery] = useState('')
 
   // AI Modal
   const [isAiModalOpen, setIsAiModalOpen] = useState(false)
@@ -41,6 +42,7 @@ export const SponsorshipPage: React.FC = () => {
     }
   }, [])
 
+
   const handleStageChange = async (leadId: string, newStage: PipelineStage) => {
     await sponsorshipService.updateStage(leadId, newStage)
     loadData()
@@ -49,14 +51,17 @@ export const SponsorshipPage: React.FC = () => {
   const handleGenerateAi = async () => {
     if (!aiCompany || !aiContact) return
     setIsGenerating(true)
-    const draft = await sponsorshipService.generateAIEmailDraft({
-      companyName: aiCompany,
-      contactPerson: aiContact,
-      packageName: aiPackage,
-      eventTitle: aiEvent,
-    })
-    setGeneratedDraft(draft)
-    setIsGenerating(false)
+    try {
+      const draft = await sponsorshipService.generateAIEmailDraft({
+        companyName: aiCompany,
+        contactPerson: aiContact,
+        packageName: aiPackage,
+        eventTitle: aiEvent,
+      })
+      setGeneratedDraft(draft)
+    } finally {
+      setIsGenerating(false)
+    }
   }
 
   const copyToClipboard = () => {
@@ -138,6 +143,14 @@ export const SponsorshipPage: React.FC = () => {
       {/* Pipeline Kanban Columns */}
       <h2 className="text-lg sm:text-xl font-bold text-white mb-4 flex items-center gap-2 flex-wrap">
         <Sparkles size={18} className="text-[#CFFE06]" /> Tahapan Pipeline Sponsorship
+        <div className="max-w-sm mb-4">
+          <Input
+            label="Cari Sponsor"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="!mb-0"
+          />
+        </div>
         <span className="text-xs text-[#9C9C9C] font-medium ml-2">
           (Total Masuk: Rp {totalCommitted.toLocaleString('id-ID')})
         </span>
@@ -146,7 +159,16 @@ export const SponsorshipPage: React.FC = () => {
       {/* Pipeline Kanban Columns - Horizontally Scrollable on all screen sizes */}
       <div className="flex gap-4 items-start overflow-x-auto pb-6 pt-1 scroll-smooth">
         {stages.map((stg) => {
-          const stageLeads = leads.filter((l) => l.stage === stg.stage)
+          const stageLeads = leads.filter((l) => {
+            const matchesStage = l.stage === stg.stage
+
+            const matchesSearch =
+              l.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              l.contactPerson.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              l.notes.toLowerCase().includes(searchQuery.toLowerCase())
+
+            return matchesStage && matchesSearch
+          })
           return (
             <div
               key={stg.stage}
