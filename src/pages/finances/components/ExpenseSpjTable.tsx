@@ -25,7 +25,7 @@ export const ExpenseSpjTable: React.FC<ExpenseSpjTableProps> = ({ expenses, onVe
           [
             { id: 'all', label: 'Semua' },
             { id: 'submitted', label: 'Menunggu' },
-            { id: 'verified', label: 'Terverifikasi' },
+            { id: 'verified', label: 'Diverifikasi' },
             { id: 'rejected', label: 'Ditolak' },
           ] as const
         ).map((tab) => {
@@ -57,7 +57,7 @@ export const ExpenseSpjTable: React.FC<ExpenseSpjTableProps> = ({ expenses, onVe
               <th className="py-3 px-3 font-semibold">Nominal (Rp)</th>
               <th className="py-3 px-3 font-semibold">Status SPJ</th>
               <th className="py-3 px-3 font-semibold">Keterangan Kuitansi</th>
-              <th className="py-3 px-3 text-right font-semibold">Aksi Bendahara</th>
+              <th className="py-3 px-3 text-right font-semibold">Keterangan</th>
             </tr>
           </thead>
           <tbody>
