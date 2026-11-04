@@ -1,9 +1,17 @@
 import type { ApiError } from '../../types/api.ts'
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+export const DEFAULT_PRODUCTION_API_URL = "https://env-opentask.user.cloudjkt02.com/api/convena";
+export const DEFAULT_DEV_API_URL = 'http://localhost:8000';
 
 export interface RequestOptions extends RequestInit {
   params?: Record<string, string | number | boolean | undefined>
+}
+
+export function getBaseUrl(): string {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL.replace(/\/+$/, '');
+  }
+  return import.meta.env.DEV ? DEFAULT_DEV_API_URL : DEFAULT_PRODUCTION_API_URL;
 }
 
 class ApiClient {
@@ -22,7 +30,13 @@ class ApiClient {
   }
 
   private buildUrl(path: string, params?: Record<string, string | number | boolean | undefined>): string {
-    const url = new URL(path.startsWith('http') ? path : `${this.baseUrl}${path.startsWith('/') ? path : `/${path}`}`)
+    const cleanPath = path.startsWith('/') ? path : `/${path}`
+    const fullUrl = path.startsWith('http://') || path.startsWith('https://')
+      ? path
+      : `${this.baseUrl.replace(/\/+$/, '')}${cleanPath}`
+
+    const baseOrigin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
+    const url = new URL(fullUrl, baseOrigin)
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
@@ -126,4 +140,4 @@ class ApiClient {
   }
 }
 
-export const apiClient = new ApiClient(BASE_URL)
+export const apiClient = new ApiClient(getBaseUrl())
