@@ -30,8 +30,12 @@ export const EventDetailPage: React.FC = () => {
   const [ticketQuantity, setTicketQuantity] = useState(1)
   const [memberDiscountActive, setMemberDiscountActive] = useState(true)
   const [paymentMethod, setPaymentMethod] = useState<'qris' | 'bank' | 'ewallet'>('qris')
-  const [attendeeName, setAttendeeName] = useState('Arya Pratama')
-  const [attendeeEmail, setAttendeeEmail] = useState('arya@student.telkomuniversity.ac.id')
+  const [attendeeName, setAttendeeName] = useState('')
+  const [attendeeEmail, setAttendeeEmail] = useState('')
+  const [attendeeStudentId, setAttendeeStudentId] = useState('')
+  const [isAttendeeRegistered, setIsAttendeeRegistered] = useState(false)
+  const [registrationError, setRegistrationError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false)
   const [registrationResult, setRegistrationResult] = useState<{ registrationId: string; qrCode: string } | null>(null)
 
@@ -138,20 +142,48 @@ export const EventDetailPage: React.FC = () => {
   }
 
   // Price calculations matching Image 4
-  const basePricePerTicket = selectedTier ? selectedTier.price : 350000
+  const basePricePerTicket = selectedTier?.price ?? 0
   const subtotal = basePricePerTicket * ticketQuantity
   const discountAmount = memberDiscountActive ? Math.round(subtotal * 0.15) : 0
   const gatewayFee = subtotal > 0 ? 4500 : 0
   const totalToPay = Math.max(0, subtotal - discountAmount + gatewayFee)
 
+  const handleAttendeeRegistration = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setRegistrationError('')
+
+    if (!attendeeName.trim() || !attendeeEmail.trim()) {
+      setRegistrationError('Nama dan email wajib diisi untuk melanjutkan.')
+      return
+    }
+
+    setAttendeeName(attendeeName.trim())
+    setAttendeeEmail(attendeeEmail.trim())
+    setAttendeeStudentId(attendeeStudentId.trim())
+    setIsAttendeeRegistered(true)
+  }
+
   const handlePay = async () => {
     if (!selectedTier) return
-    const res = await eventsService.registerTicket(event.id, selectedTier.id, {
-      name: attendeeName,
-      email: attendeeEmail,
-    })
-    setRegistrationResult(res)
-    setIsSuccessModalOpen(true)
+    setRegistrationError('')
+    setIsSubmitting(true)
+    try {
+      const res = await eventsService.registerTicket(event.id, selectedTier.id, {
+        name: attendeeName,
+        email: attendeeEmail,
+        studentId: attendeeStudentId || undefined,
+      })
+      setRegistrationResult(res)
+      setIsSuccessModalOpen(true)
+    } catch (error: unknown) {
+      const message =
+        error && typeof error === 'object' && 'message' in error && typeof error.message === 'string'
+          ? error.message
+          : 'Pendaftaran tiket gagal. Silakan coba kembali.'
+      setRegistrationError(message)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -288,8 +320,97 @@ export const EventDetailPage: React.FC = () => {
 
         {/* Right Column: Checkout & Ticketing (Images 2, 3, 4 Redesign) */}
         <div className="space-y-4 sticky top-[80px]">
+          {!isAttendeeRegistered ? (
+            <form
+              onSubmit={handleAttendeeRegistration}
+              className="bg-[#141414] border border-[#262626] rounded-xl p-5 space-y-4"
+            >
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#CFFE06]">
+                  Langkah 1 dari 2
+                </span>
+                <h2 className="text-lg font-bold text-white mt-2 mb-1">Registrasi Attendee</h2>
+                <p className="text-xs text-[#9C9C9C]">
+                  Isi data peserta terlebih dahulu sebelum memilih dan membeli tiket.
+                </p>
+              </div>
+
+              {registrationError && (
+                <p role="alert" className="text-xs text-[#DF00D0] m-0">
+                  {registrationError}
+                </p>
+              )}
+
+              <div>
+                <label htmlFor="attendee-name" className="block text-xs font-semibold text-[#9C9C9C] mb-1.5">
+                  Nama Lengkap <span className="text-[#CFFE06]">*</span>
+                </label>
+                <input
+                  id="attendee-name"
+                  type="text"
+                  autoComplete="name"
+                  placeholder="Nama sesuai identitas"
+                  value={attendeeName}
+                  onChange={(e) => setAttendeeName(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="attendee-email" className="block text-xs font-semibold text-[#9C9C9C] mb-1.5">
+                  Email <span className="text-[#CFFE06]">*</span>
+                </label>
+                <input
+                  id="attendee-email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="nama@email.com"
+                  value={attendeeEmail}
+                  onChange={(e) => setAttendeeEmail(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="attendee-student-id" className="block text-xs font-semibold text-[#9C9C9C] mb-1.5">
+                  NIM / ID Mahasiswa <span className="font-normal">(opsional)</span>
+                </label>
+                <input
+                  id="attendee-student-id"
+                  type="text"
+                  autoComplete="off"
+                  placeholder="Masukkan NIM jika ada"
+                  value={attendeeStudentId}
+                  onChange={(e) => setAttendeeStudentId(e.target.value)}
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-3 px-5 bg-[#CFFE06] hover:bg-[#bde805] text-[#000000] font-bold text-sm rounded-full transition-colors cursor-pointer"
+              >
+                Lanjut ke Pembelian Tiket
+              </button>
+            </form>
+          ) : (
+            <>
           {/* Card 1: Verified Ticket Card (Image 3) */}
           <div className="bg-[#141414] border border-[#262626] rounded-xl p-5">
+            <div className="flex items-start justify-between gap-3 mb-4">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#CFFE06]">
+                  Langkah 2 dari 2
+                </span>
+                <h2 className="text-lg font-bold text-white mt-1 mb-0">Pilih Tiket</h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsAttendeeRegistered(false)}
+                className="text-xs font-semibold text-[#CFFE06] hover:underline cursor-pointer bg-transparent border-none p-0"
+              >
+                Ubah data attendee
+              </button>
+            </div>
             <div className="flex items-center justify-between mb-3">
               {/* Verified Ticket Badge */}
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#CFFE06]/15 text-[#CFFE06] font-bold text-xs">
@@ -333,6 +454,11 @@ export const EventDetailPage: React.FC = () => {
                     </div>
                   </button>
                 ))}
+                {!event.ticketTiers?.length && (
+                  <p className="col-span-2 text-xs text-[#9C9C9C] m-0">
+                    Tiket untuk event ini belum tersedia.
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -389,35 +515,14 @@ export const EventDetailPage: React.FC = () => {
             </div>
 
             {/* Attendee Details */}
-            <div className="pt-2 border-t border-[#262626] space-y-2">
-              <span className="block text-xs font-semibold text-[#9C9C9C]">
-                Data Pemilik Tiket
+            <div className="pt-2 border-t border-[#262626]">
+              <span className="block text-xs font-semibold text-[#9C9C9C] mb-2">
+                Data Attendee Terdaftar
               </span>
-              <div className="grid grid-rows-1 gap-2">
-                <div>
-                  <span className='my-1.5 block text-xs font-semibold text-[#9C9C9C]'>
-                    Nama
-                  </span>
-                  <input
-                    type="text"
-                    placeholder="Nama Lengkap"
-                    value={attendeeName}
-                    onChange={(e) => setAttendeeName(e.target.value)}
-                    className="w-full bg-[#0a0a0a] border border-[#262626] rounded-lg py-1.5 px-3 text-xs text-white outline-none focus:border-[#CFFE06]"
-                  />
-                </div>
-                <div>
-                  <span className='my-1.5 block text-xs font-semibold text-[#9C9C9C]'>
-                    Email
-                  </span>
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    value={attendeeEmail}
-                    onChange={(e) => setAttendeeEmail(e.target.value)}
-                    className="w-full bg-[#0a0a0a] border border-[#262626] rounded-lg py-1.5 px-3 text-xs text-white outline-none focus:border-[#CFFE06]"
-                  />
-                </div>
+              <div className="text-xs text-white space-y-1">
+                <div>{attendeeName}</div>
+                <div className="text-[#9C9C9C]">{attendeeEmail}</div>
+                {attendeeStudentId && <div className="text-[#9C9C9C]">NIM: {attendeeStudentId}</div>}
               </div>
             </div>
 
@@ -543,13 +648,27 @@ export const EventDetailPage: React.FC = () => {
           </div>
 
           {/* Pay Button: Big pill button as seen in Image 4 */}
+          {registrationError && (
+            <p role="alert" className="text-xs text-[#DF00D0] m-0">
+              {registrationError}
+            </p>
+          )}
           <button
             type="button"
             onClick={handlePay}
-            className="w-full py-4 px-6 bg-[#CFFE06] hover:bg-[#bde805] text-[#000000] font-medium text-sm rounded-full transition-all duration-200 cursor-pointer shadow-[0_0_20px_rgba(207,254,6,0.3)] hover:shadow-[0_0_30px_rgba(207,254,6,0.5)] active:scale-[0.99] flex items-center justify-center gap-2 select-none"
+            disabled={isSubmitting || !selectedTier}
+            className="w-full py-4 px-6 bg-[#CFFE06] hover:bg-[#bde805] text-[#000000] font-medium text-sm rounded-full transition-all duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(207,254,6,0.3)] hover:shadow-[0_0_30px_rgba(207,254,6,0.5)] active:scale-[0.99] flex items-center justify-center gap-2 select-none"
           >
-            <span>Pay</span>
+            <span>
+              {isSubmitting
+                ? 'Memproses...'
+                : selectedTier
+                  ? 'Bayar & Daftar Tiket'
+                  : 'Tiket Belum Tersedia'}
+            </span>
           </button>
+            </>
+          )}
         </div>
       </div>
 
