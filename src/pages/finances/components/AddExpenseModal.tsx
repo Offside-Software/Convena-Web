@@ -29,7 +29,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 }) => {
   const [title, setTitle] = useState(() => editingExpense?.title || '')
   const [amount, setAmount] = useState<string>(() =>
-    editingExpense ? String(editingExpense.amount) : ''
+    editingExpense ? editingExpense.amount.toLocaleString('id-ID') : ''
   )
   const [category, setCategory] = useState<ExpenseCategory>(
     () => editingExpense?.category || 'venue'
@@ -82,7 +82,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     : 0
   const plannedAmount = selectedCatPlan?.plannedAmount ?? 0
   const remainingBefore = plannedAmount - baseSpent
-  const numericAmount = Number(amount) || 0
+  const numericAmount = Number(amount.replace(/\D/g, '')) || 0
   const projectedSpent = baseSpent + numericAmount
   const projectedRemaining = plannedAmount - projectedSpent
   const overageAmount = Math.max(0, projectedSpent - plannedAmount)
@@ -95,7 +95,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
       setToastState((prev) => ({ ...prev, open: false }))
       await onSubmitExpense({
         title: title.trim(),
-        amount: Number(amount),
+        amount: numericAmount,
         category,
         division: division.trim() || 'Divisi Kepanitiaan',
         notes: notes.trim() || undefined,
@@ -125,7 +125,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
       return
     }
 
-    if (!amount || Number.isNaN(Number(amount)) || Number(amount) <= 0) {
+    if (!numericAmount || Number.isNaN(numericAmount) || numericAmount <= 0) {
       showToast(
         'warning',
         'Nominal Pengeluaran Tidak Valid',
@@ -228,11 +228,13 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="Nominal Pengeluaran (Rp) *"
-              type="number"
-              placeholder="Contoh: 1500000"
+              type="text"
+              inputMode="numeric"
+              placeholder="Contoh: 1.500.000"
               value={amount}
               onChange={(e) => {
-                setAmount(e.target.value)
+                const digits = e.target.value.replace(/\D/g, '')
+                setAmount(digits ? Number(digits).toLocaleString('id-ID') : '')
                 setConfirmedOverBudget(false)
               }}
               className="!mb-0"
