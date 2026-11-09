@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Calendar, Users, MapPin, ArrowUpRight, DollarSign } from 'lucide-react'
+import { Plus, Calendar, Users, MapPin, ArrowUpRight, DollarSign, ListTodo } from 'lucide-react'
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
 import { ProgressBar } from '../../components/common/ProgressBar.tsx'
@@ -258,6 +258,11 @@ export const ManageEventsPage: React.FC = () => {
                   </div>
 
                   <div className="flex items-center gap-2 flex-wrap">
+                    <Link to={`/dashboard/tasks?eventId=${evt.id}`} className="no-underline">
+                      <Button variant="outline" size="sm" icon={<ListTodo size={14} />}>
+                        Task Panitia
+                      </Button>
+                    </Link>
                     <Link to={`/dashboard/finances?eventId=${evt.id}`} className="no-underline">
                       <Button variant="accent" size="sm" icon={<DollarSign size={14} />}>
                         Anggaran & SPJ
