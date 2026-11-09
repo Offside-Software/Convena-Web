@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard,
@@ -14,7 +14,11 @@ import {
   X,
 } from 'lucide-react'
 import { authService } from '../services/auth.service.ts'
+import { organizationService } from '../services/organization.service.ts'
+import { eventsService } from '../services/events.service.ts'
 import type { User } from '../types/user.ts'
+import type { Organization } from '../types/organization.ts'
+import type { Event } from '../types/event.ts'
 import { BrandLogo } from '../components/common/BrandLogo.tsx'
 import { Badge } from '../components/common/Badge.tsx'
 
@@ -22,18 +26,25 @@ export const DashboardLayout: React.FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [userOrgs, setUserOrgs] = useState<Organization[]>([])
+  const [myEvents, setMyEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     let isMounted = true
-    authService.getCurrentUser().then((u) => {
+    Promise.all([
+      authService.getCurrentUser(),
+      organizationService.getOrganizations().catch(() => [] as Organization[]),
+      eventsService.getMyEvents().catch(() => [] as Event[]),
+    ]).then(([u, orgs, evts]) => {
       if (!isMounted) return
       if (u) {
         setCurrentUser(u)
+        setUserOrgs(orgs)
+        setMyEvents(evts)
         setLoading(false)
       } else {
-        // Non logged in users cannot access admin workspace: redirect to login
         navigate('/login', { replace: true })
       }
     })
@@ -42,16 +53,130 @@ export const DashboardLayout: React.FC = () => {
     }
   }, [location.pathname, navigate])
 
-  // All workspace navigation links stay within /dashboard/*
-  const sidebarLinks = [
-    { label: 'Dashboard Overview', path: '/dashboard', icon: <LayoutDashboard size={18} /> },
-    { label: 'Organisasi & RBAC', path: '/dashboard/organization', icon: <Building2 size={18} /> },
-    { label: 'Kelola Event', path: '/dashboard/events', icon: <Calendar size={18} /> },
-    { label: 'Task Panitia', path: '/dashboard/tasks', icon: <ListTodo size={18} /> },
-    { label: 'Sponsorship Pipeline', path: '/dashboard/sponsorship', icon: <Sparkles size={18} /> },
-    { label: 'Anggaran & SPJ', path: '/dashboard/finances', icon: <DollarSign size={18} /> },
-    { label: 'Validasi Sertifikat', path: '/dashboard/verify', icon: <ShieldCheck size={18} /> },
-  ]
+  // Aggregate permissions across user's organizations and event roles
+  const { sidebarLinks, roleSummaryLabel } = useMemo(() => {
+    const orgPerms = new Set<string>()
+    const orgRoleNames = new Set<string>()
+    for (const org of userOrgs) {
+      if (org.myRole) orgRoleNames.add(org.myRole.toLowerCase())
+      for (const p of org.myPermissions || []) {
+        orgPerms.add(p)
+      }
+    }
+
+    const eventRoles = new Set<string>()
+    for (const ev of myEvents) {
+      if (ev.myRole) eventRoles.add(ev.myRole.toLowerCase())
+    }
+
+    const isOwnerOrAdmin =
+      orgRoleNames.has('owner') ||
+      orgRoleNames.has('admin') ||
+      eventRoles.has('owner') ||
+      eventRoles.has('admin')
+
+    const canAccessOrg =
+      isOwnerOrAdmin ||
+      userOrgs.length === 0 ||
+      orgPerms.has('org:view') ||
+      orgPerms.has('org:manage_members') ||
+      orgPerms.has('org:manage_roles')
+
+    const canAccessEvents =
+      isOwnerOrAdmin ||
+      orgPerms.has('event:create') ||
+      orgPerms.has('event:edit') ||
+      orgPerms.has('event:manage_team') ||
+      eventRoles.has('committee')
+
+    const canAccessTasks =
+      isOwnerOrAdmin ||
+      orgPerms.has('event:edit') ||
+      orgPerms.has('event:manage_team') ||
+      eventRoles.has('committee') ||
+      eventRoles.has('treasurer') ||
+      eventRoles.has('sponsor')
+
+    const canAccessSponsorship =
+      isOwnerOrAdmin ||
+      orgPerms.has('sponsor:view') ||
+      orgPerms.has('sponsor:manage') ||
+      eventRoles.has('sponsor') ||
+      eventRoles.has('committee')
+
+    const canAccessFinances =
+      isOwnerOrAdmin ||
+      orgPerms.has('finance:view') ||
+      orgPerms.has('finance:manage_budget') ||
+      orgPerms.has('finance:submit_expense') ||
+      orgPerms.has('finance:audit_spj') ||
+      eventRoles.has('treasurer') ||
+      eventRoles.has('committee')
+
+    const canAccessCertificates =
+      isOwnerOrAdmin ||
+      orgPerms.has('cert:issue') ||
+      orgPerms.has('cert:verify') ||
+      eventRoles.has('committee')
+
+    const allLinks = [
+      {
+        label: 'Dashboard Overview',
+        path: '/dashboard',
+        icon: <LayoutDashboard size={18} />,
+        visible: true,
+      },
+      {
+        label: 'Organisasi & RBAC',
+        path: '/dashboard/organization',
+        icon: <Building2 size={18} />,
+        visible: canAccessOrg,
+      },
+      {
+        label: 'Kelola Event',
+        path: '/dashboard/events',
+        icon: <Calendar size={18} />,
+        visible: canAccessEvents,
+      },
+      {
+        label: 'Task Panitia',
+        path: '/dashboard/tasks',
+        icon: <ListTodo size={18} />,
+        visible: canAccessTasks,
+      },
+      {
+        label: 'Sponsorship Pipeline',
+        path: '/dashboard/sponsorship',
+        icon: <Sparkles size={18} />,
+        visible: canAccessSponsorship,
+      },
+      {
+        label: 'Anggaran & SPJ',
+        path: '/dashboard/finances',
+        icon: <DollarSign size={18} />,
+        visible: canAccessFinances,
+      },
+      {
+        label: 'Validasi Sertifikat',
+        path: '/dashboard/verify',
+        icon: <ShieldCheck size={18} />,
+        visible: canAccessCertificates,
+      },
+    ]
+
+    const primaryOrg = userOrgs[0]
+    const primaryEventRole = myEvents[0]?.myCustomTitle || myEvents[0]?.myRole
+    const summary = primaryOrg
+      ? `${primaryOrg.myRoleDisplay || primaryOrg.myRole || 'Member'} • ${primaryOrg.name}`
+      : primaryEventRole
+        ? `Panitia (${primaryEventRole})`
+        : 'Anggota Workspace'
+
+    return {
+      sidebarLinks: allLinks.filter((link) => link.visible),
+      roleSummaryLabel: summary,
+    }
+  }, [userOrgs, myEvents])
 
   const handleLogout = async () => {
     await authService.logout()
@@ -126,7 +251,7 @@ export const DashboardLayout: React.FC = () => {
           </button>
           <BrandLogo />
         </div>
-        <Badge variant="accent">Admin</Badge>
+        <Badge variant="accent">Workspace</Badge>
       </div>
 
       {/* Sidebar Navigation */}
@@ -138,19 +263,22 @@ export const DashboardLayout: React.FC = () => {
         <div className="flex flex-col gap-6">
           {/* Logo & Workspace Title */}
           <div className="flex items-center justify-between pb-4 border-b border-[#202020]">
-            <div>
+            <div className="min-w-0 pr-2">
               <BrandLogo />
-              <div className="text-[11px] font-semibold text-[#9C9C9C] mt-1">
-                Workspace
+              <div
+                className="text-[11px] font-semibold text-[#CFFE06] mt-1 truncate"
+                title={roleSummaryLabel}
+              >
+                {roleSummaryLabel}
               </div>
             </div>
-            <span className="w-2.5 h-2.5 rounded-full bg-[#CFFE06] shadow-[0_0_8px_#CFFE06]" />
+            <span className="w-2.5 h-2.5 shrink-0 rounded-full bg-[#CFFE06] shadow-[0_0_8px_#CFFE06]" />
           </div>
 
           {/* Nav Items */}
           <div className="pt-2">
             <div className="text-[11px] font-bold text-[#9C9C9C] uppercase tracking-wider mb-3 px-3">
-              Admin Menu
+              Menu Sesuai Role
             </div>
             <nav className="flex flex-col gap-1.5">
               {sidebarLinks.map((item) => {
@@ -240,7 +368,7 @@ export const DashboardLayout: React.FC = () => {
         />
       )}
 
-      {/* Main Workspace Workspace Content */}
+      {/* Main Workspace Content */}
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Workspace Top Header Bar */}
         <header className="hidden md:flex items-center justify-between py-4 px-8 bg-[#000000] border-b border-[#202020]">
@@ -257,7 +385,7 @@ export const DashboardLayout: React.FC = () => {
                 Workspace
               </p>
               <p className="text-xs text-[#9C9C9C] m-0">
-                Pusat kendali kegiatan, sponsorship, dan keuangan organisasi
+                Pusat kendali kegiatan, sponsorship, dan keuangan organisasi ({roleSummaryLabel})
               </p>
             </div>
           </div>

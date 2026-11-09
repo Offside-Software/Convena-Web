@@ -10,11 +10,18 @@ import type {
   EventCategory,
   EventStatus,
   LocationType,
+  EventRegistration,
+  AttendanceQrResponse,
+  AttendEventResponse,
 } from '../types/event.ts'
-import type { EventWithRole } from '../types/membership.ts'
+import type {
+  EventMember,
+  EventWithRole,
+  InviteMemberPayload,
+  UpdateMemberRolePayload,
+} from '../types/membership.ts'
 
 export function normalizeEvent(raw: any): Event {
-  // Ensure ticketTiers is always an array
   let ticketTiers: TicketTier[] = []
   if (Array.isArray(raw.ticketTiers) && raw.ticketTiers.length > 0) {
     ticketTiers = raw.ticketTiers
@@ -42,12 +49,25 @@ export function normalizeEvent(raw: any): Event {
       ? raw.locationType
       : 'offline'
 
-  const venueName = raw.venueName || raw.location?.venueName || (locationType === 'online' ? 'Online' : 'Venue Acara')
+  const venueName =
+    raw.venueName || raw.location?.venueName || (locationType === 'online' ? 'Online' : 'Venue Acara')
   const address = raw.address || raw.location?.address || ''
   const city = raw.city || raw.location?.city || ''
   const onlineUrl = raw.onlineUrl || raw.location?.onlineUrl || ''
-  const company = raw.company || raw.university || 'Telkom University'
-  const organizationName = raw.organizationName || 'BEM & DPM Kema Telkom University'
+  const latitude =
+    typeof raw.latitude === 'number'
+      ? raw.latitude
+      : typeof raw.location?.latitude === 'number'
+        ? raw.location.latitude
+        : null
+  const longitude =
+    typeof raw.longitude === 'number'
+      ? raw.longitude
+      : typeof raw.location?.longitude === 'number'
+        ? raw.location.longitude
+        : null
+  const company = raw.company || raw.university || 'Institut Teknologi Bandung'
+  const organizationName = raw.organizationName || 'HMIF ITB'
 
   const attendeeCount =
     typeof raw.attendeeCount === 'number'
@@ -62,10 +82,12 @@ export function normalizeEvent(raw: any): Event {
   return {
     id: String(raw.id),
     createdBy: raw.createdBy || 'usr-default',
+    organizationId: raw.organizationId || null,
     title: raw.title || 'Untitled Event',
     slug: raw.slug || String(raw.id),
     description: raw.description || '',
-    shortDescription: raw.shortDescription || (raw.description ? raw.description.slice(0, 120) : ''),
+    shortDescription:
+      raw.shortDescription || (raw.description ? raw.description.slice(0, 120) : ''),
     bannerUrl:
       raw.bannerUrl ||
       'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop&q=80',
@@ -79,6 +101,9 @@ export function normalizeEvent(raw: any): Event {
     address,
     city,
     onlineUrl,
+    latitude,
+    longitude,
+    attendanceQrToken: raw.attendanceQrToken || null,
     organizationName,
     company,
     ticketTiers,
@@ -90,11 +115,14 @@ export function normalizeEvent(raw: any): Event {
       address,
       city,
       onlineUrl,
+      latitude,
+      longitude,
     },
     attendeeCount,
     totalCapacity,
     myRole: raw.myRole,
     myCustomTitle: raw.myCustomTitle,
+    myDivision: raw.myDivision,
   }
 }
 
@@ -147,15 +175,113 @@ export class EventsService {
     }
   }
 
+  async updateEvent(id: string, eventData: Partial<CreateEventInput>): Promise<Event> {
+    const res = await apiClient.patch<{ event: any }>(`/events/${id}`, eventData)
+    return normalizeEvent(res.event || res)
+  }
+
+  async getEventMembers(eventId: string): Promise<EventMember[]> {
+    try {
+      const res = await apiClient.get<EventMember[]>(`/events/${eventId}/members`)
+      return Array.isArray(res) ? res : []
+    } catch {
+      return []
+    }
+  }
+
+  async addEventMember(
+    eventId: string,
+    payload: InviteMemberPayload
+  ): Promise<{ message: string; status: string }> {
+    return await apiClient.post(`/events/${eventId}/members`, payload)
+  }
+
+  async updateEventMember(
+    eventId: string,
+    userId: string,
+    payload: UpdateMemberRolePayload
+  ): Promise<{ message: string }> {
+    return await apiClient.patch(`/events/${eventId}/members/${userId}`, payload)
+  }
+
+  async removeEventMember(eventId: string, userId: string): Promise<{ message: string }> {
+    return await apiClient.delete(`/events/${eventId}/members/${userId}`)
+  }
+
+  async registerForEvent(
+    eventId: string,
+    payload: {
+      tierId: string
+      paymentMethod?: string
+      attendeeName?: string
+      attendeeEmail?: string
+      attendeePhone?: string
+      attendeeInstitution?: string
+    }
+  ): Promise<{ message: string; registration: EventRegistration }> {
+    return await apiClient.post(`/events/${eventId}/register`, payload)
+  }
+
+  async getMyRegistration(eventId: string): Promise<EventRegistration | null> {
+    try {
+      const res = await apiClient.get<{ registration: EventRegistration | null }>(
+        `/events/${eventId}/my-registration`
+      )
+      return res?.registration ?? null
+    } catch {
+      return null
+    }
+  }
+
+  async getMyRegistrations(): Promise<EventRegistration[]> {
+    try {
+      const res = await apiClient.get<EventRegistration[]>('/events/my-registrations')
+      return Array.isArray(res) ? res : []
+    } catch {
+      return []
+    }
+  }
+
+  async getEventRegistrations(eventId: string): Promise<EventRegistration[]> {
+    try {
+      const res = await apiClient.get<EventRegistration[]>(`/events/${eventId}/registrations`)
+      return Array.isArray(res) ? res : []
+    } catch {
+      return []
+    }
+  }
+
+  async generateAttendanceQr(eventId: string): Promise<AttendanceQrResponse> {
+    return await apiClient.post<AttendanceQrResponse>(`/events/${eventId}/attendance-qr`, {})
+  }
+
+  async attendEventByQr(qrCode: string, eventId?: string): Promise<AttendEventResponse> {
+    return await apiClient.post<AttendEventResponse>('/events/attend', {
+      qrCode,
+      eventId,
+    })
+  }
+
   async registerTicket(
     eventId: string,
     ticketTierId: string,
     attendee: RegisterTicketInput
   ): Promise<RegisterTicketResponse> {
-    return await apiClient.post<RegisterTicketResponse>(`/events/${eventId}/register`, {
-      ticketTierId,
-      ...attendee,
+    const res = await this.registerForEvent(eventId, {
+      tierId: ticketTierId,
+      paymentMethod: attendee.paymentMethod,
+      attendeeName: attendee.name,
+      attendeeEmail: attendee.email,
+      attendeePhone: attendee.phone,
+      attendeeInstitution: attendee.institution,
     })
+    return {
+      registrationId: res.registration.id,
+      qrCode: res.registration.ticketCode,
+      status: res.registration.status,
+      registration: res.registration,
+      message: res.message,
+    }
   }
 }
 

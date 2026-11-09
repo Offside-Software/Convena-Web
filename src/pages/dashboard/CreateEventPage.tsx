@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, useParams, Link } from 'react-router-dom'
 import {
   Calendar,
   MapPin,
@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
+import { LocationPickerMap } from '../../components/maps/LocationPickerMap.tsx'
 import { eventsService } from '../../services/events.service.ts'
 import { organizationService } from '../../services/organization.service.ts'
 import type { Organization } from '../../types/organization.ts'
@@ -90,6 +91,8 @@ const INITIAL_TIERS: TicketTier[] = [
 
 export const CreateEventPage: React.FC = () => {
   const navigate = useNavigate()
+  const { id: editEventId } = useParams<{ id?: string }>()
+  const isEditMode = Boolean(editEventId)
 
   // 1. General State
   const [title, setTitle] = useState('')
@@ -98,6 +101,7 @@ export const CreateEventPage: React.FC = () => {
   const [description, setDescription] = useState('')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
+  const [currentStatus, setCurrentStatus] = useState<EventStatus>('draft')
 
   // 2. Location State
   const [locationType, setLocationType] = useState<LocationType>('offline')
@@ -105,28 +109,14 @@ export const CreateEventPage: React.FC = () => {
   const [address, setAddress] = useState('')
   const [city, setCity] = useState('')
   const [onlineUrl, setOnlineUrl] = useState('')
+  const [latitude, setLatitude] = useState<number | null>(-6.8915)
+  const [longitude, setLongitude] = useState<number | null>(107.6107)
 
   // 3. Organization State
+  const [organizationId, setOrganizationId] = useState<string>('')
   const [organizationName, setOrganizationName] = useState('')
   const [company, setCompany] = useState('')
   const [userOrgs, setUserOrgs] = useState<Organization[]>([])
-
-  React.useEffect(() => {
-    let isMounted = true
-    organizationService.getOrganizations().then((orgs) => {
-      if (!isMounted) return
-      setUserOrgs(orgs)
-      if (orgs.length > 0) {
-        setOrganizationName((curr) => curr || orgs[0].name)
-        if (orgs[0].company) {
-          setCompany((curr) => curr || orgs[0].company || '')
-        }
-      }
-    })
-    return () => {
-      isMounted = false
-    }
-  }, [])
 
   // 4. Design State
   const [bannerUrl, setBannerUrl] = useState(DEFAULT_BANNERS[0])
@@ -141,6 +131,65 @@ export const CreateEventPage: React.FC = () => {
   const [visibility, setVisibility] = useState<EventVisibility>('public')
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  React.useEffect(() => {
+    let isMounted = true
+    organizationService.getOrganizations().then((orgs) => {
+      if (!isMounted) return
+      setUserOrgs(orgs)
+      if (!editEventId && orgs.length > 0) {
+        setOrganizationId((curr) => curr || orgs[0].id)
+        setOrganizationName((curr) => curr || orgs[0].name)
+        if (orgs[0].company) {
+          setCompany((curr) => curr || orgs[0].company || '')
+        }
+      }
+    })
+
+    if (editEventId) {
+      eventsService.getEventById(editEventId).then((ev) => {
+        if (!isMounted || !ev) return
+        setTitle(ev.title)
+        setCategory(ev.category)
+        setShortDescription(ev.shortDescription || '')
+        setDescription(ev.description || '')
+        setCurrentStatus(ev.status)
+        if (ev.startDate) {
+          setStartDate(new Date(ev.startDate).toISOString().slice(0, 16))
+        }
+        if (ev.endDate) {
+          setEndDate(new Date(ev.endDate).toISOString().slice(0, 16))
+        }
+        setLocationType(ev.locationType || 'offline')
+        setVenueName(ev.venueName || '')
+        setAddress(ev.address || '')
+        setCity(ev.city || '')
+        setOnlineUrl(ev.onlineUrl || '')
+        if (typeof ev.latitude === 'number') setLatitude(ev.latitude)
+        if (typeof ev.longitude === 'number') setLongitude(ev.longitude)
+        if (ev.organizationId) setOrganizationId(ev.organizationId)
+        setOrganizationName(ev.organizationName || '')
+        setCompany(ev.company || '')
+        setVisibility(ev.visibility || 'public')
+        if (ev.bannerUrl) {
+          if (DEFAULT_BANNERS.includes(ev.bannerUrl)) {
+            setBannerUrl(ev.bannerUrl)
+            setIsCustomBanner(false)
+          } else {
+            setCustomBannerUrl(ev.bannerUrl)
+            setIsCustomBanner(true)
+          }
+        }
+        if (Array.isArray(ev.ticketTiers) && ev.ticketTiers.length > 0) {
+          setTicketTiers(ev.ticketTiers)
+        }
+      })
+    }
+
+    return () => {
+      isMounted = false
+    }
+  }, [editEventId])
 
   // Handlers for Ticket Tiers
   const handleAddTier = () => {
@@ -229,8 +278,9 @@ export const CreateEventPage: React.FC = () => {
     try {
       setIsLoading(true)
 
-      await eventsService.createEvent({
+      const payload = {
         title: title.trim(),
+        organizationId: organizationId || undefined,
         category,
         status: submitStatus,
         visibility,
@@ -243,6 +293,8 @@ export const CreateEventPage: React.FC = () => {
         address: address.trim() || undefined,
         city: city.trim() || undefined,
         onlineUrl: onlineUrl.trim() || undefined,
+        latitude: locationType !== 'online' ? latitude : null,
+        longitude: locationType !== 'online' ? longitude : null,
         organizationName: organizationName.trim() || undefined,
         company: company.trim() || undefined,
         bannerUrl: activeBanner,
@@ -251,7 +303,13 @@ export const CreateEventPage: React.FC = () => {
           price: Number(tier.price) || 0,
           quota: Number(tier.quota) || 0,
         })),
-      })
+      }
+
+      if (isEditMode && editEventId) {
+        await eventsService.updateEvent(editEventId, payload)
+      } else {
+        await eventsService.createEvent(payload)
+      }
 
       navigate('/dashboard/events')
     } catch (err: unknown) {
@@ -275,47 +333,52 @@ export const CreateEventPage: React.FC = () => {
             <ArrowLeft size={14} /> Kembali ke Kelola Event
           </Link>
           <span className="text-xs text-[#555555]">/</span>
-          <span className="text-xs text-[#CFFE06] font-semibold">Buat Event Baru</span>
+          <span className="text-xs text-[#CFFE06] font-semibold">
+            {isEditMode ? 'Edit & Revisi Event' : 'Buat Event Baru'}
+          </span>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <Badge variant="accent">PANEL PEMBUATAN EVENT</Badge>
+              <Badge variant="accent">
+                {isEditMode ? `REVISI EVENT (${currentStatus.toUpperCase()})` : 'PANEL PEMBUATAN EVENT'}
+              </Badge>
               <Badge variant="dark" className="text-[11px]">
                 {locationType.toUpperCase()}
               </Badge>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white m-0">
-              Buat & Publikasikan Event
+              {isEditMode ? 'Edit & Revisi Event' : 'Buat & Publikasikan Event'}
             </h1>
             <p className="text-xs sm:text-sm text-[#9C9C9C] mt-1 max-w-2xl">
-              Lengkapi 6 kelompok data berikut secara terperinci untuk mengaktifkan halaman registrasi,
-              penjualan tiket, dan manajemen kepanitiaan Anda.
+              {isEditMode
+                ? 'Perbarui detail event kapan saja termasuk event yang sudah dipublikasikan untuk revisi mendesak.'
+                : 'Lengkapi 6 kelompok data berikut secara terperinci untuk mengaktifkan halaman registrasi, penjualan tiket, dan manajemen kepanitiaan Anda.'}
             </p>
           </div>
 
-          {/* Quick Header Action Buttons */}
+          {/* Quick Header Action Buttons — Prioritize Save as Draft */}
           <div className="flex items-center gap-2.5 shrink-0">
             <Button
               type="button"
-              variant="outline"
+              variant="accent"
               size="md"
               icon={<Save size={16} />}
               onClick={() => handleSave('draft')}
               disabled={isLoading}
             >
-              Simpan Draft
+              {isLoading ? 'Menyimpan...' : 'Simpan sebagai Draft'}
             </Button>
             <Button
               type="button"
-              variant="accent"
+              variant="outline"
               size="md"
               icon={<Send size={16} />}
               onClick={() => handleSave('published')}
               disabled={isLoading}
             >
-              {isLoading ? 'Menyimpan...' : 'Publikasikan'}
+              {isEditMode && currentStatus === 'published' ? 'Simpan & Tetap Publik' : 'Publikasikan'}
             </Button>
           </div>
         </div>
@@ -575,6 +638,18 @@ export const CreateEventPage: React.FC = () => {
                     className="w-full px-4 py-2.5 bg-[#1A1A1A] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
                   />
                 </div>
+
+                {/* Leaflet Map Location Picker */}
+                <LocationPickerMap
+                  latitude={latitude}
+                  longitude={longitude}
+                  city={city}
+                  venueName={venueName}
+                  onChange={({ latitude: lat, longitude: lng }) => {
+                    setLatitude(lat)
+                    setLongitude(lng)
+                  }}
+                />
               </div>
             )}
 
@@ -619,26 +694,30 @@ export const CreateEventPage: React.FC = () => {
           {userOrgs.length > 0 && (
             <div className="mb-4 p-3 bg-[#1A1A1A] border border-[#2B2B2B] rounded-xl">
               <span className="text-[11px] font-semibold text-[#9C9C9C] block mb-2">
-                Pilih dari Organisasi Anda:
+                Pilih Organisasi Induk Event Ini *:
               </span>
               <div className="flex flex-wrap gap-2">
-                {userOrgs.map((org) => (
-                  <button
-                    key={org.id}
-                    type="button"
-                    onClick={() => {
-                      setOrganizationName(org.name)
-                      if (org.company) setCompany(org.company)
-                    }}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
-                      organizationName === org.name
-                        ? 'bg-[#CFFE06]/15 border-[#CFFE06] text-[#CFFE06]'
-                        : 'bg-[#222222] border-[#333333] text-[#CCCCCC] hover:text-white hover:border-[#555555]'
-                    }`}
-                  >
-                    {org.name}
-                  </button>
-                ))}
+                {userOrgs.map((org) => {
+                  const isSelected = organizationId === org.id || (!organizationId && organizationName === org.name)
+                  return (
+                    <button
+                      key={org.id}
+                      type="button"
+                      onClick={() => {
+                        setOrganizationId(org.id)
+                        setOrganizationName(org.name)
+                        if (org.company) setCompany(org.company)
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+                        isSelected
+                          ? 'bg-[#CFFE06]/15 border-[#CFFE06] text-[#CFFE06]'
+                          : 'bg-[#222222] border-[#333333] text-[#CCCCCC] hover:text-white hover:border-[#555555]'
+                      }`}
+                    >
+                      {org.name} ({org.myRoleDisplay || org.myRole || 'Member'})
+                    </button>
+                  )
+                })}
               </div>
             </div>
           )}
@@ -1048,7 +1127,7 @@ export const CreateEventPage: React.FC = () => {
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="accent"
                   size="md"
                   icon={<Save size={16} />}
                   onClick={() => handleSave('draft')}
@@ -1060,14 +1139,18 @@ export const CreateEventPage: React.FC = () => {
 
                 <Button
                   type="button"
-                  variant="accent"
+                  variant="outline"
                   size="md"
                   icon={<Send size={16} />}
                   onClick={() => handleSave('published')}
                   disabled={isLoading}
                   className="flex-1 sm:flex-initial"
                 >
-                  {isLoading ? 'Menyimpan...' : 'Publikasikan Sekarang'}
+                  {isLoading
+                    ? 'Menyimpan...'
+                    : isEditMode && currentStatus === 'published'
+                      ? 'Simpan & Tetap Publik'
+                      : 'Publikasikan Sekarang'}
                 </Button>
               </div>
             </div>

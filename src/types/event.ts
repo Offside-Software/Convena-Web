@@ -28,11 +28,14 @@ export interface EventLocation {
   address?: string
   city?: string
   onlineUrl?: string
+  latitude?: number | null
+  longitude?: number | null
 }
 
 export interface Event {
   id: string
   createdBy?: string
+  organizationId?: string | null
   title: string
   slug: string
   description?: string | null
@@ -48,6 +51,9 @@ export interface Event {
   address?: string | null
   city?: string | null
   onlineUrl?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  attendanceQrToken?: string | null
   organizationName?: string | null
   company?: string | null
   ticketTiers?: TicketTier[]
@@ -59,14 +65,15 @@ export interface Event {
   attendeeCount: number
   totalCapacity: number
   tags?: string[]
-  organizationId?: string
   myRole?: string
   myCustomTitle?: string
+  myDivision?: string
 }
 
 export interface CreateEventInput {
   title: string
   slug?: string
+  organizationId?: string | null
   description?: string
   shortDescription?: string
   bannerUrl?: string
@@ -80,6 +87,8 @@ export interface CreateEventInput {
   address?: string
   city?: string
   onlineUrl?: string
+  latitude?: number | null
+  longitude?: number | null
   organizationName?: string
   company?: string
   ticketTiers?: TicketTier[]
@@ -99,14 +108,54 @@ export interface EventFilterParams {
   priceType?: 'all' | 'free' | 'paid'
 }
 
+export interface EventRegistration {
+  id: string
+  eventId: string
+  userId: string
+  tierId: string
+  tierName: string
+  price: number
+  paymentMethod: string
+  paymentStatus: 'pending' | 'paid'
+  status: 'pending_payment' | 'confirmed' | 'checked_in' | 'cancelled'
+  attendeeName: string
+  attendeeEmail: string
+  attendeePhone?: string | null
+  attendeeInstitution?: string | null
+  ticketCode: string
+  checkedInAt?: string | null
+  createdAt: string
+}
+
 export interface RegisterTicketInput {
   name: string
   email: string
   studentId?: string
+  tierId?: string
+  paymentMethod?: string
+  phone?: string
+  institution?: string
 }
 
 export interface RegisterTicketResponse {
   registrationId: string
   qrCode: string
   status: string
+  registration?: EventRegistration
+  message?: string
+}
+
+export interface AttendanceQrResponse {
+  eventId: string
+  eventTitle: string
+  qrToken: string
+  qrPayload: string
+  message: string
+}
+
+export interface AttendEventResponse {
+  message: string
+  alreadyCheckedIn: boolean
+  eventTitle: string
+  registration: EventRegistration
 }
