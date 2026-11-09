@@ -17,6 +17,7 @@ export interface EventMember {
   email: string
   role: EventRole
   customTitle?: string
+  division: string
   status: 'active' | 'suspended'
   joinedAt: string
 }
@@ -24,6 +25,7 @@ export interface EventMember {
 export interface EventWithRole {
   id: string
   createdBy: string
+  organizationId?: string | null
   title: string
   slug: string
   description?: string | null
@@ -39,6 +41,9 @@ export interface EventWithRole {
   address?: string | null
   city?: string | null
   onlineUrl?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  attendanceQrToken?: string | null
   organizationName?: string | null
   company?: string | null
   ticketTiers?: TicketTier[]
@@ -46,15 +51,18 @@ export interface EventWithRole {
   updatedAt?: string | null
   myRole: EventRole
   myCustomTitle?: string | null
+  myDivision?: string | null
 }
 
 export interface InviteMemberPayload {
   email: string
   role: EventRole
   customTitle?: string
+  division?: string
 }
 
 export interface UpdateMemberRolePayload {
   role: EventRole
   customTitle?: string
+  division?: string
 }
