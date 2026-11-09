@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import { Badge } from '../../components/common/Badge.tsx'
 import { Button } from '../../components/common/Button.tsx'
+import { Select } from '../../components/common/Select.tsx'
 import { eventsService } from '../../services/events.service.ts'
 import { tasksService } from '../../services/tasks.service.ts'
 import type { Event } from '../../types/event.ts'
@@ -22,12 +23,6 @@ const TASK_STATUSES: { value: CommitteeTaskStatus; label: string }[] = [
   { value: 'in_progress', label: 'Sedang Dikerjakan' },
   { value: 'completed', label: 'Selesai' },
 ]
-
-const STATUS_STYLES: Record<CommitteeTaskStatus, string> = {
-  todo: 'bg-[#202020] text-[#9C9C9C]',
-  in_progress: 'bg-[#CFFE06]/15 text-[#CFFE06]',
-  completed: 'bg-emerald-500/15 text-emerald-400',
-}
 
 function formatDueDate(date: string): string {
   return new Date(`${date}T00:00:00`).toLocaleDateString('id-ID', {
@@ -185,17 +180,17 @@ export const TaskManagementPage: React.FC = () => {
           {isOverdue(task) && ' · Terlambat'}
         </span>
       </div>
-      <label className="sr-only" htmlFor={`task-status-${task.id}`}>Status task {task.title}</label>
-      <select
+      <Select
         id={`task-status-${task.id}`}
+        aria-label={`Status task ${task.title}`}
         value={task.status}
-        onChange={(event) => handleStatusChange(task.id, event.target.value as CommitteeTaskStatus)}
-        className={`!w-auto !rounded-full !border-0 !py-1 !pl-3 !pr-8 !text-[11px] !font-bold ${STATUS_STYLES[task.status]}`}
-      >
-        {TASK_STATUSES.map((status) => (
-          <option key={status.value} value={status.value}>{status.label}</option>
-        ))}
-      </select>
+        onChange={(val) => handleStatusChange(task.id, val as CommitteeTaskStatus)}
+        options={TASK_STATUSES}
+        size="sm"
+        variant="surface"
+        className="!w-auto !mb-0"
+        fullWidth={false}
+      />
     </article>
   )
 
@@ -262,16 +257,23 @@ export const TaskManagementPage: React.FC = () => {
       <div className="flex flex-wrap items-center justify-between gap-3 bg-[#151515] border border-[#3D3D3D]/50 rounded-xl p-4 mb-5">
         <div className="flex items-center gap-3 flex-wrap">
           <label htmlFor="task-event" className="text-xs font-semibold text-[#9C9C9C]">Event:</label>
-          <select
-            id="task-event"
-            value={selectedEventId}
-            onChange={(event) => setSelectedEventId(event.target.value)}
-            disabled={loadingEvents || events.length === 0}
-            className="!w-auto min-w-56"
-          >
-            {events.length === 0 && <option value="">Tidak ada event</option>}
-            {events.map((event) => <option key={event.id} value={event.id}>{event.title}</option>)}
-          </select>
+          <div className="min-w-56">
+            <Select
+              id="task-event"
+              value={selectedEventId}
+              onChange={(val) => setSelectedEventId(val)}
+              disabled={loadingEvents || events.length === 0}
+              options={
+                events.length === 0
+                  ? [{ label: 'Tidak ada event', value: '' }]
+                  : events.map((event) => ({ label: event.title, value: event.id }))
+              }
+              size="sm"
+              variant="surface"
+              className="!mb-0"
+              fullWidth={false}
+            />
+          </div>
         </div>
         <div className="flex items-center gap-1.5">
           <button type="button" onClick={() => setView('board')} aria-pressed={view === 'board'} className={`p-2 rounded-lg border cursor-pointer ${view === 'board' ? 'bg-[#CFFE06] text-black border-[#CFFE06]' : 'bg-[#202020] text-[#9C9C9C] border-[#3D3D3D]'}`} title="Tampilan Kanban">
@@ -342,14 +344,16 @@ export const TaskManagementPage: React.FC = () => {
                     {formatDueDate(task.dueDate)}{isOverdue(task) && ' · Terlambat'}
                   </td>
                   <td className="px-4 py-3">
-                    <select
+                    <Select
                       aria-label={`Status task ${task.title}`}
                       value={task.status}
-                      onChange={(event) => handleStatusChange(task.id, event.target.value as CommitteeTaskStatus)}
-                      className={`!w-auto !rounded-full !border-0 !py-1 !pl-3 !pr-8 !text-[11px] !font-bold ${STATUS_STYLES[task.status]}`}
-                    >
-                      {TASK_STATUSES.map((status) => <option key={status.value} value={status.value}>{status.label}</option>)}
-                    </select>
+                      onChange={(val) => handleStatusChange(task.id, val as CommitteeTaskStatus)}
+                      options={TASK_STATUSES}
+                      size="sm"
+                      variant="surface"
+                      className="!w-auto !mb-0"
+                      fullWidth={false}
+                    />
                   </td>
                   <td className="px-4 py-3">
                     <button type="button" onClick={() => handleDeleteTask(task.id)} aria-label={`Hapus task ${task.title}`} className="text-[#777] hover:text-[#DF00D0] bg-transparent border-none p-1 cursor-pointer">

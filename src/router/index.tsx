@@ -10,6 +10,7 @@ import { ManageEventsPage } from '../pages/dashboard/ManageEventsPage.tsx'
 import { CreateEventPage } from '../pages/dashboard/CreateEventPage.tsx'
 import { SponsorshipPage } from '../pages/sponsorship/SponsorshipPage.tsx'
 import { FinancesPage } from '../pages/finances/FinancesPage.tsx'
+import { OrganizationPage } from '../pages/organization/OrganizationPage.tsx'
 import { VerifyPage } from '../pages/verify/VerifyPage.tsx'
 import { LoginPage } from '../pages/auth/LoginPage.tsx'
 import { RegisterPage } from '../pages/auth/RegisterPage.tsx'
@@ -38,6 +39,7 @@ export const AppRoutes: React.FC = () => {
       {/* Admin Workspace with DashboardLayout */}
       <Route element={<DashboardLayout />}>
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/dashboard/organization" element={<OrganizationPage />} />
         <Route path="/dashboard/events" element={<ManageEventsPage />} />
         <Route path="/dashboard/events/create" element={<CreateEventPage />} />
         <Route

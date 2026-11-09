@@ -7,6 +7,7 @@ import { Input } from '../../components/common/Input.tsx'
 import { Select } from '../../components/common/Select.tsx'
 import { sponsorshipService } from '../../services/sponsorship.service.ts'
 import type { SponsorLead, SponsorPackage, PipelineStage } from '../../types/sponsorship.ts'
+import { SearchBar } from '../../components/common/SearchBar.tsx'
 
 export const SponsorshipPage: React.FC = () => {
   const [packages, setPackages] = useState<SponsorPackage[]>([])
@@ -205,17 +206,19 @@ export const SponsorshipPage: React.FC = () => {
           {/* Pipeline Kanban Columns */}
           <h2 className="text-lg sm:text-xl font-bold text-white mb-4 flex items-center gap-2 flex-wrap">
             <Sparkles size={18} className="text-[#CFFE06]" /> Tahapan Pipeline Sponsorship
-            <div className="max-w-sm mb-4">
-              <Input
-                label="Cari Sponsor"
+
+            <div className="flex flex-row justify-space-between">
+              <SearchBar
+                placeholder="Cari sponsor"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="!mb-0"
+                showSubmitButton={false}
+                clearable
               />
+              <span className="text-xs text-[#9C9C9C] font-medium ml-2">
+                (Total Masuk: Rp {totalCommitted.toLocaleString('id-ID')})
+              </span>
             </div>
-            <span className="text-xs text-[#9C9C9C] font-medium ml-2">
-              (Total Masuk: Rp {totalCommitted.toLocaleString('id-ID')})
-            </span>
           </h2>
 
           {/* Pipeline Kanban Columns - Horizontally Scrollable on all screen sizes */}
@@ -268,17 +271,20 @@ export const SponsorshipPage: React.FC = () => {
                       </p>
 
                       {/* Stage mover selector */}
-                      <select
+                      <Select
                         value={lead.stage}
-                        onChange={(e) => handleStageChange(lead.id, e.target.value as PipelineStage)}
-                        className="w-full text-xs py-1.5 px-2.5 rounded-lg border border-[#3D3D3D] bg-[#151515] text-white cursor-pointer font-medium focus:border-[#CFFE06] outline-none"
-                      >
-                        <option value="prospect">Pindah: Target Prospek</option>
-                        <option value="proposal_sent">Pindah: Proposal Terkirim</option>
-                        <option value="negotiating">Pindah: Negosiasi MOU</option>
-                        <option value="committed">Pindah: Komitmen Deal</option>
-                        <option value="paid">Pindah: Lunas / Transfer</option>
-                      </select>
+                        onChange={(stage) => handleStageChange(lead.id, stage as PipelineStage)}
+                        options={[
+                          { label: 'Pindah: Target Prospek', value: 'prospect' },
+                          { label: 'Pindah: Proposal Terkirim', value: 'proposal_sent' },
+                          { label: 'Pindah: Negosiasi MOU', value: 'negotiating' },
+                          { label: 'Pindah: Komitmen Deal', value: 'committed' },
+                          { label: 'Pindah: Lunas / Transfer', value: 'paid' },
+                        ]}
+                        size="sm"
+                        variant="surface"
+                        className="!mb-0"
+                      />
                     </div>
                   ))}
                 </div>
@@ -323,7 +329,7 @@ export const SponsorshipPage: React.FC = () => {
                 { label: 'Silver Sponsor (Rp 10 jt)', value: 'Silver Sponsor' },
               ]}
               value={aiPackage}
-              onChange={(e) => setAiPackage(e.target.value)}
+              onChange={(val) => setAiPackage(val)}
               className="!mb-0"
             />
             <Input

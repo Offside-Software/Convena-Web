@@ -251,8 +251,8 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 { label: 'Biaya Lain-lain', value: 'other' },
               ]}
               value={category}
-              onChange={(e) => {
-                setCategory(e.target.value as ExpenseCategory)
+              onChange={(val) => {
+                setCategory(val as ExpenseCategory)
                 setConfirmedOverBudget(false)
               }}
               className="!mb-0"

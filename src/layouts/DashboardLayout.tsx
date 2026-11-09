@@ -6,6 +6,7 @@ import {
   DollarSign,
   Calendar,
   ShieldCheck,
+  Building2,
   LogOut,
   ListTodo,
   ChevronLeft,
@@ -44,6 +45,7 @@ export const DashboardLayout: React.FC = () => {
   // All workspace navigation links stay within /dashboard/*
   const sidebarLinks = [
     { label: 'Dashboard Overview', path: '/dashboard', icon: <LayoutDashboard size={18} /> },
+    { label: 'Organisasi & RBAC', path: '/dashboard/organization', icon: <Building2 size={18} /> },
     { label: 'Kelola Event', path: '/dashboard/events', icon: <Calendar size={18} /> },
     { label: 'Task Panitia', path: '/dashboard/tasks', icon: <ListTodo size={18} /> },
     { label: 'Sponsorship Pipeline', path: '/dashboard/sponsorship', icon: <Sparkles size={18} /> },
