@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { CheckCircle, XCircle, Pencil, Trash2 } from 'lucide-react'
+import { CheckCircle, XCircle, Pencil, Trash2, Loader2 } from 'lucide-react'
 import { Card } from '../../../components/common/Card.tsx'
 import { Badge } from '../../../components/common/Badge.tsx'
 import { Button } from '../../../components/common/Button.tsx'
@@ -7,9 +7,9 @@ import type { ExpenseRecord, SpjStatus } from '../../../types/finance.ts'
 
 export interface ExpenseSpjTableProps {
   expenses: ExpenseRecord[]
-  onVerify: (id: string, approved: boolean) => void
+  onVerify: (id: string, approved: boolean) => Promise<void> | void
   onEdit: (expense: ExpenseRecord) => void
-  onDelete: (id: string) => void
+  onDelete: (id: string) => Promise<void> | void
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -42,6 +42,30 @@ export const ExpenseSpjTable: React.FC<ExpenseSpjTableProps> = ({
   onDelete,
 }) => {
   const [statusFilter, setStatusFilter] = useState<'all' | SpjStatus>('all')
+  const [processingState, setProcessingState] = useState<{
+    id: string
+    action: 'approve' | 'reject' | 'delete'
+  } | null>(null)
+
+  const handleVerifyClick = async (id: string, approved: boolean) => {
+    if (processingState) return
+    try {
+      setProcessingState({ id, action: approved ? 'approve' : 'reject' })
+      await onVerify(id, approved)
+    } finally {
+      setProcessingState(null)
+    }
+  }
+
+  const handleDeleteClick = async (id: string) => {
+    if (processingState) return
+    try {
+      setProcessingState({ id, action: 'delete' })
+      await onDelete(id)
+    } finally {
+      setProcessingState(null)
+    }
+  }
 
   const filteredExpenses = expenses.filter(
     (exp) => statusFilter === 'all' || exp.spjStatus === statusFilter
@@ -149,46 +173,75 @@ export const ExpenseSpjTable: React.FC<ExpenseSpjTableProps> = ({
                     {exp.notes || '-'}
                   </td>
                   <td className="py-3 px-3 text-right">
-                    <div className="inline-flex items-center justify-end gap-1.5 flex-wrap">
-                      {exp.spjStatus === 'submitted' && (
-                        <>
-                          <Button
-                            variant="accent"
-                            size="sm"
-                            icon={<CheckCircle size={13} />}
-                            onClick={() => onVerify(exp.id, true)}
-                          >
-                            Setuju
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            icon={<XCircle size={13} />}
-                            onClick={() => onVerify(exp.id, false)}
-                          >
-                            Tolak
-                          </Button>
-                        </>
-                      )}
+                    {(() => {
+                      const isRowBusy = processingState?.id === exp.id
+                      const isApproving = isRowBusy && processingState?.action === 'approve'
+                      const isRejecting = isRowBusy && processingState?.action === 'reject'
+                      const isDeleting = isRowBusy && processingState?.action === 'delete'
 
-                      <button
-                        type="button"
-                        onClick={() => onEdit(exp)}
-                        title="Edit Pengeluaran"
-                        className="p-1.5 rounded-lg bg-[#202020] hover:bg-[#2a2a2a] text-[#9C9C9C] hover:text-[#CFFE06] border border-[#3D3D3D] cursor-pointer transition-colors"
-                      >
-                        <Pencil size={13} />
-                      </button>
+                      return (
+                        <div className="inline-flex items-center justify-end gap-1.5 flex-wrap">
+                          {exp.spjStatus === 'submitted' && (
+                            <>
+                              <Button
+                                variant="accent"
+                                size="sm"
+                                disabled={isRowBusy}
+                                icon={
+                                  isApproving ? (
+                                    <Loader2 size={13} className="animate-spin" />
+                                  ) : (
+                                    <CheckCircle size={13} />
+                                  )
+                                }
+                                onClick={() => handleVerifyClick(exp.id, true)}
+                              >
+                                {isApproving ? 'Menyimpan...' : 'Setuju'}
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={isRowBusy}
+                                icon={
+                                  isRejecting ? (
+                                    <Loader2 size={13} className="animate-spin" />
+                                  ) : (
+                                    <XCircle size={13} />
+                                  )
+                                }
+                                onClick={() => handleVerifyClick(exp.id, false)}
+                              >
+                                {isRejecting ? 'Menyimpan...' : 'Tolak'}
+                              </Button>
+                            </>
+                          )}
 
-                      <button
-                        type="button"
-                        onClick={() => onDelete(exp.id)}
-                        title="Hapus Pengeluaran"
-                        className="p-1.5 rounded-lg bg-[#202020] hover:bg-[#2a1520] text-[#9C9C9C] hover:text-[#DF00D0] border border-[#3D3D3D] cursor-pointer transition-colors"
-                      >
-                        <Trash2 size={13} />
-                      </button>
-                    </div>
+                          <button
+                            type="button"
+                            disabled={isRowBusy}
+                            onClick={() => onEdit(exp)}
+                            title="Edit Pengeluaran"
+                            className="p-1.5 rounded-lg bg-[#202020] hover:bg-[#2a2a2a] text-[#9C9C9C] hover:text-[#CFFE06] border border-[#3D3D3D] cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <Pencil size={13} />
+                          </button>
+
+                          <button
+                            type="button"
+                            disabled={isRowBusy}
+                            onClick={() => handleDeleteClick(exp.id)}
+                            title="Hapus Pengeluaran"
+                            className="p-1.5 rounded-lg bg-[#202020] hover:bg-[#2a1520] text-[#9C9C9C] hover:text-[#DF00D0] border border-[#3D3D3D] cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {isDeleting ? (
+                              <Loader2 size={13} className="animate-spin text-[#DF00D0]" />
+                            ) : (
+                              <Trash2 size={13} />
+                            )}
+                          </button>
+                        </div>
+                      )
+                    })()}
                   </td>
                 </tr>
               ))}

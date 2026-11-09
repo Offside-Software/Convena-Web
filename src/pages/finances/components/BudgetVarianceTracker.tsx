@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Loader2 } from 'lucide-react'
 import { Card } from '../../../components/common/Card.tsx'
 import { Badge } from '../../../components/common/Badge.tsx'
 import { Button } from '../../../components/common/Button.tsx'
@@ -15,16 +16,30 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
   onUpdateCategoryBudget,
 }) => {
   const [editingCategory, setEditingCategory] = useState<ExpenseCategory | null>(null)
-  const [newAmount, setNewAmount] = useState<number>(0)
+  const [amountInput, setAmountInput] = useState<string>('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleEditClick = (cat: BudgetCategoryPlan) => {
+    if (isLoading) return
     setEditingCategory(cat.category)
-    setNewAmount(cat.plannedAmount)
+    setAmountInput(cat.plannedAmount > 0 ? cat.plannedAmount.toLocaleString('id-ID') : '')
+  }
+
+  const handleAmountChange = (raw: string) => {
+    const digits = raw.replace(/\D/g, '')
+    setAmountInput(digits ? Number(digits).toLocaleString('id-ID') : '')
   }
 
   const handleSave = async (category: ExpenseCategory) => {
-    await onUpdateCategoryBudget(category, newAmount)
-    setEditingCategory(null)
+    if (isLoading) return
+    const parsedAmount = Number(amountInput.replace(/\D/g, '')) || 0
+    try {
+      setIsLoading(true)
+      await onUpdateCategoryBudget(category, parsedAmount)
+      setEditingCategory(null)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -42,9 +57,8 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
           return (
             <div
               key={cat.category}
-              className={`border rounded-xl p-4 transition-colors ${
-                isOver ? 'border-[#DF00D0]/50 bg-[#1e151d]' : 'border-[#3D3D3D]/60 bg-[#151515]'
-              }`}
+              className={`border rounded-xl p-4 transition-colors ${isOver ? 'border-[#DF00D0]/50 bg-[#1e151d]' : 'border-[#3D3D3D]/60 bg-[#151515]'
+                }`}
             >
               <div className="flex justify-between items-center mb-2">
                 <strong className="text-sm font-bold text-white">{cat.label}</strong>
@@ -66,14 +80,33 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
                   <span className="text-[#9C9C9C]">Pagu RAB:</span>
                   {isEditing ? (
                     <div className="flex gap-1.5 items-center">
-                      <input
-                        type="number"
-                        value={newAmount}
-                        onChange={(e) => setNewAmount(Number(e.target.value))}
-                        className="w-28 py-1 px-2 text-xs bg-[#202020] border border-[#3D3D3D] rounded-lg text-white"
-                      />
-                      <Button variant="accent" size="sm" onClick={() => handleSave(cat.category)} className="!py-1 !px-2.5 text-xs">
-                        OK
+                      <div className="relative flex items-center">
+                        <span className="absolute left-2.5 text-[11px] font-semibold text-[#9C9C9C] pointer-events-none">
+                          Rp
+                        </span>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          placeholder="0"
+                          value={amountInput}
+                          disabled={isLoading}
+                          onChange={(e) => handleAmountChange(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleSave(cat.category)
+                            if (e.key === 'Escape' && !isLoading) setEditingCategory(null)
+                          }}
+                          className="w-32 py-1 pl-7 pr-2 text-xs font-mono bg-[#202020] border border-[#3D3D3D] focus:border-[#CFFE06] focus:outline-none rounded-lg text-white disabled:opacity-50"
+                        />
+                      </div>
+                      <Button
+                        variant="accent"
+                        size="sm"
+                        disabled={isLoading}
+                        icon={isLoading ? <Loader2 size={12} className="animate-spin" /> : undefined}
+                        onClick={() => handleSave(cat.category)}
+                        className="!py-1 !px-2.5 text-xs"
+                      >
+                        {isLoading ? 'Menyimpan...' : 'OK'}
                       </Button>
                     </div>
                   ) : (
@@ -83,8 +116,9 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
                       </strong>
                       <button
                         type="button"
+                        disabled={isLoading}
                         onClick={() => handleEditClick(cat)}
-                        className="text-[11px] underline bg-transparent border-none cursor-pointer font-semibold text-[#CFFE06]"
+                        className="text-[11px] underline bg-transparent border-none cursor-pointer font-semibold text-[#CFFE06] disabled:opacity-40 disabled:cursor-not-allowed"
                       >
                         Ubah
                       </button>
@@ -102,9 +136,8 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
                 <div className="flex justify-between pt-1 border-t border-[#3D3D3D]/40">
                   <span className="text-[#9C9C9C]">Sisa Saldo:</span>
                   <strong
-                    className={`font-mono ${
-                      isOver ? 'text-[#DF00D0]' : 'text-[#CFFE06]'
-                    }`}
+                    className={`font-mono ${isOver ? 'text-[#DF00D0]' : 'text-[#CFFE06]'
+                      }`}
                   >
                     Rp {sisa.toLocaleString('id-ID')}
                   </strong>
