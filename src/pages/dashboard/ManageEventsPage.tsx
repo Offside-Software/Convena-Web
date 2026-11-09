@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Calendar, Users, MapPin, ArrowUpRight, ClipboardList } from 'lucide-react'
+import { Plus, Calendar, Users, MapPin, ArrowUpRight } from 'lucide-react'
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
 import { ProgressBar } from '../../components/common/ProgressBar.tsx'
@@ -226,16 +226,6 @@ export const ManageEventsPage: React.FC = () => {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Link to={`/dashboard/attendees?eventId=${encodeURIComponent(evt.id)}`} className="no-underline">
-                      <Button variant="outline" size="sm" icon={<Users size={14} />}>
-                        Peserta
-                      </Button>
-                    </Link>
-                    <Link to={`/dashboard/tasks?eventId=${encodeURIComponent(evt.id)}`} className="no-underline">
-                      <Button variant="outline" size="sm" icon={<ClipboardList size={14} />}>
-                        Tugas
-                      </Button>
-                    </Link>
                     <Link to={`/events/${evt.id}`} className="no-underline">
                       <Button variant="outline" size="sm" icon={<ArrowUpRight size={14} />}>
                         Lihat Halaman Publik

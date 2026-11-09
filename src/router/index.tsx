@@ -11,9 +11,6 @@ import { CreateEventPage } from '../pages/dashboard/CreateEventPage.tsx'
 import { SponsorshipPage } from '../pages/sponsorship/SponsorshipPage.tsx'
 import { FinancesPage } from '../pages/finances/FinancesPage.tsx'
 import { VerifyPage } from '../pages/verify/VerifyPage.tsx'
-import { AttendeesPage } from '../pages/dashboard/AttendeesPage.tsx'
-import { CommitteeTasksPage } from '../pages/dashboard/CommitteeTasksPage.tsx'
-import { CheckInPage } from '../pages/dashboard/CheckInPage.tsx'
 import { LoginPage } from '../pages/auth/LoginPage.tsx'
 import { RegisterPage } from '../pages/auth/RegisterPage.tsx'
 import { NotFoundPage } from '../pages/not-found/NotFoundPage.tsx'
@@ -37,9 +34,6 @@ export const AppRoutes: React.FC = () => {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/dashboard/events" element={<ManageEventsPage />} />
         <Route path="/dashboard/events/create" element={<CreateEventPage />} />
-        <Route path="/dashboard/attendees" element={<AttendeesPage />} />
-        <Route path="/dashboard/tasks" element={<CommitteeTasksPage />} />
-        <Route path="/dashboard/check-in" element={<CheckInPage />} />
         <Route path="/dashboard/sponsorship" element={<SponsorshipPage />} />
         <Route path="/dashboard/finances" element={<FinancesPage />} />
         <Route path="/dashboard/verify" element={<VerifyPage />} />
