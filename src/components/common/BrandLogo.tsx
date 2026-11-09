@@ -20,12 +20,20 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({ size = 'md' }) => {
 
   return (
     <div className="flex items-center gap-2.5 select-none">
-      <div
-        className={`${iconSizes[size]} rounded-full bg-[#151515] border border-[#3D3D3D] flex items-center justify-center text-[#CFFE06] font-extrabold relative transition-transform hover:scale-105`}
+      <svg
+        viewBox="0 0 36 36"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        className={`${iconSizes[size]} shrink-0 transition-transform hover:scale-105`}
       >
-        <span>C</span>
-        <span className="w-1.5 h-1.5 rounded-full bg-[#CFFE06] absolute bottom-1 right-1" />
-      </div>
+        <circle cx="18" cy="18" r="17" fill="#151515" stroke="#3D3D3D" strokeWidth="1.5" />
+        <path
+          d="M 22.95 13.72 A 6.4 6.4 0 1 0 22.95 22.28 L 20.95 20.48 A 3.7 3.7 0 1 1 20.95 15.52 Z"
+          fill="#CFFE06"
+        />
+        <circle cx="28.5" cy="28.5" r="3" fill="#CFFE06" />
+      </svg>
       <div className="flex items-baseline">
         <span className={`font-['Montserrat',sans-serif] font-black tracking-tight text-white ${textSizes[size]}`}>
           Convena

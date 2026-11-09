@@ -17,6 +17,9 @@ import {
   Copy,
   Trash2,
   Building2,
+  Radio,
+  BellRing,
+  UserCheck,
 } from 'lucide-react'
 import { QRCodeSVG } from 'qrcode.react'
 import { Button } from '../../components/common/Button.tsx'
@@ -25,7 +28,11 @@ import { ProgressBar } from '../../components/common/ProgressBar.tsx'
 import { SearchBar } from '../../components/common/SearchBar.tsx'
 import { eventsService } from '../../services/events.service.ts'
 import { organizationService } from '../../services/organization.service.ts'
-import type { Event, EventRegistration } from '../../types/event.ts'
+import type {
+  AttendanceRealtimeEvent,
+  Event,
+  EventRegistration,
+} from '../../types/event.ts'
 import type { EventMember, EventRole } from '../../types/membership.ts'
 import type { OrgMember, Organization } from '../../types/organization.ts'
 
@@ -74,6 +81,10 @@ export const ManageEventsPage: React.FC = () => {
   const [registrations, setRegistrations] = useState<EventRegistration[]>([])
   const [loadingQr, setLoadingQr] = useState(false)
   const [copiedQr, setCopiedQr] = useState(false)
+  const [realtimeToast, setRealtimeToast] = useState<AttendanceRealtimeEvent | null>(null)
+  const [realtimeFeed, setRealtimeFeed] = useState<AttendanceRealtimeEvent[]>([])
+  const [recentlyCheckedInIds, setRecentlyCheckedInIds] = useState<Record<string, number>>({})
+  const [checkingInId, setCheckingInId] = useState<string | null>(null)
 
   useEffect(() => {
     let isMounted = true
@@ -179,6 +190,9 @@ export const ManageEventsPage: React.FC = () => {
   const openQrModal = async (evt: Event) => {
     setQrModalEvent(evt)
     setCopiedQr(false)
+    setRealtimeToast(null)
+    setRealtimeFeed([])
+    setRecentlyCheckedInIds({})
     setLoadingQr(true)
     try {
       const existingToken = evt.attendanceQrToken
@@ -199,6 +213,101 @@ export const ManageEventsPage: React.FC = () => {
     } finally {
       setLoadingQr(false)
     }
+  }
+
+  // Subscribe to Real-Time Attendance & Registration Event System while QR modal is open
+  useEffect(() => {
+    if (!qrModalEvent) return
+
+    let toastTimer: ReturnType<typeof setTimeout> | null = null
+
+    const unsubscribe = eventsService.subscribeToEventAttendance(
+      qrModalEvent.id,
+      (evt, latestList) => {
+        if (latestList) {
+          setRegistrations(latestList)
+        } else if (evt.registration) {
+          setRegistrations((prev) => {
+            const exists = prev.some((r) => r.id === evt.registration.id)
+            if (exists) {
+              const updated = prev.map((r) =>
+                r.id === evt.registration.id ? evt.registration : r
+              )
+              // Move newly checked-in attendee to the top of the list for instant visibility
+              const target = updated.find((r) => r.id === evt.registration.id)
+              const rest = updated.filter((r) => r.id !== evt.registration.id)
+              return target ? [target, ...rest] : updated
+            }
+            return [evt.registration, ...prev]
+          })
+        }
+
+        if (evt.eventType === 'attendance.checked_in') {
+          setRecentlyCheckedInIds((prev) => ({
+            ...prev,
+            [evt.registration.id]: Date.now(),
+          }))
+        } else if (evt.eventType === 'registration.created') {
+          setEvents((prev) =>
+            prev.map((e) =>
+              e.id === qrModalEvent.id ? { ...e, attendeeCount: (e.attendeeCount || 0) + 1 } : e
+            )
+          )
+        }
+
+        setRealtimeToast(evt)
+        setRealtimeFeed((prev) => [evt, ...prev].slice(0, 5))
+
+        if (toastTimer) clearTimeout(toastTimer)
+        toastTimer = setTimeout(() => {
+          setRealtimeToast((curr) => (curr?.timestamp === evt.timestamp ? null : curr))
+        }, 7000)
+      },
+      registrations
+    )
+
+    return () => {
+      unsubscribe()
+      if (toastTimer) clearTimeout(toastTimer)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [qrModalEvent?.id, loadingQr])
+
+  const handleManualCheckIn = async (reg: EventRegistration) => {
+    if (!qrModalEvent || checkingInId) return
+    setCheckingInId(reg.id)
+    try {
+      const res = await eventsService.checkInRegistration(qrModalEvent.id, reg.id)
+      if (res?.registration) {
+        setRegistrations((prev) =>
+          prev.map((r) => (r.id === res.registration.id ? res.registration : r))
+        )
+      }
+    } catch {
+      // Fallback: optimistic local event dispatch if offline
+      const optimisticReg: EventRegistration = {
+        ...reg,
+        status: 'checked_in',
+        checkedInAt: new Date().toISOString(),
+      }
+      eventsService.emitAttendanceEvent({
+        eventType: 'attendance.checked_in',
+        eventId: qrModalEvent.id,
+        eventTitle: qrModalEvent.title,
+        alreadyCheckedIn: false,
+        message: `${reg.attendeeName} (${reg.ticketCode}) berhasil ditandai HADIR!`,
+        registration: optimisticReg,
+        timestamp: new Date().toISOString(),
+      })
+    } finally {
+      setCheckingInId(null)
+    }
+  }
+
+  const handleRefreshRegistrations = async () => {
+    if (!qrModalEvent) return
+    const latest = await eventsService.getEventRegistrations(qrModalEvent.id)
+    setRegistrations(latest)
   }
 
   const handleRegenerateQr = async () => {
@@ -689,17 +798,73 @@ export const ManageEventsPage: React.FC = () => {
       {/* ================================================================= */}
       {qrModalEvent && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
+          {/* Floating Real-Time Toast Notification */}
+          {realtimeToast && (
+            <div
+              role="status"
+              aria-live="polite"
+              className="fixed top-5 right-5 z-[60] max-w-md w-full bg-[#141A05] border-2 border-[#CFFE06] rounded-2xl p-4 shadow-[0_12px_36px_rgba(207,254,6,0.22)] flex items-start gap-3 animate-in fade-in slide-in-from-top-3 duration-200"
+            >
+              <div className="w-9 h-9 rounded-xl bg-[#CFFE06] text-black flex items-center justify-center shrink-0">
+                <BellRing size={18} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#CFFE06] text-black">
+                    {realtimeToast.eventType === 'attendance.checked_in'
+                      ? 'PRESENSI REAL-TIME'
+                      : 'PENDAFTARAN BARU'}
+                  </span>
+                  <span className="text-[11px] font-mono text-[#9C9C9C]">
+                    {new Date(realtimeToast.timestamp).toLocaleTimeString('id-ID', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                    })}
+                  </span>
+                </div>
+                <div className="text-sm font-extrabold text-white mt-1 truncate">
+                  {realtimeToast.registration.attendeeName}{' '}
+                  <span className="font-mono text-xs text-[#CFFE06]">
+                    ({realtimeToast.registration.ticketCode})
+                  </span>
+                </div>
+                <p className="text-xs text-[#D5E69C] m-0 mt-0.5">
+                  {realtimeToast.message}
+                </p>
+                <div className="text-[11px] text-[#9C9C9C] mt-1">
+                  Kategori: <span className="text-white font-semibold">{realtimeToast.registration.tierName}</span>
+                  {realtimeToast.registration.attendeeInstitution
+                    ? ` • ${realtimeToast.registration.attendeeInstitution}`
+                    : ''}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setRealtimeToast(null)}
+                className="p-1 rounded-lg text-[#9C9C9C] hover:text-white cursor-pointer"
+                aria-label="Tutup notifikasi"
+              >
+                <X size={15} />
+              </button>
+            </div>
+          )}
+
           <div className="bg-[#151515] border border-[#333333] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6">
             <div className="flex items-start justify-between gap-4 border-b border-[#262626] pb-4">
               <div>
-                <Badge variant="accent" className="mb-1">
-                  QR PRESENSI KEHADIRAN RESMI
-                </Badge>
-                <h2 className="text-lg font-extrabold text-white m-0">
+                <div className="flex items-center gap-2 flex-wrap mb-1">
+                  <Badge variant="accent">QR PRESENSI KEHADIRAN RESMI</Badge>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#192205] border border-[#CFFE06]/50 text-[10px] font-bold text-[#CFFE06]">
+                    <Radio size={11} className="animate-pulse" />
+                    LIVE EVENT STREAM AKTIF
+                  </span>
+                </div>
+                <h2 className="!text-lg font-extrabold text-white m-0">
                   QR Presensi — {qrModalEvent.title}
                 </h2>
                 <p className="text-xs text-[#9C9C9C] m-0 mt-1">
-                  Tampilkan QR ini di meja registrasi. Peserta yang sudah terdaftar & lunas dapat memindai QR ini dari aplikasi Mobile atau Web untuk bukti kehadiran.
+                  Tampilkan QR ini di meja registrasi. Saat peserta memindai QR dari aplikasi Mobile atau Web, status kehadiran di bawah akan diperbarui secara langsung (real-time).
                 </p>
               </div>
               <button
@@ -738,10 +903,10 @@ export const ManageEventsPage: React.FC = () => {
                 <div className="p-3 rounded-xl bg-[#121212] border border-[#282828] text-xs text-[#CCCCCC] space-y-1">
                   <div className="font-bold text-white flex items-center gap-1.5">
                     <CheckCircle2 size={14} className="text-[#CFFE06]" />
-                    Validasi Otomatis Berlapis:
+                    Validasi Otomatis & Event System Real-Time:
                   </div>
                   <p className="m-0 text-[11px] text-[#9C9C9C]">
-                    Sistem otomatis menolak peserta yang belum terdaftar atau belum menyelesaikan pembayaran tiket berbayar.
+                    Sistem otomatis menolak peserta yang belum terdaftar atau belum lunas, dan langsung memancarkan event kehadiran ke layar ini begitu scan berhasil.
                   </p>
                 </div>
 
@@ -772,12 +937,69 @@ export const ManageEventsPage: React.FC = () => {
               </div>
             </div>
 
+            {/* Inline Real-Time Attendance Event Banner */}
+            {realtimeFeed.length > 0 && (
+              <div className="p-3.5 rounded-2xl bg-[#161F05] border border-[#CFFE06]/60 space-y-2">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 text-xs font-extrabold text-[#CFFE06]">
+                    <CheckCircle2 size={15} />
+                    <span>AKTIVITAS PRESENSI REAL-TIME TERBARU</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setRealtimeFeed([])}
+                    className="text-[11px] text-[#9C9C9C] hover:text-white cursor-pointer"
+                  >
+                    Bersihkan Log
+                  </button>
+                </div>
+                <div className="space-y-1.5">
+                  {realtimeFeed.map((item, idx) => (
+                    <div
+                      key={`${item.registration.id}-${item.timestamp}-${idx}`}
+                      className="flex items-center justify-between gap-2 text-xs px-3 py-2 rounded-xl bg-[#101603] border border-[#2C3B0A]"
+                    >
+                      <div className="min-w-0">
+                        <span className="font-bold text-white">
+                          {item.registration.attendeeName}
+                        </span>{' '}
+                        <span className="font-mono text-[11px] text-[#CFFE06]">
+                          ({item.registration.ticketCode})
+                        </span>
+                        <span className="text-[#B8C78E] ml-1.5">
+                          — {item.eventType === 'attendance.checked_in' ? 'Berhasil Check-In Hadir' : 'Mendaftar Tiket'}
+                        </span>
+                      </div>
+                      <span className="text-[11px] font-mono text-[#9C9C9C] shrink-0">
+                        {new Date(item.timestamp).toLocaleTimeString('id-ID', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          second: '2-digit',
+                        })}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Live Attendance & Registration Check */}
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-white uppercase tracking-wider">
-                  Peserta Terdaftar & Status Kehadiran
-                </span>
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-white uppercase tracking-wider">
+                    Peserta Terdaftar & Status Kehadiran
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleRefreshRegistrations}
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#202020] hover:bg-[#2A2A2A] border border-[#333333] text-[11px] text-[#CCCCCC] cursor-pointer"
+                    title="Sinkronkan daftar peserta"
+                  >
+                    <RefreshCw size={11} />
+                    Sinkronkan
+                  </button>
+                </div>
                 <Badge variant="accent">
                   Hadir: {checkedInCount} / {registrations.length} Terdaftar
                 </Badge>
@@ -788,42 +1010,77 @@ export const ManageEventsPage: React.FC = () => {
                   Belum ada peserta yang mendaftar melalui sistem untuk event ini.
                 </div>
               ) : (
-                <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
-                  {registrations.map((reg) => (
-                    <div
-                      key={reg.id}
-                      className="p-3 rounded-xl bg-[#1C1C1C] border border-[#2A2A2A] flex items-center justify-between gap-3"
-                    >
-                      <div>
-                        <div className="text-xs font-bold text-white">
-                          {reg.attendeeName}{' '}
-                          <span className="font-mono text-[11px] text-[#CFFE06]">
-                            ({reg.ticketCode})
-                          </span>
+                <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                  {registrations.map((reg) => {
+                    const isRecentlyCheckedIn = Boolean(recentlyCheckedInIds[reg.id])
+                    const isCheckedIn = reg.status === 'checked_in'
+                    return (
+                      <div
+                        key={reg.id}
+                        className={`p-3 rounded-xl border transition-all flex items-center justify-between gap-3 ${
+                          isRecentlyCheckedIn
+                            ? 'bg-[#172006] border-[#CFFE06] shadow-[0_0_20px_rgba(207,254,6,0.12)]'
+                            : 'bg-[#1C1C1C] border-[#2A2A2A]'
+                        }`}
+                      >
+                        <div className="min-w-0">
+                          <div className="text-xs font-bold text-white flex items-center gap-2 flex-wrap">
+                            <span>{reg.attendeeName}</span>
+                            <span className="font-mono text-[11px] text-[#CFFE06]">
+                              ({reg.ticketCode})
+                            </span>
+                            {isRecentlyCheckedIn && (
+                              <span className="px-2 py-0.5 rounded-full bg-[#CFFE06] text-black text-[9px] font-extrabold uppercase tracking-wider">
+                                BARU SAJA HADIR
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-[11px] text-[#9C9C9C] mt-0.5">
+                            {reg.tierName} •{' '}
+                            {reg.price === 0
+                              ? 'Tiket Gratis'
+                              : `Rp ${reg.price.toLocaleString('id-ID')} (${reg.paymentMethod.toUpperCase()})`}
+                            {isCheckedIn && reg.checkedInAt && (
+                              <span className="text-[#CFFE06] ml-2 font-mono">
+                                • Check-in{' '}
+                                {new Date(reg.checkedInAt).toLocaleTimeString('id-ID', {
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                  second: '2-digit',
+                                })}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                        <div className="text-[11px] text-[#9C9C9C]">
-                          {reg.tierName} •{' '}
-                          {reg.price === 0
-                            ? 'Tiket Gratis'
-                            : `Rp ${reg.price.toLocaleString('id-ID')} (${reg.paymentMethod.toUpperCase()})`}
+                        <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
+                          <Badge
+                            variant={reg.paymentStatus === 'paid' ? 'accent' : 'grey'}
+                            className="text-[10px]"
+                          >
+                            {reg.paymentStatus === 'paid' ? 'LUNAS' : 'PENDING'}
+                          </Badge>
+                          <Badge
+                            variant={isCheckedIn ? 'accent' : 'dark'}
+                            className="text-[10px]"
+                          >
+                            {isCheckedIn ? 'HADIR (CHECKED-IN)' : 'TERDAFTAR'}
+                          </Badge>
+                          {!isCheckedIn && reg.paymentStatus === 'paid' && (
+                            <button
+                              type="button"
+                              onClick={() => handleManualCheckIn(reg)}
+                              disabled={checkingInId === reg.id}
+                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#222B07] hover:bg-[#CFFE06] text-[#CFFE06] hover:text-black border border-[#CFFE06]/50 text-[10px] font-bold transition-colors cursor-pointer disabled:opacity-50"
+                              title="Verifikasi kehadiran peserta secara langsung"
+                            >
+                              <UserCheck size={12} />
+                              {checkingInId === reg.id ? 'Memproses...' : 'Tandai Hadir'}
+                            </button>
+                          )}
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge
-                          variant={reg.paymentStatus === 'paid' ? 'accent' : 'grey'}
-                          className="text-[10px]"
-                        >
-                          {reg.paymentStatus === 'paid' ? 'LUNAS' : 'PENDING'}
-                        </Badge>
-                        <Badge
-                          variant={reg.status === 'checked_in' ? 'accent' : 'dark'}
-                          className="text-[10px]"
-                        >
-                          {reg.status === 'checked_in' ? 'HADIR (CHECKED-IN)' : 'TERDAFTAR'}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </div>

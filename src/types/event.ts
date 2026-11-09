@@ -159,3 +159,13 @@ export interface AttendEventResponse {
   eventTitle: string
   registration: EventRegistration
 }
+
+export interface AttendanceRealtimeEvent {
+  eventType: 'attendance.checked_in' | 'registration.created' | string
+  eventId: string
+  eventTitle: string
+  alreadyCheckedIn: boolean
+  message: string
+  registration: EventRegistration
+  timestamp: string
+}

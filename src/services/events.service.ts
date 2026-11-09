@@ -13,6 +13,7 @@ import type {
   EventRegistration,
   AttendanceQrResponse,
   AttendEventResponse,
+  AttendanceRealtimeEvent,
 } from '../types/event.ts'
 import type {
   EventMember,
@@ -219,7 +220,22 @@ export class EventsService {
       attendeeInstitution?: string
     }
   ): Promise<{ message: string; registration: EventRegistration }> {
-    return await apiClient.post(`/events/${eventId}/register`, payload)
+    const res = await apiClient.post<{ message: string; registration: EventRegistration }>(
+      `/events/${eventId}/register`,
+      payload
+    )
+    if (res?.registration) {
+      this.emitAttendanceEvent({
+        eventType: 'registration.created',
+        eventId: res.registration.eventId || eventId,
+        eventTitle: 'Event Convena',
+        alreadyCheckedIn: false,
+        message: res.message || `Peserta baru terdaftar: ${res.registration.attendeeName}`,
+        registration: res.registration,
+        timestamp: new Date().toISOString(),
+      })
+    }
+    return res
   }
 
   async getMyRegistration(eventId: string): Promise<EventRegistration | null> {
@@ -256,10 +272,227 @@ export class EventsService {
   }
 
   async attendEventByQr(qrCode: string, eventId?: string): Promise<AttendEventResponse> {
-    return await apiClient.post<AttendEventResponse>('/events/attend', {
+    const res = await apiClient.post<AttendEventResponse>('/events/attend', {
       qrCode,
       eventId,
     })
+    if (res?.registration) {
+      this.emitAttendanceEvent({
+        eventType: 'attendance.checked_in',
+        eventId: res.registration.eventId || eventId || '',
+        eventTitle: res.eventTitle || 'Event Convena',
+        alreadyCheckedIn: Boolean(res.alreadyCheckedIn),
+        message:
+          res.message ||
+          `${res.registration.attendeeName} (${res.registration.ticketCode}) berhasil melakukan presensi kehadiran!`,
+        registration: res.registration,
+        timestamp: new Date().toISOString(),
+      })
+    }
+    return res
+  }
+
+  async checkInRegistration(
+    eventId: string,
+    registrationId: string
+  ): Promise<AttendEventResponse> {
+    const res = await apiClient.post<AttendEventResponse>(
+      `/events/${eventId}/registrations/${registrationId}/check-in`,
+      {}
+    )
+    if (res?.registration) {
+      this.emitAttendanceEvent({
+        eventType: 'attendance.checked_in',
+        eventId: res.registration.eventId || eventId,
+        eventTitle: res.eventTitle || 'Event Convena',
+        alreadyCheckedIn: Boolean(res.alreadyCheckedIn),
+        message:
+          res.message ||
+          `${res.registration.attendeeName} (${res.registration.ticketCode}) berhasil melakukan presensi kehadiran!`,
+        registration: res.registration,
+        timestamp: new Date().toISOString(),
+      })
+    }
+    return res
+  }
+
+  emitAttendanceEvent(evt: AttendanceRealtimeEvent): void {
+    if (typeof window === 'undefined') return
+    try {
+      window.dispatchEvent(new CustomEvent<AttendanceRealtimeEvent>('convena:attendance', { detail: evt }))
+    } catch {
+      // ignore
+    }
+    try {
+      if ('BroadcastChannel' in window) {
+        const bc = new BroadcastChannel('convena_attendance_events')
+        bc.postMessage(evt)
+        bc.close()
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  /**
+   * Subscribe to real-time attendance & registration events for a given eventId.
+   * Combines:
+   * 1. Server-Sent Events (SSE) stream `/api/events/{id}/attendance-stream`
+   * 2. Cross-tab BroadcastChannel & same-window CustomEvent bus
+   * 3. Smart delta-sync polling fallback (detects status transitions from mobile/external scans)
+   */
+  subscribeToEventAttendance(
+    eventId: string,
+    onEvent: (evt: AttendanceRealtimeEvent, latestList?: EventRegistration[]) => void,
+    initialRegistrations: EventRegistration[] = []
+  ): () => void {
+    let closed = false
+    const recentFingerprints = new Map<string, number>()
+    const knownStatusById = new Map<string, string>()
+
+    for (const reg of initialRegistrations) {
+      knownStatusById.set(reg.id, reg.status)
+    }
+
+    const deliver = (evt: AttendanceRealtimeEvent, latestList?: EventRegistration[]) => {
+      if (closed || !evt || evt.eventId !== eventId || !evt.registration) return
+      const fp = `${evt.eventType}:${evt.registration.id}:${evt.registration.status}:${evt.alreadyCheckedIn ? 'repeat' : 'first'}`
+      const now = Date.now()
+      const prevTime = recentFingerprints.get(fp)
+      if (prevTime && now - prevTime < 3500) {
+        return
+      }
+      recentFingerprints.set(fp, now)
+      knownStatusById.set(evt.registration.id, evt.registration.status)
+      onEvent(evt, latestList)
+    }
+
+    // 1. SSE Connection to Convena-API
+    let eventSource: EventSource | null = null
+    if (typeof window !== 'undefined' && 'EventSource' in window) {
+      try {
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || '/api'
+        const streamUrl = `${baseUrl.replace(/\/$/, '')}/events/${eventId}/attendance-stream`
+        eventSource = new EventSource(streamUrl)
+
+        const handleSsePayload = (e: MessageEvent) => {
+          try {
+            const parsed = JSON.parse(e.data) as AttendanceRealtimeEvent
+            if (parsed && parsed.registration) {
+              deliver(parsed)
+            }
+          } catch {
+            // ignore malformed frame
+          }
+        }
+
+        eventSource.addEventListener('attendance.checked_in', handleSsePayload as EventListener)
+        eventSource.addEventListener('registration.created', handleSsePayload as EventListener)
+        eventSource.onmessage = handleSsePayload
+      } catch {
+        // Fallback to BroadcastChannel + delta sync
+      }
+    }
+
+    // 2. Same-window CustomEvent & Cross-tab BroadcastChannel
+    const handleDomEvent = (e: globalThis.Event) => {
+      const custom = e as CustomEvent<AttendanceRealtimeEvent>
+      if (custom.detail) {
+        deliver(custom.detail)
+      }
+    }
+    if (typeof window !== 'undefined') {
+      window.addEventListener('convena:attendance', handleDomEvent)
+    }
+
+    let bc: BroadcastChannel | null = null
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      try {
+        bc = new BroadcastChannel('convena_attendance_events')
+        bc.onmessage = (msg: MessageEvent<AttendanceRealtimeEvent>) => {
+          if (msg.data) {
+            deliver(msg.data)
+          }
+        }
+      } catch {
+        // ignore
+      }
+    }
+
+    // 3. Smart Delta-Sync Polling (catches scans if SSE is buffered by a proxy)
+    const pollInterval = setInterval(async () => {
+      if (closed) return
+      try {
+        const latest = await this.getEventRegistrations(eventId)
+        if (closed || !Array.isArray(latest)) return
+
+        for (const reg of latest) {
+          const prevStatus = knownStatusById.get(reg.id)
+          if (!prevStatus) {
+            knownStatusById.set(reg.id, reg.status)
+            if (reg.status === 'checked_in') {
+              deliver(
+                {
+                  eventType: 'attendance.checked_in',
+                  eventId,
+                  eventTitle: 'Event Convena',
+                  alreadyCheckedIn: false,
+                  message: `${reg.attendeeName} (${reg.ticketCode}) berhasil melakukan presensi kehadiran!`,
+                  registration: reg,
+                  timestamp: reg.checkedInAt || new Date().toISOString(),
+                },
+                latest
+              )
+            } else {
+              deliver(
+                {
+                  eventType: 'registration.created',
+                  eventId,
+                  eventTitle: 'Event Convena',
+                  alreadyCheckedIn: false,
+                  message: `Peserta baru terdaftar: ${reg.attendeeName} (${reg.tierName})`,
+                  registration: reg,
+                  timestamp: reg.createdAt || new Date().toISOString(),
+                },
+                latest
+              )
+            }
+          } else if (prevStatus !== 'checked_in' && reg.status === 'checked_in') {
+            knownStatusById.set(reg.id, reg.status)
+            deliver(
+              {
+                eventType: 'attendance.checked_in',
+                eventId,
+                eventTitle: 'Event Convena',
+                alreadyCheckedIn: false,
+                message: `${reg.attendeeName} (${reg.ticketCode}) berhasil melakukan presensi kehadiran!`,
+                registration: reg,
+                timestamp: reg.checkedInAt || new Date().toISOString(),
+              },
+              latest
+            )
+          } else {
+            knownStatusById.set(reg.id, reg.status)
+          }
+        }
+      } catch {
+        // ignore polling error
+      }
+    }, 2500)
+
+    return () => {
+      closed = true
+      clearInterval(pollInterval)
+      if (eventSource) {
+        eventSource.close()
+      }
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('convena:attendance', handleDomEvent)
+      }
+      if (bc) {
+        bc.close()
+      }
+    }
   }
 
   async registerTicket(
