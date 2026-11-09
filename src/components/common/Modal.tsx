@@ -9,6 +9,8 @@ export interface ModalProps {
   headerColor?: 'pink' | 'cyan' | 'purple' | 'mint' | 'yellow' | 'accent' | 'dark'
   footer?: React.ReactNode
   maxWidth?: string
+  closeOnOverlayClick?: boolean
+  closeOnEscape?: boolean
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -18,10 +20,12 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   footer,
   maxWidth,
+  closeOnOverlayClick = true,
+  closeOnEscape = true,
 }) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === 'Escape' && isOpen && closeOnEscape) {
         onClose()
       }
     }
@@ -33,14 +37,14 @@ export const Modal: React.FC<ModalProps> = ({
       document.body.classList.remove('overflow-hidden')
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [isOpen, onClose])
+  }, [isOpen, onClose, closeOnEscape])
 
   if (!isOpen) return null
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-[fadeIn_0.15s_ease-out]"
-      onClick={onClose}
+      onClick={closeOnOverlayClick ? onClose : undefined}
     >
       <div
         className={`w-full ${maxWidth || 'max-w-[540px]'} bg-[#151515] border border-[#3D3D3D] shadow-2xl rounded-xl overflow-hidden transition-all duration-200`}

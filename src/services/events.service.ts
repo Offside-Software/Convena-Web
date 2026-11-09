@@ -152,18 +152,10 @@ export class EventsService {
     ticketTierId: string,
     attendee: RegisterTicketInput
   ): Promise<RegisterTicketResponse> {
-    try {
-      return await apiClient.post<RegisterTicketResponse>(`/events/${eventId}/register`, {
-        ticketTierId,
-        ...attendee,
-      })
-    } catch {
-      return {
-        registrationId: `REG-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
-        qrCode: `CONVENA-TKT-${eventId}-${ticketTierId}`,
-        status: 'confirmed',
-      }
-    }
+    return await apiClient.post<RegisterTicketResponse>(`/events/${eventId}/register`, {
+      ticketTierId,
+      ...attendee,
+    })
   }
 }
 

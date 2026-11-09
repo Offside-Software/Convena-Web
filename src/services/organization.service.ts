@@ -1,5 +1,4 @@
 import { apiClient } from './api/client.ts'
-import { mockOrganizations } from '../data/mockData.ts'
 import type { Organization } from '../types/organization.ts'
 
 export class OrganizationService {
@@ -7,7 +6,7 @@ export class OrganizationService {
     try {
       return await apiClient.get<Organization[]>('/organizations')
     } catch {
-      return mockOrganizations
+      return []
     }
   }
 
@@ -15,7 +14,7 @@ export class OrganizationService {
     try {
       return await apiClient.get<Organization>(`/organizations/${id}`)
     } catch {
-      return mockOrganizations.find((org) => org.id === id)
+      return undefined
     }
   }
 }

@@ -1,5 +1,4 @@
 import { apiClient } from './api/client.ts'
-import { mockSponsorLeads, mockSponsorPackages } from '../data/mockData.ts'
 import type { SponsorLead, SponsorPackage, PipelineStage } from '../types/sponsorship.ts'
 
 export class SponsorshipService {
@@ -7,7 +6,7 @@ export class SponsorshipService {
     try {
       return await apiClient.get<SponsorPackage[]>('/sponsorship/packages')
     } catch {
-      return mockSponsorPackages
+      return []
     }
   }
 
@@ -15,21 +14,12 @@ export class SponsorshipService {
     try {
       return await apiClient.get<SponsorLead[]>('/sponsorship/leads')
     } catch {
-      return mockSponsorLeads
+      return []
     }
   }
 
   async updateStage(leadId: string, stage: PipelineStage): Promise<SponsorLead> {
-    try {
-      return await apiClient.patch<SponsorLead>(`/sponsorship/leads/${leadId}`, { stage })
-    } catch {
-      const lead = mockSponsorLeads.find((l) => l.id === leadId)
-      if (lead) {
-        lead.stage = stage
-        return { ...lead }
-      }
-      throw new Error('Lead not found')
-    }
+    return await apiClient.patch<SponsorLead>(`/sponsorship/leads/${leadId}`, { stage })
   }
 
   async generateAIEmailDraft(params: {
@@ -43,7 +33,6 @@ export class SponsorshipService {
       const res = await apiClient.post<{ draft: string }>('/ai/generate-proposal-email', params)
       return res.draft
     } catch {
-      // Offline fallback template in Indonesian formal business standard
       return `Yth. ${params.contactPerson}
 Perwakilan Manajemen ${params.companyName}
 di Tempat

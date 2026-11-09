@@ -11,6 +11,7 @@ import type { SponsorLead, SponsorPackage, PipelineStage } from '../../types/spo
 export const SponsorshipPage: React.FC = () => {
   const [packages, setPackages] = useState<SponsorPackage[]>([])
   const [leads, setLeads] = useState<SponsorLead[]>([])
+  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
 
   // AI Modal
@@ -31,12 +32,18 @@ export const SponsorshipPage: React.FC = () => {
 
   useEffect(() => {
     let isMounted = true
-    Promise.all([sponsorshipService.getPackages(), sponsorshipService.getLeads()]).then(([pkgs, lds]) => {
-      if (isMounted) {
-        setPackages(pkgs)
-        setLeads(lds)
-      }
-    })
+    Promise.all([sponsorshipService.getPackages(), sponsorshipService.getLeads()])
+      .then(([pkgs, lds]) => {
+        if (isMounted) {
+          setPackages(pkgs)
+          setLeads(lds)
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setLoading(false)
+        }
+      })
     return () => {
       isMounted = false
     }
@@ -114,115 +121,172 @@ export const SponsorshipPage: React.FC = () => {
         </Button>
       </div>
 
-      {/* Package slots summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
-        {packages.map((pkg) => (
-          <div
-            key={pkg.id}
-            className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl relative overflow-hidden flex flex-col hover:border-[#CFFE06]/40 transition-colors"
-          >
-            <div className="absolute top-0 left-0 w-full h-1 bg-[#CFFE06]" />
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-base font-bold text-white m-0">{pkg.name}</h3>
-              <Badge variant="accent" className="text-[10px]">
-                {pkg.slotsFilled} / {pkg.slotLimit} Terisi
-              </Badge>
-            </div>
-            <div className="font-extrabold text-xl text-[#CFFE06] mb-3">
-              Rp {pkg.price.toLocaleString('id-ID')}
-            </div>
-            <ul className="pl-4 m-0 text-xs text-[#9C9C9C] space-y-1">
-              {pkg.deliverables.slice(0, 3).map((d, i) => (
-                <li key={i}>{d}</li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      {/* Pipeline Kanban Columns */}
-      <h2 className="text-lg sm:text-xl font-bold text-white mb-4 flex items-center gap-2 flex-wrap">
-        <Sparkles size={18} className="text-[#CFFE06]" /> Tahapan Pipeline Sponsorship
-        <div className="max-w-sm mb-4">
-          <Input
-            label="Cari Sponsor"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="!mb-0"
-          />
-        </div>
-        <span className="text-xs text-[#9C9C9C] font-medium ml-2">
-          (Total Masuk: Rp {totalCommitted.toLocaleString('id-ID')})
-        </span>
-      </h2>
-
-      {/* Pipeline Kanban Columns - Horizontally Scrollable on all screen sizes */}
-      <div className="flex gap-4 items-start overflow-x-auto pb-6 pt-1 scroll-smooth">
-        {stages.map((stg) => {
-          const stageLeads = leads.filter((l) => {
-            const matchesStage = l.stage === stg.stage
-
-            const matchesSearch =
-              l.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              l.contactPerson.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              l.notes.toLowerCase().includes(searchQuery.toLowerCase())
-
-            return matchesStage && matchesSearch
-          })
-          return (
-            <div
-              key={stg.stage}
-              className="bg-[#151515] border border-[#3D3D3D]/50 rounded-xl p-3.5 flex flex-col gap-3 min-h-[380px] w-[280px] min-w-[280px] shrink-0"
-            >
-              {/* Column Header */}
+      {loading ? (
+        <div className="space-y-10 animate-pulse">
+          {/* Package slots skeleton */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[1, 2, 3].map((i) => (
               <div
-                className="p-2.5 bg-[#202020] border border-[#3D3D3D] rounded-lg flex justify-between items-center font-bold text-xs text-white"
+                key={i}
+                className="p-5 bg-[#151515] border border-[#262626] rounded-xl space-y-3"
               >
-                <span>{stg.title}</span>
-                <span className="font-mono text-[#CFFE06] bg-[#000000] px-2 py-0.5 rounded-full text-[11px]">
-                  {stageLeads.length}
-                </span>
+                <div className="flex justify-between items-center">
+                  <div className="h-5 w-36 bg-[#262626] rounded" />
+                  <div className="h-4 w-20 bg-[#242424] rounded-full" />
+                </div>
+                <div className="h-7 w-40 bg-[#262626] rounded" />
+                <div className="space-y-2 pt-1">
+                  <div className="h-3 w-full bg-[#202020] rounded" />
+                  <div className="h-3 w-5/6 bg-[#202020] rounded" />
+                  <div className="h-3 w-4/6 bg-[#202020] rounded" />
+                </div>
               </div>
+            ))}
+          </div>
 
-              {/* Lead Cards */}
-              {stageLeads.map((lead) => (
+          {/* Pipeline Kanban Skeleton */}
+          <div className="space-y-4">
+            <div className="h-6 w-64 bg-[#262626] rounded" />
+            <div className="flex gap-4 items-start overflow-x-auto pb-6">
+              {[1, 2, 3, 4, 5].map((col) => (
                 <div
-                  key={lead.id}
-                  className="p-3.5 border border-[#3D3D3D]/60 rounded-xl bg-[#202020] hover:border-[#CFFE06]/40 transition-colors"
+                  key={col}
+                  className="bg-[#151515] border border-[#262626] rounded-xl p-3.5 flex flex-col gap-3 min-h-[380px] w-[280px] min-w-[280px] shrink-0"
                 >
-                  <div className="font-bold text-sm text-white mb-0.5">
-                    {lead.companyName}
+                  <div className="p-2.5 bg-[#202020] border border-[#262626] rounded-lg flex justify-between items-center">
+                    <div className="h-4 w-28 bg-[#2c2c2c] rounded" />
+                    <div className="h-4 w-6 bg-[#2c2c2c] rounded-full" />
                   </div>
-                  <div className="text-xs text-[#9C9C9C] mb-2">
-                    {lead.contactPerson}
-                  </div>
-
-                  <div className="font-bold text-sm text-[#CFFE06] mb-2">
-                    Rp {lead.value.toLocaleString('id-ID')}
-                  </div>
-
-                  <p className="text-xs text-[#9C9C9C] m-0 mb-3 leading-relaxed">
-                    {lead.notes}
-                  </p>
-
-                  {/* Stage mover selector */}
-                  <select
-                    value={lead.stage}
-                    onChange={(e) => handleStageChange(lead.id, e.target.value as PipelineStage)}
-                    className="w-full text-xs py-1.5 px-2.5 rounded-lg border border-[#3D3D3D] bg-[#151515] text-white cursor-pointer font-medium focus:border-[#CFFE06] outline-none"
-                  >
-                    <option value="prospect">Pindah: Target Prospek</option>
-                    <option value="proposal_sent">Pindah: Proposal Terkirim</option>
-                    <option value="negotiating">Pindah: Negosiasi MOU</option>
-                    <option value="committed">Pindah: Komitmen Deal</option>
-                    <option value="paid">Pindah: Lunas / Transfer</option>
-                  </select>
+                  {[1, 2].map((card) => (
+                    <div
+                      key={card}
+                      className="p-3.5 border border-[#262626] rounded-xl bg-[#202020] space-y-2.5"
+                    >
+                      <div className="h-4 w-40 bg-[#2c2c2c] rounded" />
+                      <div className="h-3 w-32 bg-[#262626] rounded" />
+                      <div className="h-4 w-28 bg-[#2c2c2c] rounded" />
+                      <div className="h-3 w-full bg-[#262626] rounded" />
+                      <div className="h-8 w-full bg-[#151515] rounded-lg" />
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
-          )
-        })}
-      </div>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Package slots summary */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+            {packages.map((pkg) => (
+              <div
+                key={pkg.id}
+                className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl relative overflow-hidden flex flex-col hover:border-[#CFFE06]/40 transition-colors"
+              >
+                <div className="absolute top-0 left-0 w-full h-1 bg-[#CFFE06]" />
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-base font-bold text-white m-0">{pkg.name}</h3>
+                  <Badge variant="accent" className="text-[10px]">
+                    {pkg.slotsFilled} / {pkg.slotLimit} Terisi
+                  </Badge>
+                </div>
+                <div className="font-extrabold text-xl text-[#CFFE06] mb-3">
+                  Rp {pkg.price.toLocaleString('id-ID')}
+                </div>
+                <ul className="pl-4 m-0 text-xs text-[#9C9C9C] space-y-1">
+                  {pkg.deliverables.slice(0, 3).map((d, i) => (
+                    <li key={i}>{d}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          {/* Pipeline Kanban Columns */}
+          <h2 className="text-lg sm:text-xl font-bold text-white mb-4 flex items-center gap-2 flex-wrap">
+            <Sparkles size={18} className="text-[#CFFE06]" /> Tahapan Pipeline Sponsorship
+            <div className="max-w-sm mb-4">
+              <Input
+                label="Cari Sponsor"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="!mb-0"
+              />
+            </div>
+            <span className="text-xs text-[#9C9C9C] font-medium ml-2">
+              (Total Masuk: Rp {totalCommitted.toLocaleString('id-ID')})
+            </span>
+          </h2>
+
+          {/* Pipeline Kanban Columns - Horizontally Scrollable on all screen sizes */}
+          <div className="flex gap-4 items-start overflow-x-auto pb-6 pt-1 scroll-smooth">
+            {stages.map((stg) => {
+              const stageLeads = leads.filter((l) => {
+                const matchesStage = l.stage === stg.stage
+
+                const matchesSearch =
+                  l.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  l.contactPerson.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  l.notes.toLowerCase().includes(searchQuery.toLowerCase())
+
+                return matchesStage && matchesSearch
+              })
+              return (
+                <div
+                  key={stg.stage}
+                  className="bg-[#151515] border border-[#3D3D3D]/50 rounded-xl p-3.5 flex flex-col gap-3 min-h-[380px] w-[280px] min-w-[280px] shrink-0"
+                >
+                  {/* Column Header */}
+                  <div
+                    className="p-2.5 bg-[#202020] border border-[#3D3D3D] rounded-lg flex justify-between items-center font-bold text-xs text-white"
+                  >
+                    <span>{stg.title}</span>
+                    <span className="font-mono text-[#CFFE06] bg-[#000000] px-2 py-0.5 rounded-full text-[11px]">
+                      {stageLeads.length}
+                    </span>
+                  </div>
+
+                  {/* Lead Cards */}
+                  {stageLeads.map((lead) => (
+                    <div
+                      key={lead.id}
+                      className="p-3.5 border border-[#3D3D3D]/60 rounded-xl bg-[#202020] hover:border-[#CFFE06]/40 transition-colors"
+                    >
+                      <div className="font-bold text-sm text-white mb-0.5">
+                        {lead.companyName}
+                      </div>
+                      <div className="text-xs text-[#9C9C9C] mb-2">
+                        {lead.contactPerson}
+                      </div>
+
+                      <div className="font-bold text-sm text-[#CFFE06] mb-2">
+                        Rp {lead.value.toLocaleString('id-ID')}
+                      </div>
+
+                      <p className="text-xs text-[#9C9C9C] m-0 mb-3 leading-relaxed">
+                        {lead.notes}
+                      </p>
+
+                      {/* Stage mover selector */}
+                      <select
+                        value={lead.stage}
+                        onChange={(e) => handleStageChange(lead.id, e.target.value as PipelineStage)}
+                        className="w-full text-xs py-1.5 px-2.5 rounded-lg border border-[#3D3D3D] bg-[#151515] text-white cursor-pointer font-medium focus:border-[#CFFE06] outline-none"
+                      >
+                        <option value="prospect">Pindah: Target Prospek</option>
+                        <option value="proposal_sent">Pindah: Proposal Terkirim</option>
+                        <option value="negotiating">Pindah: Negosiasi MOU</option>
+                        <option value="committed">Pindah: Komitmen Deal</option>
+                        <option value="paid">Pindah: Lunas / Transfer</option>
+                      </select>
+                    </div>
+                  ))}
+                </div>
+              )
+            })}
+          </div>
+        </>
+      )}
 
       {/* AI Proposal Assistant Modal */}
       <Modal
