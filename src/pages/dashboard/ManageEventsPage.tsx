@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Calendar, Users, MapPin, ArrowUpRight } from 'lucide-react'
+import { Plus, Calendar, Users, MapPin, ArrowUpRight, DollarSign } from 'lucide-react'
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
 import { ProgressBar } from '../../components/common/ProgressBar.tsx'
@@ -131,11 +131,43 @@ export const ManageEventsPage: React.FC = () => {
 
       {/* Events List */}
       {loading ? (
-        <div className="py-24 text-center">
-          <div className="w-10 h-10 border-2 border-[#CFFE06] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="font-semibold text-xs text-[#9C9C9C]">
-            Memuat daftar event kelolaan...
-          </p>
+        <div className="space-y-4 animate-pulse">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="p-5 bg-[#151515] border border-[#262626] rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-5"
+            >
+              <div className="flex items-start gap-4 w-full md:w-auto">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-[#242424] shrink-0" />
+                <div className="space-y-2.5 flex-1">
+                  <div className="flex items-center gap-2">
+                    <div className="h-4 w-20 bg-[#262626] rounded-full" />
+                    <div className="h-4 w-20 bg-[#262626] rounded-full" />
+                    <div className="h-3 w-40 bg-[#202020] rounded" />
+                  </div>
+                  <div className="h-5 w-64 sm:w-80 bg-[#262626] rounded" />
+                  <div className="flex items-center gap-4">
+                    <div className="h-3.5 w-28 bg-[#202020] rounded" />
+                    <div className="h-3.5 w-36 bg-[#202020] rounded" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full md:w-auto flex flex-col sm:flex-row md:flex-col items-start md:items-end justify-between gap-4 pt-3 md:pt-0 border-t md:border-t-0 border-[#202020]">
+                <div className="w-full sm:w-48 space-y-2">
+                  <div className="flex justify-between">
+                    <div className="h-3 w-20 bg-[#242424] rounded" />
+                    <div className="h-3 w-16 bg-[#242424] rounded" />
+                  </div>
+                  <div className="h-1.5 w-full bg-[#262626] rounded-full" />
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="h-8 w-32 bg-[#262626] rounded-full" />
+                  <div className="h-8 w-36 bg-[#242424] rounded-full" />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       ) : filteredEvents.length === 0 ? (
         <div className="py-16 text-center p-8 bg-[#151515] border border-[#3D3D3D]/50 rounded-xl max-w-lg mx-auto">
@@ -225,7 +257,12 @@ export const ManageEventsPage: React.FC = () => {
                     />
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Link to={`/dashboard/finances?eventId=${evt.id}`} className="no-underline">
+                      <Button variant="accent" size="sm" icon={<DollarSign size={14} />}>
+                        Anggaran & SPJ
+                      </Button>
+                    </Link>
                     <Link to={`/events/${evt.id}`} className="no-underline">
                       <Button variant="outline" size="sm" icon={<ArrowUpRight size={14} />}>
                         Lihat Halaman Publik
