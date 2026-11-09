@@ -1,5 +1,4 @@
 import { apiClient } from './api/client.ts'
-import { mockCertificates } from '../data/mockData.ts'
 import type { Certificate } from '../types/certificate.ts'
 
 export class CertificateService {
@@ -8,7 +7,7 @@ export class CertificateService {
     try {
       return await apiClient.get<Certificate>(`/certificates/verify/${encodeURIComponent(cleanCode)}`)
     } catch {
-      return mockCertificates[cleanCode] || null
+      return null
     }
   }
 }

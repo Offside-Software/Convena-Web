@@ -27,6 +27,7 @@ import type { SponsorLead } from '../../types/sponsorship.ts'
 export const DashboardPage: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [authLoading, setAuthLoading] = useState(true)
+  const [dataLoading, setDataLoading] = useState(true)
   const [events, setEvents] = useState<Event[]>([])
   const [budget, setBudget] = useState<EventBudgetSummary | null>(null)
   const [leads, setLeads] = useState<SponsorLead[]>([])
@@ -40,30 +41,35 @@ export const DashboardPage: React.FC = () => {
       setAuthLoading(false)
 
       if (user) {
-        eventsService
-          .getMyEvents()
-          .then((myEvents) => {
-            if (!isMounted) return
-            if (myEvents.length > 0) {
-              setEvents(myEvents)
-            } else {
-              eventsService
-                .getEvents()
-                .then((allEvts) => {
-                  if (isMounted) setEvents(allEvts.slice(0, 3))
-                })
-                .catch(() => {})
+        const loadEventsAndBudget = async () => {
+          try {
+            let activeEvents = await eventsService.getMyEvents()
+            if (activeEvents.length === 0) {
+              const allEvts = await eventsService.getEvents()
+              activeEvents = allEvts.slice(0, 3)
             }
-          })
-          .catch(() => {})
+            if (!isMounted) return
+            setEvents(activeEvents)
 
-        financeService.getBudgetSummary('evt-arkavidia-2026').then((b) => {
-          if (isMounted) setBudget(b)
-        })
+            if (activeEvents.length > 0) {
+              const b = await financeService.getBudgetSummary(activeEvents[0].id)
+              if (isMounted) setBudget(b)
+            }
+          } catch {
+            // ignore error
+          }
+        }
 
-        sponsorshipService.getLeads().then((l) => {
-          if (isMounted) setLeads(l)
+        Promise.all([
+          loadEventsAndBudget(),
+          sponsorshipService.getLeads().then((l) => {
+            if (isMounted) setLeads(l)
+          }),
+        ]).finally(() => {
+          if (isMounted) setDataLoading(false)
         })
+      } else {
+        setDataLoading(false)
       }
     })
 
@@ -72,13 +78,115 @@ export const DashboardPage: React.FC = () => {
     }
   }, [])
 
-  if (authLoading) {
+  if (authLoading || dataLoading) {
     return (
-      <div className="py-24 text-center">
-        <div className="w-10 h-10 border-2 border-[#CFFE06] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-        <p className="font-semibold text-xs text-[#9C9C9C]">
-          Memeriksa sesi pengguna...
-        </p>
+      <div className="font-['Montserrat',sans-serif] bg-[#000000] text-white space-y-8 animate-pulse">
+        {/* Header Bar Skeleton */}
+        <div className="flex items-start justify-between flex-wrap gap-4">
+          <div className="space-y-2.5">
+            <div className="flex items-center gap-2">
+              <div className="h-5 w-24 bg-[#242424] rounded-full" />
+              <div className="h-4 w-36 bg-[#202020] rounded" />
+            </div>
+            <div className="h-8 w-72 sm:w-96 bg-[#262626] rounded-lg" />
+            <div className="h-4 w-64 sm:w-[440px] bg-[#1c1c1c] rounded" />
+          </div>
+          <div className="flex gap-2.5">
+            <div className="h-10 w-40 bg-[#262626] rounded-full" />
+            <div className="h-10 w-32 bg-[#202020] rounded-full" />
+          </div>
+        </div>
+
+        {/* 4 Metric Stat Cards Skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              className="p-5 bg-[#151515] border border-[#262626] rounded-xl space-y-3"
+            >
+              <div className="flex justify-between items-center">
+                <div className="h-3.5 w-28 bg-[#242424] rounded" />
+                <div className="w-8 h-8 rounded-lg bg-[#242424]" />
+              </div>
+              <div className="h-7 w-32 bg-[#262626] rounded" />
+              <div className="h-3 w-36 bg-[#202020] rounded" />
+            </div>
+          ))}
+        </div>
+
+        {/* Two Column Section Skeleton */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6">
+          <div className="space-y-6">
+            <div className="bg-[#151515] border border-[#262626] rounded-xl overflow-hidden">
+              <div className="px-6 py-4 bg-[#202020] border-b border-[#262626]">
+                <div className="h-5 w-48 bg-[#2c2c2c] rounded" />
+              </div>
+              <div className="p-6 space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="flex items-center justify-between p-3.5 border border-[#262626] rounded-xl bg-[#181818]"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-lg bg-[#262626]" />
+                      <div className="space-y-2">
+                        <div className="h-4 w-48 bg-[#262626] rounded" />
+                        <div className="h-3 w-36 bg-[#202020] rounded" />
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="h-8 w-24 bg-[#242424] rounded-full" />
+                      <div className="h-8 w-20 bg-[#242424] rounded-full" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[1, 2].map((i) => (
+                <div
+                  key={i}
+                  className="p-5 bg-[#151515] border border-[#262626] rounded-xl flex items-center gap-3.5"
+                >
+                  <div className="w-10 h-10 rounded-full bg-[#242424] shrink-0" />
+                  <div className="space-y-2 flex-1">
+                    <div className="h-4 w-36 bg-[#262626] rounded" />
+                    <div className="h-3 w-44 bg-[#202020] rounded" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-[#151515] border border-[#262626] rounded-xl overflow-hidden">
+            <div className="px-6 py-4 bg-[#202020] border-b border-[#262626]">
+              <div className="h-5 w-56 bg-[#2c2c2c] rounded" />
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <div className="h-3 w-32 bg-[#242424] rounded" />
+                  <div className="h-3 w-28 bg-[#242424] rounded" />
+                </div>
+                <div className="h-2 w-full bg-[#262626] rounded-full" />
+                <div className="h-3 w-40 bg-[#202020] rounded" />
+              </div>
+              <div className="pt-4 border-t border-[#262626] space-y-3">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="space-y-1.5">
+                    <div className="flex justify-between">
+                      <div className="h-3 w-36 bg-[#242424] rounded" />
+                      <div className="h-3 w-20 bg-[#242424] rounded" />
+                    </div>
+                    <div className="h-1.5 w-full bg-[#262626] rounded-full" />
+                  </div>
+                ))}
+              </div>
+              <div className="h-9 w-full bg-[#242424] rounded-full mt-4" />
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
@@ -223,11 +331,18 @@ export const DashboardPage: React.FC = () => {
                       </div>
                     </div>
 
-                    <Link to={`/events/${evt.id}`} className="no-underline">
-                      <Button variant="outline" size="sm" icon={<ArrowUpRight size={14} />}>
-                        Kelola
-                      </Button>
-                    </Link>
+                    <div className="flex items-center gap-2">
+                      <Link to={`/dashboard/finances?eventId=${evt.id}`} className="no-underline">
+                        <Button variant="outline" size="sm" icon={<Receipt size={14} />}>
+                          RAB & SPJ
+                        </Button>
+                      </Link>
+                      <Link to={`/events/${evt.id}`} className="no-underline">
+                        <Button variant="outline" size="sm" icon={<ArrowUpRight size={14} />}>
+                          Kelola
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -272,8 +387,15 @@ export const DashboardPage: React.FC = () => {
 
         {/* Right Column: Financial Burn Rate & SPJ Audit Status */}
         <div className="space-y-6">
-          <Card headerColor="dark" headerTitle="Realisasi Anggaran Arkavidia">
-            {budget && (
+          <Card
+            headerColor="dark"
+            headerTitle={
+              events[0]
+                ? `Realisasi Anggaran: ${events[0].title}`
+                : 'Realisasi Anggaran Event'
+            }
+          >
+            {budget ? (
               <div>
                 <div className="mb-5">
                   <div className="flex justify-between text-xs mb-1.5">
@@ -286,7 +408,7 @@ export const DashboardPage: React.FC = () => {
                   </div>
                   <ProgressBar
                     value={budget.totalExpenseRealized}
-                    max={budget.totalBudgetPlanned}
+                    max={budget.totalBudgetPlanned || 1}
                     color="accent"
                     height={8}
                   />
@@ -308,8 +430,8 @@ export const DashboardPage: React.FC = () => {
                         </div>
                         <ProgressBar
                           value={c.spentAmount}
-                          max={c.plannedAmount}
-                          color={c.spentAmount >= c.plannedAmount ? 'purple' : 'accent'}
+                          max={c.plannedAmount || 1}
+                          color={c.plannedAmount > 0 && c.spentAmount >= c.plannedAmount ? 'purple' : 'accent'}
                           showPercentage={false}
                           height={6}
                         />
@@ -319,12 +441,19 @@ export const DashboardPage: React.FC = () => {
                 </div>
 
                 <div className="mt-5">
-                  <Link to="/dashboard/finances" className="no-underline">
+                  <Link
+                    to={events[0] ? `/dashboard/finances?eventId=${events[0].id}` : '/dashboard/finances'}
+                    className="no-underline"
+                  >
                     <Button variant="outline" fullWidth size="sm">
                       Buka Rincian SPJ & Kuitansi →
                     </Button>
                   </Link>
                 </div>
+              </div>
+            ) : (
+              <div className="p-6 text-center text-xs text-[#9C9C9C]">
+                Pilih atau buat event terlebih dahulu untuk memantau anggaran RAB dan kuitansi SPJ.
               </div>
             )}
           </Card>

@@ -64,8 +64,46 @@ export const DashboardLayout: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#000000] text-white font-['Montserrat',sans-serif]">
-        <div className="w-8 h-8 border-2 border-[#CFFE06] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#000000] text-white flex flex-col md:flex-row font-['Montserrat',sans-serif] animate-pulse">
+        {/* Sidebar Skeleton */}
+        <aside className="hidden md:flex w-72 bg-[#151515] border-r border-[#202020] flex-col justify-between p-5">
+          <div className="space-y-6">
+            <div className="pb-4 border-b border-[#202020] space-y-2">
+              <div className="h-6 w-32 bg-[#262626] rounded" />
+              <div className="h-3 w-20 bg-[#202020] rounded" />
+            </div>
+            <div className="space-y-2.5 pt-2">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="h-10 w-full bg-[#202020] rounded-full" />
+              ))}
+            </div>
+          </div>
+          <div className="pt-4 border-t border-[#202020]">
+            <div className="h-12 w-full bg-[#202020] rounded-xl" />
+          </div>
+        </aside>
+
+        {/* Main Content Skeleton */}
+        <div className="flex-1 flex flex-col">
+          <header className="hidden md:flex items-center justify-between py-4 px-8 bg-[#000000] border-b border-[#202020]">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#151515]" />
+              <div className="space-y-1.5">
+                <div className="h-4 w-28 bg-[#242424] rounded" />
+                <div className="h-3 w-64 bg-[#1c1c1c] rounded" />
+              </div>
+            </div>
+          </header>
+          <main className="p-4 sm:p-6 lg:p-8 flex-1 space-y-6">
+            <div className="h-8 w-72 bg-[#202020] rounded-lg" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-28 bg-[#151515] border border-[#262626] rounded-xl" />
+              ))}
+            </div>
+            <div className="h-72 bg-[#151515] border border-[#262626] rounded-xl" />
+          </main>
+        </div>
       </div>
     )
   }

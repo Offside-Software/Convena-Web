@@ -33,6 +33,7 @@ export const EventsPage: React.FC = () => {
     { label: 'UI', value: 'UI' },
     { label: 'UGM', value: 'UGM' },
     { label: 'ITS', value: 'ITS' },
+    { label: 'Unpad', value: 'Unpad' },
   ]
 
   useEffect(() => {
@@ -143,11 +144,25 @@ export const EventsPage: React.FC = () => {
 
       {/* Events Grid Section */}
       {loading ? (
-        <div className="py-24 text-center">
-          <div className="w-10 h-10 border-2 border-[#CFFE06] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <div className="font-bold text-sm text-[#9C9C9C]">
-            Memuat Katalog Kegiatan...
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div
+              key={i}
+              className="bg-[#151515] border border-[#202020] rounded-2xl overflow-hidden p-4 animate-pulse flex flex-col gap-4"
+            >
+              <div className="w-full h-44 bg-[#202020] rounded-xl" />
+              <div className="flex gap-2">
+                <div className="h-4 bg-[#242424] rounded-full w-20" />
+                <div className="h-4 bg-[#202020] rounded-full w-28" />
+              </div>
+              <div className="h-6 bg-[#242424] rounded w-3/4" />
+              <div className="h-4 bg-[#202020] rounded w-full" />
+              <div className="mt-4 pt-4 border-t border-[#202020] flex justify-between items-center">
+                <div className="h-4 bg-[#242424] rounded w-1/3" />
+                <div className="h-8 bg-[#242424] rounded-full w-24" />
+              </div>
+            </div>
+          ))}
         </div>
       ) : events.length === 0 ? (
         <div className="py-16 text-center p-8 bg-[#151515] border border-[#3D3D3D]/50 rounded-xl max-w-lg mx-auto">

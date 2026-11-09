@@ -1,38 +1,19 @@
 import { apiClient } from './api/client.ts'
-import { mockBudgetSummary, mockExpenses } from '../data/mockData.ts'
-import type { EventBudgetSummary, ExpenseRecord, ExpenseCategory } from '../types/finance.ts'
-
-const recalculateTotals = () => {
-  const totalPlanned = mockBudgetSummary.categories.reduce((sum, c) => sum + c.plannedAmount, 0)
-  const totalSpent = mockExpenses
-    .filter((e) => e.spjStatus !== 'rejected')
-    .reduce((sum, e) => sum + e.amount, 0)
-
-  mockBudgetSummary.totalBudgetPlanned = totalPlanned
-  mockBudgetSummary.totalExpenseRealized = totalSpent
-  mockBudgetSummary.remainingBudget = totalPlanned - totalSpent
-  mockBudgetSummary.pendingSpjCount = mockExpenses.filter((e) => e.spjStatus === 'submitted').length
-}
+import type {
+  EventBudgetSummary,
+  ExpenseRecord,
+  ExpenseCategory,
+  CreateExpenseInput,
+  UpdateExpenseInput,
+} from '../types/finance.ts'
 
 export class FinanceService {
   async getBudgetSummary(eventId: string): Promise<EventBudgetSummary> {
-    try {
-      return await apiClient.get<EventBudgetSummary>(`/finances/summary/${eventId}`)
-    } catch {
-      recalculateTotals()
-      return {
-        ...mockBudgetSummary,
-        categories: mockBudgetSummary.categories.map((c) => ({ ...c })),
-      }
-    }
+    return await apiClient.get<EventBudgetSummary>(`/finances/summary/${eventId}`)
   }
 
   async getExpenses(eventId: string): Promise<ExpenseRecord[]> {
-    try {
-      return await apiClient.get<ExpenseRecord[]>(`/finances/expenses/${eventId}`)
-    } catch {
-      return [...mockExpenses]
-    }
+    return await apiClient.get<ExpenseRecord[]>(`/finances/expenses/${eventId}`)
   }
 
   async updateCategoryBudget(
@@ -40,76 +21,44 @@ export class FinanceService {
     category: ExpenseCategory,
     plannedAmount: number
   ): Promise<EventBudgetSummary> {
-    try {
-      return await apiClient.patch<EventBudgetSummary>(`/finances/summary/${eventId}/category`, {
-        category,
-        plannedAmount,
-      })
-    } catch {
-      const target = mockBudgetSummary.categories.find((c) => c.category === category)
-      if (target) {
-        target.plannedAmount = Math.max(0, plannedAmount)
-      }
-      recalculateTotals()
-      return {
-        ...mockBudgetSummary,
-        categories: mockBudgetSummary.categories.map((c) => ({ ...c })),
-      }
-    }
+    return await apiClient.patch<EventBudgetSummary>(`/finances/summary/${eventId}/category`, {
+      category,
+      plannedAmount,
+    })
   }
 
-  async addExpense(expenseData: Partial<ExpenseRecord>): Promise<ExpenseRecord> {
-    try {
-      return await apiClient.post<ExpenseRecord>('/finances/expenses', expenseData)
-    } catch {
-      const amount = Number(expenseData.amount) || 0
-      const category: ExpenseCategory = expenseData.category || 'other'
-
-      const newExp: ExpenseRecord = {
-        id: `exp-${Date.now().toString().slice(-4)}`,
-        title: expenseData.title || 'Pengeluaran Kegiatan',
-        category,
-        amount,
-        receiptDate: new Date().toISOString().split('T')[0],
-        submittedBy: expenseData.submittedBy || 'Raissa (Panitia)',
-        division: expenseData.division || 'Divisi Logistik',
-        spjStatus: 'submitted',
-        notes: expenseData.notes,
-      }
-
-      mockExpenses.unshift(newExp)
-
-      const cat = mockBudgetSummary.categories.find((c) => c.category === category)
-      if (cat) {
-        cat.spentAmount += amount
-      }
-
-      recalculateTotals()
-      return newExp
-    }
+  async addExpense(eventId: string, expenseData: CreateExpenseInput): Promise<ExpenseRecord> {
+    return await apiClient.post<ExpenseRecord>(`/finances/expenses/${eventId}`, {
+      ...expenseData,
+      eventId,
+    })
   }
 
-  async verifySpj(expenseId: string, approved: boolean): Promise<ExpenseRecord> {
-    try {
-      return await apiClient.patch<ExpenseRecord>(`/finances/expenses/${expenseId}/verify`, { approved })
-    } catch {
-      const exp = mockExpenses.find((e) => e.id === expenseId)
-      if (!exp) {
-        throw new Error('Data pengeluaran tidak ditemukan')
-      }
+  async updateExpense(
+    eventId: string,
+    expenseId: string,
+    expenseData: UpdateExpenseInput
+  ): Promise<ExpenseRecord> {
+    return await apiClient.patch<ExpenseRecord>(
+      `/finances/expenses/${eventId}/${expenseId}`,
+      expenseData
+    )
+  }
 
-      exp.spjStatus = approved ? 'verified' : 'rejected'
+  async deleteExpense(eventId: string, expenseId: string): Promise<void> {
+    await apiClient.delete(`/finances/expenses/${eventId}/${expenseId}`)
+  }
 
-      if (!approved) {
-        const cat = mockBudgetSummary.categories.find((c) => c.category === exp.category)
-        if (cat) {
-          cat.spentAmount = Math.max(0, cat.spentAmount - exp.amount)
-        }
-      }
-
-      recalculateTotals()
-      return { ...exp }
-    }
+  async verifySpj(
+    eventId: string,
+    expenseId: string,
+    approved: boolean,
+    notes?: string
+  ): Promise<ExpenseRecord> {
+    return await apiClient.patch<ExpenseRecord>(
+      `/finances/expenses/${eventId}/${expenseId}/verify`,
+      { approved, notes }
+    )
   }
 }
 

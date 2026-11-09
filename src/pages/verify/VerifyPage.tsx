@@ -9,7 +9,7 @@ export const VerifyPage: React.FC = () => {
   const [code, setCode] = useState('CNV-2026-ITB-8821')
   const [certificate, setCertificate] = useState<Certificate | null>(null)
   const [hasSearched, setHasSearched] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const performVerification = (certCode: string) => {
     if (!certCode.trim()) return
@@ -23,12 +23,19 @@ export const VerifyPage: React.FC = () => {
 
   useEffect(() => {
     let isMounted = true
-    certificateService.verifyCertificate(code).then((result) => {
-      if (isMounted) {
-        setCertificate(result)
-        setHasSearched(true)
-      }
-    })
+    certificateService
+      .verifyCertificate(code)
+      .then((result) => {
+        if (isMounted) {
+          setCertificate(result)
+          setHasSearched(true)
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setLoading(false)
+        }
+      })
     return () => {
       isMounted = false
     }
@@ -92,7 +99,28 @@ export const VerifyPage: React.FC = () => {
       </div>
 
       {/* Result Display */}
-      {hasSearched && (
+      {loading ? (
+        <div className="bg-[#151515] border border-[#262626] rounded-xl overflow-hidden animate-pulse">
+          <div className="bg-[#202020] border-b border-[#262626] py-3.5 px-6 flex items-center justify-between">
+            <div className="h-4 w-56 bg-[#2c2c2c] rounded" />
+            <div className="h-4 w-36 bg-[#262626] rounded" />
+          </div>
+          <div className="py-12 px-6 sm:px-12 text-center bg-[#121212] space-y-5 flex flex-col items-center">
+            <div className="h-3.5 w-64 bg-[#242424] rounded" />
+            <div className="h-8 w-80 bg-[#262626] rounded-lg" />
+            <div className="h-3.5 w-44 bg-[#202020] rounded" />
+            <div className="h-14 w-72 bg-[#202020] border border-[#2e2e2e] rounded-xl" />
+            <div className="h-4 w-96 max-w-full bg-[#202020] rounded" />
+            <div className="w-full flex items-center justify-around flex-wrap gap-8 border-t border-[#262626] pt-8 mt-4">
+              <div className="space-y-2 w-40">
+                <div className="h-4 w-28 bg-[#242424] rounded mx-auto" />
+                <div className="h-4 w-36 bg-[#262626] rounded mx-auto" />
+              </div>
+              <div className="w-16 h-16 bg-[#202020] rounded-xl" />
+            </div>
+          </div>
+        </div>
+      ) : hasSearched && (
         <div>
           {certificate ? (
             <div className="bg-[#151515] border border-[#3D3D3D]/60 rounded-xl overflow-hidden shadow-2xl relative">
@@ -167,7 +195,7 @@ export const VerifyPage: React.FC = () => {
             <div className="max-w-[600px] mx-auto py-12 px-6 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl text-center">
               <XCircle size={44} className="text-[#DF00D0] mx-auto mb-3" />
               <h3 className="text-lg font-bold text-white mb-2">
-                Sertifikat Tidak Ditemukan
+                Maaf, Sertifikat Tidak Ditemukan
               </h3>
               <p className="text-xs text-[#9C9C9C] mb-6 leading-relaxed">
                 Kode <strong>"{code}"</strong> tidak terdaftar dalam catatan sertifikat resmi ormawa Convena. Mohon periksa kembali ejaan kode Anda.

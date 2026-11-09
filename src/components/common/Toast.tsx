@@ -110,7 +110,7 @@ export const Toast: React.FC<ToastProps> = ({
       aria-live="assertive"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`fixed z-50 max-w-[calc(100vw-2rem)] sm:max-w-md w-full animate-in fade-in slide-in-from-bottom-3 duration-200 ${positionClasses} ${className}`}
+      className={`fixed z-[70] max-w-[calc(100vw-2rem)] sm:max-w-md w-full animate-in fade-in slide-in-from-bottom-3 duration-200 ${positionClasses} ${className}`}
     >
       <div
         className={`relative overflow-hidden rounded-2xl bg-[#151515]/95 backdrop-blur-md border ${typeConfig.border} p-4 text-white font-['Montserrat',sans-serif] transition-all`}

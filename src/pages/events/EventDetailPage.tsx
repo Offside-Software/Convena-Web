@@ -45,11 +45,11 @@ export const EventDetailPage: React.FC = () => {
         setLoading(false)
       })
     } else {
-      // Default to premier event if no id
-      eventsService.getEventById('evt-global-tech-summit').then((res) => {
-        setEvent(res || null)
-        if (res?.ticketTiers?.length) {
-          setSelectedTier(res.ticketTiers[0])
+      eventsService.getEvents().then((evts) => {
+        const first = evts[0] || null
+        setEvent(first)
+        if (first?.ticketTiers?.length) {
+          setSelectedTier(first.ticketTiers[0])
         }
         setLoading(false)
       })
@@ -58,9 +58,69 @@ export const EventDetailPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-8 bg-[#000000] text-white font-['Montserrat',sans-serif]">
-        <div className="w-10 h-10 border-2 border-[#CFFE06] border-t-transparent rounded-full animate-spin mb-4" />
-        <p className="font-semibold text-sm text-[#9C9C9C]">Memuat detail acara...</p>
+      <div className="max-w-[1280px] mx-auto py-6 px-4 sm:px-6 pb-20 font-['Montserrat',sans-serif] bg-[#000000] text-white animate-pulse">
+        <div className="flex items-center gap-3.5 mb-6">
+          <div className="w-10 h-10 rounded-full bg-[#1c1c1c]" />
+          <div className="h-6 w-28 bg-[#242424] rounded" />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_440px] gap-8 items-start">
+          {/* Left Column Skeleton */}
+          <div className="bg-[#141414] border border-[#262626] rounded-xl overflow-hidden">
+            <div className="h-[280px] sm:h-[360px] bg-[#202020]" />
+            <div className="p-6 space-y-5">
+              <div className="h-4 w-48 bg-[#242424] rounded" />
+              <div className="h-8 w-3/4 bg-[#262626] rounded-lg" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl">
+                <div className="space-y-2">
+                  <div className="h-3.5 w-28 bg-[#262626] rounded" />
+                  <div className="h-4 w-44 bg-[#242424] rounded" />
+                </div>
+                <div className="space-y-2">
+                  <div className="h-3.5 w-28 bg-[#262626] rounded" />
+                  <div className="h-4 w-44 bg-[#242424] rounded" />
+                </div>
+              </div>
+              <div className="space-y-2.5">
+                <div className="h-5 w-40 bg-[#262626] rounded" />
+                <div className="h-3.5 w-full bg-[#202020] rounded" />
+                <div className="h-3.5 w-11/12 bg-[#202020] rounded" />
+                <div className="h-3.5 w-4/5 bg-[#202020] rounded" />
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column Checkout Skeleton */}
+          <div className="space-y-4">
+            <div className="bg-[#141414] border border-[#262626] rounded-xl p-5 space-y-4">
+              <div className="flex justify-between">
+                <div className="h-5 w-28 bg-[#242424] rounded-full" />
+                <div className="h-4 w-20 bg-[#202020] rounded" />
+              </div>
+              <div className="h-6 w-3/4 bg-[#262626] rounded" />
+              <div className="grid grid-cols-2 gap-2 pt-2">
+                <div className="h-14 bg-[#202020] rounded-lg" />
+                <div className="h-14 bg-[#202020] rounded-lg" />
+              </div>
+            </div>
+
+            <div className="bg-[#141414] border border-[#262626] rounded-xl p-5 space-y-4">
+              <div className="flex justify-between items-center">
+                <div className="h-4 w-28 bg-[#242424] rounded" />
+                <div className="h-8 w-28 bg-[#202020] rounded-full" />
+              </div>
+              <div className="h-9 w-full bg-[#202020] rounded-lg" />
+              <div className="h-9 w-full bg-[#202020] rounded-lg" />
+              <div className="grid grid-cols-3 gap-2.5 pt-2">
+                <div className="h-16 bg-[#202020] rounded-xl" />
+                <div className="h-16 bg-[#202020] rounded-xl" />
+                <div className="h-16 bg-[#202020] rounded-xl" />
+              </div>
+            </div>
+
+            <div className="h-12 w-full bg-[#262626] rounded-full" />
+          </div>
+        </div>
       </div>
     )
   }

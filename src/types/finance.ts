@@ -10,19 +10,47 @@ export type ExpenseCategory =
 
 export interface ExpenseRecord {
   id: string
+  eventId: string
+  title: string
+  category: ExpenseCategory
+  amount: number
+  receiptUrl?: string | null
+  receiptDate: string
+  submittedById?: string | null
+  submittedBy: string
+  division: string
+  spjStatus: SpjStatus
+  approvedById?: string | null
+  approvedBy?: string | null
+  notes?: string | null
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface CreateExpenseInput {
   title: string
   category: ExpenseCategory
   amount: number
   receiptUrl?: string
-  receiptDate: string
-  submittedBy: string
-  division: string
-  spjStatus: SpjStatus
-  approvedBy?: string
+  receiptDate?: string
+  division?: string
+  submittedBy?: string
+  notes?: string
+}
+
+export interface UpdateExpenseInput {
+  title?: string
+  category?: ExpenseCategory
+  amount?: number
+  receiptUrl?: string
+  receiptDate?: string
+  division?: string
   notes?: string
 }
 
 export interface BudgetCategoryPlan {
+  id?: string
+  eventId?: string
   category: ExpenseCategory
   label: string
   plannedAmount: number
