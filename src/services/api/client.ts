@@ -91,7 +91,6 @@ class ApiClient {
           code: 'CONNECTION_REFUSED',
         }
       }
-      console.warn(`[ApiClient] Request failed for ${path}:`, error)
       throw error
     }
   }
