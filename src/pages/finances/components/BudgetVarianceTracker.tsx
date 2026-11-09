@@ -15,150 +15,105 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
   onUpdateCategoryBudget,
 }) => {
   const [editingCategory, setEditingCategory] = useState<ExpenseCategory | null>(null)
-  const [newAmount, setNewAmount] = useState<string>('')
-  const [editError, setEditError] = useState<string | null>(null)
+  const [newAmount, setNewAmount] = useState<number>(0)
 
   const handleEditClick = (cat: BudgetCategoryPlan) => {
     setEditingCategory(cat.category)
-    setNewAmount(String(cat.plannedAmount))
-    setEditError(null)
-  }
-
-  const handleCancelEdit = () => {
-    setEditingCategory(null)
-    setEditError(null)
+    setNewAmount(cat.plannedAmount)
   }
 
   const handleSave = async (category: ExpenseCategory) => {
-    const parsed = Number(newAmount)
-    if (!newAmount.trim() || Number.isNaN(parsed) || parsed < 0) {
-      setEditError('Nominal pagu tidak boleh kosong atau negatif')
-      return
-    }
-    setEditError(null)
-    await onUpdateCategoryBudget(category, parsed)
+    await onUpdateCategoryBudget(category, newAmount)
     setEditingCategory(null)
   }
 
   return (
-    <section aria-label="Alokasi Anggaran RAB per Pos Biaya">
-      <Card
-        headerColor="dark"
-        headerTitle="Alokasi Anggaran (RAB) per Pos Biaya"
-        className="mb-8 font-['Montserrat',sans-serif]"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {categories.map((cat) => {
-            const sisa = cat.plannedAmount - cat.spentAmount
-            const isOver = sisa < 0
-            const isEditing = editingCategory === cat.category
-            const inputId = `pagu-input-${cat.category}`
+    <Card
+      headerColor="dark"
+      headerTitle="Alokasi Anggaran (RAB) per Pos Biaya"
+      className="mb-8 font-['Montserrat',sans-serif]"
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {categories.map((cat) => {
+          const sisa = cat.plannedAmount - cat.spentAmount
+          const isOver = sisa < 0
+          const isEditing = editingCategory === cat.category
 
-            return (
-              <article
-                key={cat.category}
-                aria-label={`Pos biaya ${cat.label}`}
-                className={`border rounded-xl p-4 transition-colors ${
-                  isOver
-                    ? 'border-[#DF00D0]/50 bg-[#1e151d]'
-                    : 'border-[#3D3D3D]/60 bg-[#151515]'
-                }`}
-              >
-                <div className="flex justify-between items-center mb-2">
-                  <strong className="text-sm font-bold text-white">{cat.label}</strong>
-                  <Badge variant={isOver ? 'pink' : 'accent'} className="text-[10px]">
-                    {isOver ? 'OVER BUDGET' : 'AMAN'}
-                  </Badge>
+          return (
+            <div
+              key={cat.category}
+              className={`border rounded-xl p-4 transition-colors ${
+                isOver ? 'border-[#DF00D0]/50 bg-[#1e151d]' : 'border-[#3D3D3D]/60 bg-[#151515]'
+              }`}
+            >
+              <div className="flex justify-between items-center mb-2">
+                <strong className="text-sm font-bold text-white">{cat.label}</strong>
+                <Badge variant={isOver ? 'pink' : 'accent'} className="text-[10px]">
+                  {isOver ? 'OVER BUDGET' : 'AMAN'}
+                </Badge>
+              </div>
+
+              <ProgressBar
+                value={cat.spentAmount}
+                max={cat.plannedAmount || 1}
+                color={isOver ? 'pink' : 'accent'}
+                height={8}
+                showPercentage={false}
+              />
+
+              <div className="text-xs mt-3 flex flex-col gap-1.5">
+                <div className="flex justify-between items-center">
+                  <span className="text-[#9C9C9C]">Pagu RAB:</span>
+                  {isEditing ? (
+                    <div className="flex gap-1.5 items-center">
+                      <input
+                        type="number"
+                        value={newAmount}
+                        onChange={(e) => setNewAmount(Number(e.target.value))}
+                        className="w-28 py-1 px-2 text-xs bg-[#202020] border border-[#3D3D3D] rounded-lg text-white"
+                      />
+                      <Button variant="accent" size="sm" onClick={() => handleSave(cat.category)} className="!py-1 !px-2.5 text-xs">
+                        OK
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <strong className="text-white font-mono">
+                        Rp {cat.plannedAmount.toLocaleString('id-ID')}
+                      </strong>
+                      <button
+                        type="button"
+                        onClick={() => handleEditClick(cat)}
+                        className="text-[11px] underline bg-transparent border-none cursor-pointer font-semibold text-[#CFFE06]"
+                      >
+                        Ubah
+                      </button>
+                    </div>
+                  )}
                 </div>
 
-                <ProgressBar
-                  value={cat.spentAmount}
-                  max={cat.plannedAmount || 1}
-                  color={isOver ? 'pink' : 'accent'}
-                  height={8}
-                  showPercentage={false}
-                />
-
-                <div className="text-xs mt-3 flex flex-col gap-1.5">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[#9C9C9C]">Pagu RAB:</span>
-                    {isEditing ? (
-                      <div className="flex flex-col items-end gap-1">
-                        <div className="flex gap-1.5 items-center">
-                          <label htmlFor={inputId} className="sr-only">
-                            Ubah pagu RAB untuk {cat.label}
-                          </label>
-                          <input
-                            id={inputId}
-                            type="number"
-                            min={0}
-                            value={newAmount}
-                            onChange={(e) => {
-                              setNewAmount(e.target.value)
-                              if (editError) setEditError(null)
-                            }}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') handleSave(cat.category)
-                              if (e.key === 'Escape') handleCancelEdit()
-                            }}
-                            aria-invalid={Boolean(editError)}
-                            className="!w-28 !py-1 !px-2 !text-xs !bg-[#202020] !border !border-[#3D3D3D] !rounded-lg text-white"
-                          />
-                          <Button
-                            variant="accent"
-                            size="sm"
-                            onClick={() => handleSave(cat.category)}
-                            className="!py-1 !px-2.5 text-xs"
-                          >
-                            OK
-                          </Button>
-                        </div>
-                        {editError && (
-                          <span role="alert" className="text-[10px] text-[#DF00D0] font-medium">
-                            {editError}
-                          </span>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <strong className="text-white font-mono">
-                          Rp {cat.plannedAmount.toLocaleString('id-ID')}
-                        </strong>
-                        <button
-                          type="button"
-                          onClick={() => handleEditClick(cat)}
-                          aria-label={`Ubah pagu RAB ${cat.label}`}
-                          className="text-[11px] underline bg-transparent border-none cursor-pointer font-semibold text-[#CFFE06]"
-                        >
-                          Ubah
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="text-[#9C9C9C]">Terpakai:</span>
-                    <strong className="text-white font-mono">
-                      Rp {cat.spentAmount.toLocaleString('id-ID')}
-                    </strong>
-                  </div>
-
-                  <div className="flex justify-between pt-1 border-t border-[#3D3D3D]/40">
-                    <span className="text-[#9C9C9C]">Sisa Saldo:</span>
-                    <strong
-                      className={`font-mono ${
-                        isOver ? 'text-[#DF00D0]' : 'text-[#CFFE06]'
-                      }`}
-                    >
-                      Rp {sisa.toLocaleString('id-ID')}
-                    </strong>
-                  </div>
+                <div className="flex justify-between">
+                  <span className="text-[#9C9C9C]">Terpakai:</span>
+                  <strong className="text-white font-mono">
+                    Rp {cat.spentAmount.toLocaleString('id-ID')}
+                  </strong>
                 </div>
-              </article>
-            )
-          })}
-        </div>
-      </Card>
-    </section>
+
+                <div className="flex justify-between pt-1 border-t border-[#3D3D3D]/40">
+                  <span className="text-[#9C9C9C]">Sisa Saldo:</span>
+                  <strong
+                    className={`font-mono ${
+                      isOver ? 'text-[#DF00D0]' : 'text-[#CFFE06]'
+                    }`}
+                  >
+                    Rp {sisa.toLocaleString('id-ID')}
+                  </strong>
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </Card>
   )
 }

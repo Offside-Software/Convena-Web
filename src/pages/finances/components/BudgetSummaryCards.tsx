@@ -12,12 +12,9 @@ export const BudgetSummaryCards: React.FC<BudgetSummaryCardsProps> = ({ budget }
       : 0
 
   return (
-    <section
-      aria-label="Ringkasan Eksekutif Anggaran"
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 font-['Montserrat',sans-serif]"
-    >
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 font-['Montserrat',sans-serif]">
       {/* Pagu RAB */}
-      <article className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl">
+      <div className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl">
         <span className="text-xs text-[#9C9C9C] uppercase tracking-wider block font-semibold">
           Total Pagu Anggaran (RAB)
         </span>
@@ -25,10 +22,10 @@ export const BudgetSummaryCards: React.FC<BudgetSummaryCardsProps> = ({ budget }
           Rp {budget.totalBudgetPlanned.toLocaleString('id-ID')}
         </div>
         <span className="text-xs text-[#9C9C9C]">Alokasi RAB Disetujui</span>
-      </article>
+      </div>
 
       {/* Realisasi */}
-      <article className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl">
+      <div className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl">
         <span className="text-xs text-[#9C9C9C] uppercase tracking-wider block font-semibold">
           Realisasi Pengeluaran
         </span>
@@ -38,28 +35,23 @@ export const BudgetSummaryCards: React.FC<BudgetSummaryCardsProps> = ({ budget }
         <span className="text-xs text-[#9C9C9C]">
           {usagePercent}% dari total anggaran
         </span>
-      </article>
+      </div>
 
       {/* Sisa Saldo */}
-      <article className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl">
+      <div className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl">
         <span className="text-xs text-[#9C9C9C] uppercase tracking-wider block font-semibold">
           Sisa Saldo Anggaran
         </span>
         <div className="font-extrabold text-2xl sm:text-3xl text-white my-1 tracking-tight">
           Rp {budget.remainingBudget.toLocaleString('id-ID')}
         </div>
-        <span
-          role="status"
-          className={`text-xs font-semibold ${
-            budget.remainingBudget >= 0 ? 'text-[#CFFE06]' : 'text-[#DF00D0]'
-          }`}
-        >
+        <span className="text-xs text-[#CFFE06] font-semibold">
           {budget.remainingBudget >= 0 ? 'Aman terkendali' : 'Melebihi Pagu RAB'}
         </span>
-      </article>
+      </div>
 
       {/* SPJ Pending */}
-      <article className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl">
+      <div className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl">
         <span className="text-xs text-[#9C9C9C] uppercase tracking-wider block font-semibold">
           SPJ Pending Audit
         </span>
@@ -67,7 +59,7 @@ export const BudgetSummaryCards: React.FC<BudgetSummaryCardsProps> = ({ budget }
           {budget.pendingSpjCount} Kuitansi
         </div>
         <span className="text-xs text-[#9C9C9C]">Perlu dicek Bendahara</span>
-      </article>
-    </section>
+      </div>
+    </div>
   )
 }
