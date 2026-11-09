@@ -19,6 +19,8 @@ import {
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
 import { eventsService } from '../../services/events.service.ts'
+import { organizationService } from '../../services/organization.service.ts'
+import type { Organization } from '../../types/organization.ts'
 import type {
   EventCategory,
   EventStatus,
@@ -107,6 +109,24 @@ export const CreateEventPage: React.FC = () => {
   // 3. Organization State
   const [organizationName, setOrganizationName] = useState('')
   const [company, setCompany] = useState('')
+  const [userOrgs, setUserOrgs] = useState<Organization[]>([])
+
+  React.useEffect(() => {
+    let isMounted = true
+    organizationService.getOrganizations().then((orgs) => {
+      if (!isMounted) return
+      setUserOrgs(orgs)
+      if (orgs.length > 0) {
+        setOrganizationName((curr) => curr || orgs[0].name)
+        if (orgs[0].company) {
+          setCompany((curr) => curr || orgs[0].company || '')
+        }
+      }
+    })
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   // 4. Design State
   const [bannerUrl, setBannerUrl] = useState(DEFAULT_BANNERS[0])
@@ -595,6 +615,33 @@ export const CreateEventPage: React.FC = () => {
               </p>
             </div>
           </div>
+
+          {userOrgs.length > 0 && (
+            <div className="mb-4 p-3 bg-[#1A1A1A] border border-[#2B2B2B] rounded-xl">
+              <span className="text-[11px] font-semibold text-[#9C9C9C] block mb-2">
+                Pilih dari Organisasi Anda:
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {userOrgs.map((org) => (
+                  <button
+                    key={org.id}
+                    type="button"
+                    onClick={() => {
+                      setOrganizationName(org.name)
+                      if (org.company) setCompany(org.company)
+                    }}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+                      organizationName === org.name
+                        ? 'bg-[#CFFE06]/15 border-[#CFFE06] text-[#CFFE06]'
+                        : 'bg-[#222222] border-[#333333] text-[#CCCCCC] hover:text-white hover:border-[#555555]'
+                    }`}
+                  >
+                    {org.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
