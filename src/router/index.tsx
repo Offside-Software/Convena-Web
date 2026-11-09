@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { MainLayout } from '../layouts/MainLayout.tsx'
 import { DashboardLayout } from '../layouts/DashboardLayout.tsx'
@@ -14,6 +14,12 @@ import { VerifyPage } from '../pages/verify/VerifyPage.tsx'
 import { LoginPage } from '../pages/auth/LoginPage.tsx'
 import { RegisterPage } from '../pages/auth/RegisterPage.tsx'
 import { NotFoundPage } from '../pages/not-found/NotFoundPage.tsx'
+
+const TaskManagementPage = lazy(() =>
+  import('../pages/dashboard/TaskManagementPage.tsx').then((module) => ({
+    default: module.TaskManagementPage,
+  }))
+)
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -34,6 +40,14 @@ export const AppRoutes: React.FC = () => {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/dashboard/events" element={<ManageEventsPage />} />
         <Route path="/dashboard/events/create" element={<CreateEventPage />} />
+        <Route
+          path="/dashboard/tasks"
+          element={
+            <Suspense fallback={<div className="text-sm text-[#9C9C9C]">Memuat task panitia...</div>}>
+              <TaskManagementPage />
+            </Suspense>
+          }
+        />
         <Route path="/dashboard/sponsorship" element={<SponsorshipPage />} />
         <Route path="/dashboard/finances" element={<FinancesPage />} />
         <Route path="/dashboard/verify" element={<VerifyPage />} />

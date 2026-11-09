@@ -430,6 +430,19 @@ export const EventDetailPage: React.FC = () => {
               <span>{event.location.venueName || 'Telkom University Convention Hall'}</span>
             </div>
 
+            <div className="border-t border-[#262626] py-3">
+              <span className="block text-xs font-semibold text-[#9C9C9C] mb-2">
+                Data Attendee
+              </span>
+              <div className="text-xs text-white space-y-1">
+                <div>{attendeeName}</div>
+                <div className="text-[#9C9C9C]">{attendeeEmail}</div>
+                {attendeeStudentId && (
+                  <div className="text-[#9C9C9C]">NIM: {attendeeStudentId}</div>
+                )}
+              </div>
+            </div>
+
             {/* Selected Tier Selector */}
             <div className="border-t border-[#262626] pt-3">
               <div className="flex items-center justify-between text-xs mb-2">
@@ -512,18 +525,6 @@ export const EventDetailPage: React.FC = () => {
                   }`}
                 />
               </button>
-            </div>
-
-            {/* Attendee Details */}
-            <div className="pt-2 border-t border-[#262626]">
-              <span className="block text-xs font-semibold text-[#9C9C9C] mb-2">
-                Data Attendee Terdaftar
-              </span>
-              <div className="text-xs text-white space-y-1">
-                <div>{attendeeName}</div>
-                <div className="text-[#9C9C9C]">{attendeeEmail}</div>
-                {attendeeStudentId && <div className="text-[#9C9C9C]">NIM: {attendeeStudentId}</div>}
-              </div>
             </div>
 
             {/* Payment Method Selector (Image 2) */}
