@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { AlertTriangle, CheckCircle2, Info } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, Info, Loader2 } from 'lucide-react'
 import { Modal } from '../../../components/common/Modal.tsx'
 import { Input } from '../../../components/common/Input.tsx'
 import { Select } from '../../../components/common/Select.tsx'
@@ -201,6 +201,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             <Button
               variant="accent"
               size="sm"
+              icon={submitting ? <Loader2 size={14} className="animate-spin" /> : undefined}
               onClick={() => handleSubmit()}
               disabled={submitting}
             >
