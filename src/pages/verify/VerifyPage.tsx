@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { CheckCircle2, QrCode, XCircle } from 'lucide-react'
 import { Button } from '../../components/common/Button.tsx'
 import { SearchBar } from '../../components/common/SearchBar.tsx'
@@ -9,46 +9,39 @@ export const VerifyPage: React.FC = () => {
   const [code, setCode] = useState('CNV-2026-ITB-8821')
   const [certificate, setCertificate] = useState<Certificate | null>(null)
   const [hasSearched, setHasSearched] = useState(false)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
-  const performVerification = (certCode: string) => {
-    if (!certCode.trim()) return
-    setLoading(true)
+
+const performVerification = async (certCode: string) => {
+  if (!certCode.trim()) return
+
+  setLoading(true)
+  setHasSearched(false)
+  setCertificate(null)
+
+  try {
+    const result = await certificateService.verifyCertificate(certCode)
+    setCertificate(result)
     setHasSearched(true)
-    certificateService.verifyCertificate(certCode).then((result) => {
-      setCertificate(result)
-      setLoading(false)
-    })
+  } catch (error) {
+    console.error('Gagal memverifikasi sertifikat:', error)
+    setCertificate(null)
+    setHasSearched(true)
+  } finally {
+    setLoading(false)
   }
+}
 
-  useEffect(() => {
-    let isMounted = true
-    certificateService
-      .verifyCertificate(code)
-      .then((result) => {
-        if (isMounted) {
-          setCertificate(result)
-          setHasSearched(true)
-        }
-      })
-      .finally(() => {
-        if (isMounted) {
-          setLoading(false)
-        }
-      })
-    return () => {
-      isMounted = false
-    }
-  }, [code])
 
   const handleVerify = (e?: React.FormEvent) => {
-    if (e) e.preventDefault()
-    performVerification(code)
+  if (e) e.preventDefault()
+  performVerification(code)
   }
 
   const handleQuickFill = (sampleCode: string) => {
-    setCode(sampleCode)
-    performVerification(sampleCode)
+  setCode(sampleCode)
+  setCertificate(null)
+  setHasSearched(false)
   }
 
   return (
