@@ -8,7 +8,7 @@ import {
   ShieldCheck,
   Building2,
   LogOut,
-
+  ListTodo,
   ChevronLeft,
   Menu,
   X,
@@ -47,6 +47,7 @@ export const DashboardLayout: React.FC = () => {
     { label: 'Dashboard Overview', path: '/dashboard', icon: <LayoutDashboard size={18} /> },
     { label: 'Organisasi & RBAC', path: '/dashboard/organization', icon: <Building2 size={18} /> },
     { label: 'Kelola Event', path: '/dashboard/events', icon: <Calendar size={18} /> },
+    { label: 'Task Panitia', path: '/dashboard/tasks', icon: <ListTodo size={18} /> },
     { label: 'Sponsorship Pipeline', path: '/dashboard/sponsorship', icon: <Sparkles size={18} /> },
     { label: 'Anggaran & SPJ', path: '/dashboard/finances', icon: <DollarSign size={18} /> },
     { label: 'Validasi Sertifikat', path: '/dashboard/verify', icon: <ShieldCheck size={18} /> },
@@ -75,7 +76,7 @@ export const DashboardLayout: React.FC = () => {
               <div className="h-3 w-20 bg-[#202020] rounded" />
             </div>
             <div className="space-y-2.5 pt-2">
-              {[1, 2, 3, 4, 5].map((i) => (
+              {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div key={i} className="h-10 w-full bg-[#202020] rounded-full" />
               ))}
             </div>
