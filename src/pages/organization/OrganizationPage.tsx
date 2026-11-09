@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
+import { Dropdown } from '../../components/common/Select.tsx'
 import { Toast } from '../../components/common/Toast.tsx'
 import { organizationService } from '../../services/organization.service.ts'
 import { OrganizationOverview } from './components/OrganizationOverview.tsx'
@@ -159,21 +160,21 @@ export const OrganizationPage: React.FC = () => {
             <span className="p-2 rounded-xl bg-[#202020] text-[#CFFE06] border border-[#3D3D3D]">
               <Building2 size={20} />
             </span>
-            <div className="relative">
+            <div className="relative min-w-[240px]">
               {organizations.length > 0 ? (
-                <div className="flex items-center gap-8">
-                  <select
-                    value={selectedOrgId}
-                    onChange={(e) => handleSelectOrg(e.target.value)}
-                    className="bg-[#151515] border border-[#3D3D3D] rounded-xl py-1 px-3 text-sm font-bold text-white outline-none focus:border-[#CFFE06] cursor-pointer appearance-none"
-                  >
-                    {organizations.map((org) => (
-                      <option key={org.id} value={org.id} className="bg-[#151515] text-white">
-                        {org.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <Dropdown
+                  value={selectedOrgId}
+                  onChange={(orgId) => handleSelectOrg(orgId)}
+                  options={organizations.map((org) => ({
+                    label: org.name,
+                    value: org.id,
+                    description: org.company || undefined,
+                  }))}
+                  size="sm"
+                  variant="surface"
+                  triggerClassName="!py-2 !px-3.5 text-sm font-bold border-[#3D3D3D] rounded-xl"
+                  menuClassName="min-w-[280px]"
+                />
               ) : (
                 <h1 className="text-xl font-bold text-white">Belum Ada Organisasi</h1>
               )}

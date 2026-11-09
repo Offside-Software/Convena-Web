@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { Plus, Calendar, AlertCircle, RefreshCw } from 'lucide-react'
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
+import { Select } from '../../components/common/Select.tsx'
 import { Toast, type ToastType } from '../../components/common/Toast.tsx'
 import { financeService } from '../../services/finance.service.ts'
 import { eventsService } from '../../services/events.service.ts'
@@ -462,18 +463,23 @@ export const FinancesPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2.5 w-full sm:w-auto">
-          <select
-            aria-label="Pilih Event"
-            value={selectedEventId}
-            onChange={(e) => handleSelectEvent(e.target.value)}
-            className="w-full sm:w-72 py-2.5 px-3.5 rounded-xl bg-[#202020] border border-[#3D3D3D] text-xs sm:text-sm font-semibold text-white focus:outline-none focus:border-[#CFFE06] cursor-pointer"
-          >
-            {events.map((evt) => (
-              <option key={evt.id} value={evt.id}>
-                {evt.title}
-              </option>
-            ))}
-          </select>
+          <div className="w-full sm:w-72">
+            <Select
+              aria-label="Pilih Event"
+              value={selectedEventId}
+              onChange={(eventId) => handleSelectEvent(eventId)}
+              options={events.map((evt) => ({
+                label: evt.title,
+                value: evt.id,
+                description: evt.organizationName ? `${evt.organizationName} • ${evt.company || ''}` : undefined,
+              }))}
+              size="sm"
+              variant="default"
+              fullWidth
+              searchable={events.length > 5}
+              className="!mb-0"
+            />
+          </div>
 
           <button
             type="button"

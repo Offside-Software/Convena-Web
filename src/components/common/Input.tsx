@@ -46,7 +46,7 @@ export const Input: React.FC<InputProps> = ({
         <input
           id={inputId}
           style={style}
-          className={`w-full py-2.5 pr-3.5 bg-transparent !border-none outline-none text-sm font-medium text-white placeholder:text-[#9C9C9C]/60 ${
+          className={`w-full py-2.5 pr-3.5 bg-transparent !border-none !outline-none text-sm font-medium text-white placeholder:text-[#9C9C9C]/60 ${
             !icon ? 'pl-3.5' : ''
           }`}
           {...props}

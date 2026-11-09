@@ -118,7 +118,7 @@ export const AddMemberModal: React.FC<AddMemberModalProps> = ({
             </label>
             <Select
               value={selectedRoleId}
-              onChange={(e) => setSelectedRoleId(e.target.value)}
+              onChange={(val) => setSelectedRoleId(val)}
               options={roleOptions}
             />
           </div>

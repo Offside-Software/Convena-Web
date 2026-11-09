@@ -51,7 +51,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       <Select
         label="Masuk Sebagai Peran (Role)"
         value={role}
-        onChange={(e) => onRoleChange(e.target.value as UserRole)}
+        onChange={(val) => onRoleChange(val as UserRole)}
         options={[
           { label: 'Bendahara / Keuangan (SPJ)', value: 'treasurer' },
           { label: 'Admin Organisasi', value: 'admin' },

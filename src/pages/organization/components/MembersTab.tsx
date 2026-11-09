@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import {
   UserPlus,
   Users,
-  Search,
   Shield,
   Award,
   Trash2,
@@ -147,19 +146,22 @@ export const MembersTab: React.FC<MembersTabProps> = ({
             clearable
           />
 
-          <div className="shrink-0 sm:w-48">
-            <select
+          <div className="shrink-0 sm:w-52">
+            <Select
               value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
-              className="w-full bg-[#151515] border border-[#262626] rounded-xl px-3.5 text-xs text-white outline-none focus:border-[#CFFE06] cursor-pointer"
-            >
-              <option value="all" className="p-2">Semua Role</option>
-              {roles.map((r) => (
-                <option key={r.id} value={r.name}>
-                  {r.displayName}
-                </option>
-              ))}
-            </select>
+              onChange={(val) => setRoleFilter(val)}
+              options={[
+                { label: 'Semua Role', value: 'all' },
+                ...roles.map((r) => ({
+                  label: r.displayName,
+                  value: r.name,
+                })),
+              ]}
+              size="sm"
+              variant="surface"
+              fullWidth={false}
+              className="!mb-0"
+            />
           </div>
         </div>
 
@@ -314,7 +316,7 @@ export const MembersTab: React.FC<MembersTabProps> = ({
               </label>
               <Select
                 value={selectedRoleId}
-                onChange={(e) => setSelectedRoleId(e.target.value)}
+                onChange={(val) => setSelectedRoleId(val)}
                 options={nonOwnerRoles.map((r) => ({
                   label: `${r.displayName} (${r.permissions.length} izin)`,
                   value: r.id,
