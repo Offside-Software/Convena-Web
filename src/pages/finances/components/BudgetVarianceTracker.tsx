@@ -80,24 +80,19 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
                   <span className="text-[#9C9C9C]">Pagu RAB:</span>
                   {isEditing ? (
                     <div className="flex gap-1.5 items-center">
-                      <div className="relative flex items-center">
-                        <span className="absolute left-2.5 text-[11px] font-semibold text-[#9C9C9C] pointer-events-none">
-                          Rp
-                        </span>
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          placeholder="0"
-                          value={amountInput}
-                          disabled={isLoading}
-                          onChange={(e) => handleAmountChange(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') handleSave(cat.category)
-                            if (e.key === 'Escape' && !isLoading) setEditingCategory(null)
-                          }}
-                          className="w-32 py-1 pl-7 pr-2 text-xs font-mono bg-[#202020] border border-[#3D3D3D] focus:border-[#CFFE06] focus:outline-none rounded-lg text-white disabled:opacity-50"
-                        />
-                      </div>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        placeholder="0"
+                        value={amountInput}
+                        disabled={isLoading}
+                        onChange={(e) => handleAmountChange(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleSave(cat.category)
+                          if (e.key === 'Escape' && !isLoading) setEditingCategory(null)
+                        }}
+                        className="w-32 !py-1.5 !px-2.5 text-xs font-mono bg-[#202020] border border-[#3D3D3D] focus:border-[#CFFE06] focus:outline-none rounded-lg text-white disabled:opacity-50"
+                      />
                       <Button
                         variant="accent"
                         size="sm"
