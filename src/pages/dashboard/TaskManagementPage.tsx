@@ -564,7 +564,7 @@ export const TaskManagementPage: React.FC = () => {
                 className="bg-[#101010] border border-[#262626] rounded-xl p-3 min-h-48"
               >
                 <div className="flex items-center justify-between px-1 pb-3">
-                  <h2 className="text-sm font-bold text-white m-0">{status.label}</h2>
+                  <label className="text-sm font-bold text-white m-0">{status.label}</label>
                   <span className="text-[11px] text-[#9C9C9C] bg-[#202020] rounded-full px-2 py-0.5">
                     {columnTasks.length}
                   </span>
