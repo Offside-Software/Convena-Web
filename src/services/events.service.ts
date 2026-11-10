@@ -22,6 +22,31 @@ import type {
   UpdateMemberRolePayload,
 } from '../types/membership.ts'
 
+const CAMPUS_ALIASES: Record<string, string[]> = {
+  telkom: ['telkom', 'telkom university', 'tel-u'],
+  itb: ['itb', 'institut teknologi bandung'],
+  ui: ['ui', 'universitas indonesia'],
+  ugm: ['ugm', 'universitas gadjah mada'],
+  its: ['its', 'institut teknologi sepuluh nopember'],
+  unpad: ['unpad', 'universitas padjadjaran'],
+}
+
+function matchesCampusFilter(event: Event, selectedCampus: string): boolean {
+  const key = selectedCampus.trim().toLowerCase()
+  if (!key || key === 'all') return true
+
+  const aliases = CAMPUS_ALIASES[key] || [key]
+  const targetText = `${event.company || ''} ${event.organizationName || ''}`.toLowerCase()
+
+  return aliases.some((alias) => {
+    if (alias.length <= 4) {
+      const regex = new RegExp(`\\b${alias}\\b`, 'i')
+      return regex.test(targetText)
+    }
+    return targetText.includes(alias)
+  })
+}
+
 export function normalizeEvent(raw: any): Event {
   let ticketTiers: TicketTier[] = []
   if (Array.isArray(raw.ticketTiers) && raw.ticketTiers.length > 0) {
@@ -36,8 +61,8 @@ export function normalizeEvent(raw: any): Event {
     'conference',
     'gathering',
   ]
-  const category = validCategories.includes(raw.category as EventCategory)
-    ? (raw.category as EventCategory)
+  const category = validCategories.includes(raw.category?.toLowerCase() as EventCategory)
+    ? (raw.category.toLowerCase() as EventCategory)
     : 'seminar'
 
   const validStatuses: EventStatus[] = ['draft', 'published', 'ongoing', 'completed', 'cancelled']
@@ -129,17 +154,37 @@ export function normalizeEvent(raw: any): Event {
 
 export class EventsService {
   async getEvents(params?: EventFilterParams): Promise<Event[]> {
-    const queryParams: Record<string, string | undefined> = {
-      category: params?.category,
-      company: params?.company,
-      status: params?.status,
-      search: params?.search,
+    const rawEvents = await apiClient.get<any[]>('/events')
+    if (!Array.isArray(rawEvents)) {
+      return []
     }
-    const rawEvents = await apiClient.get<any[]>('/events', queryParams)
-    if (Array.isArray(rawEvents)) {
-      return rawEvents.map(normalizeEvent)
+
+    let events = rawEvents.map(normalizeEvent)
+    if (params?.category && params.category !== 'all') {
+      const targetCategory = params.category.trim().toLowerCase()
+      events = events.filter((e) => e.category.toLowerCase() === targetCategory)
     }
-    return []
+    if (params?.company && params.company !== 'all') {
+      events = events.filter((e) => matchesCampusFilter(e, params.company!))
+    }
+    if (params?.status && (params.status as string) !== 'all') {
+      const targetStatus = params.status.trim().toLowerCase()
+      events = events.filter((e) => e.status.toLowerCase() === targetStatus)
+    }
+    if (params?.search && params.search.trim() !== '') {
+      const q = params.search.trim().toLowerCase()
+      events = events.filter(
+        (e) =>
+          e.title.toLowerCase().includes(q) ||
+          (e.description || '').toLowerCase().includes(q) ||
+          (e.organizationName || '').toLowerCase().includes(q) ||
+          (e.company || '').toLowerCase().includes(q) ||
+          (e.venueName || '').toLowerCase().includes(q) ||
+          (e.city || '').toLowerCase().includes(q)
+      )
+    }
+
+    return events
   }
 
   async getMyEvents(): Promise<Event[]> {
@@ -334,13 +379,6 @@ export class EventsService {
     }
   }
 
-  /**
-   * Subscribe to real-time attendance & registration events for a given eventId.
-   * Combines:
-   * 1. Server-Sent Events (SSE) stream `/api/events/{id}/attendance-stream`
-   * 2. Cross-tab BroadcastChannel & same-window CustomEvent bus
-   * 3. Smart delta-sync polling fallback (detects status transitions from mobile/external scans)
-   */
   subscribeToEventAttendance(
     eventId: string,
     onEvent: (evt: AttendanceRealtimeEvent, latestList?: EventRegistration[]) => void,
@@ -367,7 +405,6 @@ export class EventsService {
       onEvent(evt, latestList)
     }
 
-    // 1. SSE Connection to Convena-API
     let eventSource: EventSource | null = null
     if (typeof window !== 'undefined' && 'EventSource' in window) {
       try {
@@ -394,7 +431,6 @@ export class EventsService {
       }
     }
 
-    // 2. Same-window CustomEvent & Cross-tab BroadcastChannel
     const handleDomEvent = (e: globalThis.Event) => {
       const custom = e as CustomEvent<AttendanceRealtimeEvent>
       if (custom.detail) {
@@ -419,7 +455,6 @@ export class EventsService {
       }
     }
 
-    // 3. Smart Delta-Sync Polling (catches scans if SSE is buffered by a proxy)
     const pollInterval = setInterval(async () => {
       if (closed) return
       try {
@@ -476,7 +511,6 @@ export class EventsService {
           }
         }
       } catch {
-        // ignore polling error
       }
     }, 2500)
 
