@@ -337,7 +337,7 @@ export const DashboardPage: React.FC = () => {
                           RAB & SPJ
                         </Button>
                       </Link>
-                      <Link to={`/events/${evt.id}`} className="no-underline">
+                      <Link to={`/dashboard/events/${evt.id}/edit`} className="no-underline">
                         <Button variant="outline" size="sm" icon={<ArrowUpRight size={14} />}>
                           Kelola
                         </Button>

@@ -270,10 +270,7 @@ export const DashboardLayout: React.FC = () => {
           </div>
 
           {/* Nav Items */}
-          <div className="pt-2">
-            <div className="text-[11px] font-bold text-[#9C9C9C] uppercase tracking-wider mb-3 px-3">
-              Menu Sesuai Role
-            </div>
+          <div>
             <nav className="flex flex-col gap-1.5">
               {sidebarLinks.map((item) => {
                 const active = isCurrent(item.path)

@@ -363,8 +363,8 @@ export const CreateEventPage: React.FC = () => {
             <Button
               type="button"
               variant="accent"
-              size="md"
-              icon={<Save size={16} />}
+              size="sm"
+              icon={<Save size={15} />}
               onClick={() => handleSave('draft')}
               disabled={isLoading}
             >
@@ -373,8 +373,8 @@ export const CreateEventPage: React.FC = () => {
             <Button
               type="button"
               variant="outline"
-              size="md"
-              icon={<Send size={16} />}
+              size="sm"
+              icon={<Send size={15} />}
               onClick={() => handleSave('published')}
               disabled={isLoading}
             >

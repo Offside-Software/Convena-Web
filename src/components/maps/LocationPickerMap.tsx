@@ -128,11 +128,11 @@ export const LocationPickerMap: React.FC<LocationPickerMapProps> = ({
   };
 
   return (
-    <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+    <div className="space-y-3 border border-[#2B2B2B] rounded-xl bg-[#1A1A1A] p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <label className="flex items-center gap-1.5 text-sm font-semibold text-slate-900">
-            <MapPin className="h-4 w-4 text-indigo-600" />
+          <label className="flex items-center gap-1.5 text-sm font-semibold text-[#CFFE06]">
+            <MapPin className="h-4 w-4 text-[#CFFE06]" />
             Pilih Titik Lokasi di Peta (Leaflet Maps)
           </label>
           <p className="text-xs text-slate-500">
@@ -143,9 +143,9 @@ export const LocationPickerMap: React.FC<LocationPickerMapProps> = ({
         <button
           type="button"
           onClick={handleUseCurrentLocation}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-xs transition hover:border-indigo-300 hover:text-indigo-600"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-[#3D3D3D] bg-[#181818] px-3 py-1.5 text-xs font-medium text-white shadow-xs transition hover:border-indigo-300 hover:text-indigo-600"
         >
-          <Compass className="h-3.5 w-3.5 text-indigo-600" />
+          <Compass className="h-3.5 w-3.5 text-[#CFFE06]" />
           Gunakan Lokasi Saya
         </button>
       </div>
@@ -170,8 +170,8 @@ export const LocationPickerMap: React.FC<LocationPickerMapProps> = ({
               }}
               className={`rounded-full px-2.5 py-1 text-xs font-medium transition ${
                 isSelected
-                  ? 'bg-indigo-600 text-white shadow-xs'
-                  : 'border border-slate-200 bg-white text-slate-600 hover:border-indigo-200 hover:text-indigo-600'
+                  ? 'bg-[#CFFE06] text-black shadow-xs'
+                  : 'border border-[#3D3D3D] bg-[#181818] text-white hover:border-[#CFFE06]'
               }`}
             >
               {preset.label}
@@ -184,7 +184,7 @@ export const LocationPickerMap: React.FC<LocationPickerMapProps> = ({
         <div ref={containerRef} className="h-72 w-full z-0" />
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600">
+      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-white">
         <span className="font-mono">
           Koordinat:{' '}
           <strong className="text-slate-900">
