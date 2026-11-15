@@ -54,7 +54,7 @@ export const DashboardLayout: React.FC = () => {
   }, [location.pathname, navigate])
 
   // Aggregate permissions across user's organizations and event roles
-  const { sidebarLinks, roleSummaryLabel } = useMemo(() => {
+  const { sidebarLinks } = useMemo(() => {
     const orgPerms = new Set<string>()
     const orgRoleNames = new Set<string>()
     for (const org of userOrgs) {
