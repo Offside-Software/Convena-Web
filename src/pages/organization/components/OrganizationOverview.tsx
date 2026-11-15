@@ -130,10 +130,10 @@ export const OrganizationOverview: React.FC<OrganizationOverviewProps> = ({
             <Button
               variant="outline"
               size="sm"
+              icon={<Edit3 size={14} />}
               onClick={() => setIsEditModalOpen(true)}
               className="flex items-center gap-2 self-stretch sm:self-auto justify-center"
             >
-              <Edit3 size={14} />
               <span>Edit Profil Organisasi</span>
             </Button>
           )}

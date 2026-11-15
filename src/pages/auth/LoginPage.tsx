@@ -32,12 +32,6 @@ export const LoginPage: React.FC = () => {
     }
   }
 
-  // Quick Demo Admin auto-fill helper
-  const handleQuickDemo = () => {
-    setIdentifier('arya@student.itb.ac.id')
-    setPassword('admin123')
-  }
-
   return (
     <div className="min-h-[calc(100vh-70px)] w-full flex flex-col justify-between items-center px-4 py-12 relative overflow-hidden bg-[#000000] font-['Montserrat',sans-serif]">
       {/* Centered Login Container */}
@@ -137,24 +131,11 @@ export const LoginPage: React.FC = () => {
           </div>
 
           {/* Register Link (matching Image 5 stacked layout) */}
-          <div className="text-center pt-4 text-xs font-medium space-y-0.5">
-            <div className="text-[#9C9C9C]">don't have an account yet?</div>
-            <div>
-              <Link to="/register" className="text-[#CFFE06] font-semibold hover:underline">
-                register here
+          <div className="text-center pt-3 text-xs font-medium">
+            <span className="text-[#9C9C9C]">Belum punya akun? </span>
+            <Link to="/register" className="text-[#CFFE06] font-semibold hover:underline">
+              Daftar di sini
               </Link>
-            </div>
-          </div>
-
-          {/* Demo Auto-fill Helper */}
-          <div className="pt-4 text-center">
-            <button
-              type="button"
-              onClick={handleQuickDemo}
-              className="text-[11px] text-[#9C9C9C] hover:text-[#CFFE06] bg-[#151515] border border-[#3D3D3D] rounded-full py-1.5 px-3 transition-colors cursor-pointer"
-            >
-              Demo Admin Auto-Fill (Arya Pratama)
-            </button>
           </div>
         </form>
       </div>

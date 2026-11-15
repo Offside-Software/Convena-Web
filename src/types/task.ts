@@ -5,7 +5,9 @@ export interface CommitteeTask {
   eventId: string
   title: string
   description: string
+  assigneeId?: string | null
   assignee: string
+  division: string
   dueDate: string
   status: CommitteeTaskStatus
   createdAt: string
@@ -16,6 +18,8 @@ export interface CreateCommitteeTaskInput {
   eventId: string
   title: string
   description: string
+  assigneeId?: string | null
   assignee: string
+  division: string
   dueDate: string
 }

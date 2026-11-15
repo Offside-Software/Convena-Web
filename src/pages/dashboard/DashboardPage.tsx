@@ -223,14 +223,14 @@ export const DashboardPage: React.FC = () => {
           <Link to="/dashboard/events/create" className="no-underline">
             <Button
               variant="accent"
-              size="md"
-              icon={<Plus size={16} />}
+              size="sm"
+              icon={<Plus size={15} />}
             >
               Buat Event Baru
             </Button>
           </Link>
           <Link to="/dashboard/finances" className="no-underline">
-            <Button variant="outline" size="md" icon={<Receipt size={16} />}>
+            <Button variant="outline" size="sm" icon={<Receipt size={15} />}>
               Catat SPJ
             </Button>
           </Link>
@@ -337,7 +337,7 @@ export const DashboardPage: React.FC = () => {
                           RAB & SPJ
                         </Button>
                       </Link>
-                      <Link to={`/events/${evt.id}`} className="no-underline">
+                      <Link to={`/dashboard/events/${evt.id}/edit`} className="no-underline">
                         <Button variant="outline" size="sm" icon={<ArrowUpRight size={14} />}>
                           Kelola
                         </Button>

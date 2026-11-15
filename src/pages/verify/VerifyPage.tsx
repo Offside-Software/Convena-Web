@@ -6,7 +6,7 @@ import { certificateService } from '../../services/certificate.service.ts'
 import type { Certificate } from '../../types/certificate.ts'
 
 export const VerifyPage: React.FC = () => {
-  const [code, setCode] = useState('CNV-2026-ITB-8821')
+  const [code, setCode] = useState('')
   const [certificate, setCertificate] = useState<Certificate | null>(null)
   const [hasSearched, setHasSearched] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -70,25 +70,6 @@ const performVerification = async (certCode: string) => {
           variant="grey"
           required
         />
-
-        {/* Quick sample fillers */}
-        <div className="flex items-center gap-2 mt-4 flex-wrap text-xs">
-          <span className="text-[#9C9C9C]">Contoh Cepat:</span>
-          <button
-            type="button"
-            onClick={() => handleQuickFill('CNV-2026-ITB-8821')}
-            className="py-1 px-3 rounded-full border border-[#3D3D3D] bg-[#202020] text-[#CFFE06] cursor-pointer font-bold hover:border-[#CFFE06] transition-colors"
-          >
-            CNV-2026-ITB-8821 (ITB)
-          </button>
-          <button
-            type="button"
-            onClick={() => handleQuickFill('CNV-2026-UI-1042')}
-            className="py-1 px-3 rounded-full border border-[#3D3D3D] bg-[#202020] text-white cursor-pointer font-medium hover:border-[#CFFE06] transition-colors"
-          >
-            CNV-2026-UI-1042 (UI)
-          </button>
-        </div>
       </div>
 
       {/* Result Display */}

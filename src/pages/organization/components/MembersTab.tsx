@@ -167,11 +167,12 @@ export const MembersTab: React.FC<MembersTabProps> = ({
 
         {canManageMembers && (
           <Button
+            size='sm'
             variant="accent"
             onClick={() => setIsAddModalOpen(true)}
             className="flex items-center gap-2 justify-center shrink-0 self-stretch sm:self-auto"
-          >
-            <UserPlus size={16} />
+            icon={<UserPlus size={15} />}
+            >
             <span>Tambah Anggota Langsung</span>
           </Button>
         )}

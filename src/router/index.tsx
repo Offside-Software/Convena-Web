@@ -42,6 +42,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="/dashboard/organization" element={<OrganizationPage />} />
         <Route path="/dashboard/events" element={<ManageEventsPage />} />
         <Route path="/dashboard/events/create" element={<CreateEventPage />} />
+        <Route path="/dashboard/events/:id/edit" element={<CreateEventPage />} />
         <Route
           path="/dashboard/tasks"
           element={
