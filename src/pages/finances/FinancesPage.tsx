@@ -371,7 +371,7 @@ export const FinancesPage: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center gap-2.5">
-            <div className="h-10 w-64 bg-[#242424] rounded-xl" />
+            <div className="h-10 w-80 md:w-[440px] bg-[#242424] rounded-xl" />
             <div className="h-10 w-10 bg-[#242424] rounded-xl" />
           </div>
         </div>
@@ -463,7 +463,7 @@ export const FinancesPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2.5 w-full sm:w-auto">
-          <div className="w-full sm:w-72">
+          <div className="w-full sm:w-96 md:w-[440px] lg:w-[500px]">
             <Select
               aria-label="Pilih Event"
               value={selectedEventId}
@@ -473,7 +473,7 @@ export const FinancesPage: React.FC = () => {
                 value: evt.id,
                 description: evt.organizationName ? `${evt.organizationName} • ${evt.company || ''}` : undefined,
               }))}
-              size="sm"
+              size="md"
               variant="default"
               fullWidth
               searchable
