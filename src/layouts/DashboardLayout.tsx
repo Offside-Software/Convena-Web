@@ -31,6 +31,25 @@ export const DashboardLayout: React.FC = () => {
   const [myEvents, setMyEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [desktopSidebarHidden, setDesktopSidebarHidden] = useState(false)
+
+  useEffect(() => {
+    const handleToggleSidebar = (e: globalThis.Event) => {
+      const custom = e as CustomEvent<{ hidden?: boolean }>
+      if (typeof custom.detail?.hidden === 'boolean') {
+        setDesktopSidebarHidden(custom.detail.hidden)
+      } else {
+        setDesktopSidebarHidden((prev) => !prev)
+      }
+    }
+    window.addEventListener('convena:toggle-desktop-sidebar', handleToggleSidebar)
+    return () => {
+      window.removeEventListener(
+        'convena:toggle-desktop-sidebar',
+        handleToggleSidebar
+      )
+    }
+  }, [])
 
   useEffect(() => {
     let isMounted = true
@@ -260,8 +279,10 @@ export const DashboardLayout: React.FC = () => {
 
       {/* Sidebar Navigation */}
       <aside
-        className={`fixed md:sticky top-0 left-0 h-screen z-50 w-60 bg-[#151515] border-r border-[#202020] flex flex-col justify-between p-3.5 overflow-y-auto transition-transform duration-200 ease-in-out md:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        className={`fixed md:sticky top-0 left-0 h-screen z-50 w-60 bg-[#151515] border-r border-[#202020] flex flex-col justify-between p-3.5 overflow-y-auto transition-all duration-200 ease-in-out ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } ${
+          desktopSidebarHidden ? 'md:hidden' : 'md:translate-x-0'
         }`}
       >
         <div className="flex flex-col gap-3.5">
@@ -368,6 +389,18 @@ export const DashboardLayout: React.FC = () => {
         {/* Workspace Top Header Bar */}
         <header className="hidden md:flex items-center justify-between py-2 px-5 bg-[#000000] border-b border-[#202020]">
           <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={() => setDesktopSidebarHidden((prev) => !prev)}
+              className="w-7 h-7 rounded-full bg-[#151515] border border-[#3D3D3D] flex items-center justify-center text-[#9C9C9C] hover:text-[#CFFE06] hover:border-[#CFFE06] transition-colors cursor-pointer"
+              title={
+                desktopSidebarHidden
+                  ? 'Tampilkan Sidebar Navigasi'
+                  : 'Sembunyikan Sidebar Navigasi'
+              }
+            >
+              <Menu size={14} />
+            </button>
             <Link
               to="/"
               className="w-7 h-7 rounded-full bg-[#151515] border border-[#3D3D3D] flex items-center justify-center text-[#9C9C9C] hover:text-[#CFFE06] transition-colors no-underline"

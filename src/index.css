@@ -72,7 +72,7 @@ a {
 }
 
 /* Form Elements */
-input:not([type="checkbox"]):not([type="radio"]), textarea, select {
+input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]), textarea, select {
   font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
   font-size: 0.9rem;
   color: #FFFFFF;
@@ -84,7 +84,7 @@ input:not([type="checkbox"]):not([type="radio"]), textarea, select {
   width: 100%;
 }
 
-input:not([type="checkbox"]):not([type="radio"]):focus, textarea:focus, select:focus {
+input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]):focus, textarea:focus, select:focus {
   outline: none;
   border-color: #CFFE06;
   box-shadow: 0 0 0 1px #CFFE06;

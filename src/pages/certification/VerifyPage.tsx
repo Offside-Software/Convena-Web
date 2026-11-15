@@ -1,46 +1,122 @@
-import React, { useState } from "react";
-import { CheckCircle2, QrCode, XCircle } from "lucide-react";
-import { Button } from "../../components/common/Button.tsx";
-import { SearchBar } from "../../components/common/SearchBar.tsx";
-import { certificateService } from "../../services/certificate.service.ts";
-import type { Certificate } from "../../types/certificate.ts";
+import React, { useCallback, useEffect, useState } from 'react'
+import { useParams, useSearchParams } from 'react-router-dom'
+import { CheckCircle2, Printer, QrCode, XCircle } from 'lucide-react'
+import { Button } from '../../components/common/Button.tsx'
+import { SearchBar } from '../../components/common/SearchBar.tsx'
+import { certificateService } from '../../services/certificate.service.ts'
+import type {
+  Certificate,
+  CertificateCategory,
+  CertificateTemplateDesign,
+} from '../../types/certificate.ts'
+import { CertificateCanvas } from './components/CertificateCanvas.tsx'
+import { getPresetTemplateByCategory } from './components/certificatePresets.ts'
+import { printCertificateElement } from './components/certificateExport.ts'
+
+function resolveCategoryFromCertificate(cert: Certificate): CertificateCategory {
+  if (cert.category) return cert.category
+  switch (cert.role) {
+    case 'winner':
+      return 'winner'
+    case 'speaker':
+      return 'speaker'
+    case 'committee':
+      return 'committee'
+    case 'group':
+      return 'group'
+    default:
+      return 'attendance'
+  }
+}
+
+function buildTemplateFromVerifiedCertificate(
+  cert: Certificate
+): CertificateTemplateDesign {
+  const category = resolveCategoryFromCertificate(cert)
+  const base = cert.templateSnapshot || getPresetTemplateByCategory(category)
+
+  return {
+    ...base,
+    signatories:
+      Array.isArray(cert.signatories) && cert.signatories.length > 0
+        ? cert.signatories.map((s, idx) => ({
+            id: `verified-sig-${idx}`,
+            name: s.name,
+            title: s.title,
+            idNumber: s.idNumber,
+          }))
+        : base.signatories,
+  }
+}
 
 export const VerifyPage: React.FC = () => {
-  const [code, setCode] = useState("");
-  const [certificate, setCertificate] = useState<Certificate | null>(null);
-  const [hasSearched, setHasSearched] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { code: routeCode } = useParams<{ code?: string }>()
+  const [searchParams] = useSearchParams()
+  const scannedSigner = searchParams.get('signer')
+  const scannedRole = searchParams.get('role')
 
-  const performVerification = async (certCode: string) => {
-    if (!certCode.trim()) return;
+  const [code, setCode] = useState(routeCode || '')
+  const [certificate, setCertificate] = useState<Certificate | null>(null)
+  const [hasSearched, setHasSearched] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-    setLoading(true);
-    setHasSearched(false);
-    setCertificate(null);
+  const performVerification = useCallback(async (certCode: string) => {
+    if (!certCode.trim()) return
+
+    setLoading(true)
+    setHasSearched(false)
+    setCertificate(null)
 
     try {
-      const result = await certificateService.verifyCertificate(certCode);
-      setCertificate(result);
-      setHasSearched(true);
+      const result = await certificateService.verifyCertificate(certCode)
+      setCertificate(result)
+      setHasSearched(true)
     } catch (error) {
-      console.error("Gagal memverifikasi sertifikat:", error);
-      setCertificate(null);
-      setHasSearched(true);
+      console.error('Gagal memverifikasi sertifikat:', error)
+      setCertificate(null)
+      setHasSearched(true)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }, [])
+
+  useEffect(() => {
+    if (!routeCode || !routeCode.trim()) return
+    let active = true
+    certificateService
+      .verifyCertificate(routeCode)
+      .then((result) => {
+        if (!active) return
+        setCertificate(result)
+        setHasSearched(true)
+      })
+      .catch(() => {
+        if (!active) return
+        setCertificate(null)
+        setHasSearched(true)
+      })
+      .finally(() => {
+        if (active) setLoading(false)
+      })
+    return () => {
+      active = false
+    }
+  }, [routeCode])
 
   const handleVerify = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    performVerification(code);
-  };
+    if (e) e.preventDefault()
+    performVerification(code)
+  }
 
   const handleQuickFill = (sampleCode: string) => {
-    setCode(sampleCode);
-    setCertificate(null);
-    setHasSearched(false);
-  };
+    setCode(sampleCode)
+    setCertificate(null)
+    setHasSearched(false)
+  }
+
+  const resolvedTemplate = certificate
+    ? buildTemplateFromVerifiedCertificate(certificate)
+    : null
 
   return (
     <div className="max-w-[1080px] mx-auto py-4 px-4 sm:px-6 pb-24 font-['Montserrat',sans-serif] bg-[#000000] text-white">
@@ -50,8 +126,7 @@ export const VerifyPage: React.FC = () => {
           Verifikasi Keaslian E-Sertifikat
         </h1>
         <p className="text-[#9C9C9C] max-w-[620px] mx-auto text-xs sm:text-sm leading-relaxed">
-          Validasi keabsahan dokumen penghargaan, kepanitiaan, atau sertifikat
-          peserta kegiatan mahasiswa melalui basis data Convena.
+          Validasi keabsahan dokumen penghargaan, kejuaraan, kelompok/tim, kepanitiaan, atau sertifikat peserta kegiatan mahasiswa melalui basis data Convena.
         </p>
       </div>
 
@@ -63,13 +138,26 @@ export const VerifyPage: React.FC = () => {
           onChange={(e) => setCode(e.target.value)}
           onSubmit={handleVerify}
           showSubmitButton={true}
-          submitLabel={loading ? "Memvalidasi..." : "Verifikasi"}
+          submitLabel={loading ? 'Memvalidasi...' : 'Verifikasi'}
           submitLoading={loading}
           submitDisabled={loading}
           variant="grey"
           required
         />
       </div>
+
+      {/* Scanned Signatory QR Banner (When arriving via a signatory QR code) */}
+      {scannedSigner && (
+        <div className="max-w-[680px] mx-auto mb-6 p-3.5 rounded-xl bg-[#CFFE06]/10 border border-[#CFFE06]/50 flex items-center gap-3">
+          <QrCode size={20} className="text-[#CFFE06] shrink-0" />
+          <div className="text-xs text-white">
+            <strong className="text-[#CFFE06]">
+              Pemindaian QR Tanda Tangan Pejabat:
+            </strong>{' '}
+            {scannedSigner} {scannedRole ? `(${scannedRole})` : ''}
+          </div>
+        </div>
+      )}
 
       {/* Result Display */}
       {loading ? (
@@ -96,85 +184,56 @@ export const VerifyPage: React.FC = () => {
       ) : (
         hasSearched && (
           <div>
-            {certificate ? (
-              <div className="bg-[#151515] border border-[#3D3D3D]/60 rounded-xl overflow-hidden shadow-2xl relative">
-                {/* Top Certificate Ribbon */}
-                <div className="bg-[#202020] border-b border-[#3D3D3D]/60 py-3.5 px-6 flex items-center justify-between flex-wrap gap-2">
+            {certificate && resolvedTemplate ? (
+              <div className="space-y-4">
+                {/* Verification Status Banner */}
+                <div className="bg-[#151515] border border-[#CFFE06]/50 rounded-xl py-3 px-5 flex items-center justify-between flex-wrap gap-3">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 size={18} className="text-[#CFFE06]" />
                     <span className="font-bold text-xs uppercase tracking-wider text-[#CFFE06]">
-                      SERTIFIKAT RESMI TERVERIFIKASI
+                      SERTIFIKAT RESMI TERVERIFIKASI • EVENT:{' '}
+                      {certificate.eventTitle}
                     </span>
                   </div>
-                  <div className="font-mono text-xs text-[#9C9C9C]">
-                    ID: {certificate.certificateNumber}
-                  </div>
+
+                  <Button
+                    variant="accent"
+                    size="sm"
+                    icon={<Printer size={14} />}
+                    onClick={() =>
+                      printCertificateElement(
+                        'verified-certificate-canvas',
+                        `Sertifikat - ${certificate.recipientName}`,
+                        resolvedTemplate.orientation
+                      )
+                    }
+                  >
+                    Cetak / Simpan PDF
+                  </Button>
                 </div>
 
-                {/* Certificate Inner Canvas */}
-                <div className="py-12 px-6 sm:px-12 text-center relative bg-[#121212]">
-                  {/* Institution Heading */}
-                  <div className="text-xs font-semibold text-[#9C9C9C] uppercase tracking-widest mb-3">
-                    {certificate.organizationName} • {certificate.company}
-                  </div>
-
-                  <div className="font-extrabold text-2xl sm:text-3xl text-white mb-4 tracking-tight">
-                    SERTIFIKAT PENGHARGAAN
-                  </div>
-
-                  <p className="text-xs sm:text-sm text-[#9C9C9C] mb-4">
-                    Diberikan dengan bangga kepada:
-                  </p>
-
-                  {/* Recipient Name Box */}
-                  <div className="inline-block py-3 px-8 bg-[#202020] border border-[#CFFE06] rounded-xl font-bold text-xl sm:text-2xl text-[#CFFE06] mb-4 shadow-[0_0_20px_rgba(207,254,6,0.15)]">
-                    {certificate.recipientName}
-                  </div>
-
-                  {certificate.studentId && (
-                    <div className="text-xs font-mono text-[#9C9C9C] mb-5">
-                      NIM: {certificate.studentId}
-                    </div>
-                  )}
-
-                  <p className="text-xs sm:text-sm max-w-[580px] mx-auto mb-10 leading-relaxed text-[#9C9C9C]">
-                    Atas partisipasi dan kontribusi aktifnya sebagai{" "}
-                    <strong className="text-white">
-                      {certificate.role.toUpperCase()}
-                    </strong>{" "}
-                    dalam kegiatan{" "}
-                    <strong className="text-white">
-                      {certificate.eventTitle}
-                    </strong>{" "}
-                    yang diselenggarakan pada tanggal {certificate.issueDate}.
-                  </p>
-
-                  {/* Signatories Row & QR Watermark */}
-                  <div className="flex items-center justify-around flex-wrap gap-8 border-t border-[#3D3D3D]/50 pt-8">
-                    {certificate.signatories.map((sig, idx) => (
-                      <div key={idx} className="text-center min-w-[160px]">
-                        <div className="h-8 flex items-center justify-center font-mono text-[11px] text-[#CFFE06] mb-1">
-                          ✓ Signed Digitally
-                        </div>
-                        <div className="font-bold text-xs text-white border-t border-[#3D3D3D] pt-1.5">
-                          {sig.name}
-                        </div>
-                        <div className="text-[11px] text-[#9C9C9C] mt-0.5">
-                          {sig.title}
-                        </div>
-                      </div>
-                    ))}
-
-                    <div className="text-center">
-                      <div className="p-2 bg-[#000000] border border-[#3D3D3D] rounded-xl inline-block shadow-md">
-                        <QrCode size={56} className="text-[#CFFE06]" />
-                      </div>
-                      <div className="text-[10px] font-semibold mt-1 text-[#9C9C9C]">
-                        Otentikasi Convena
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                {/* Certificate Canvas with QR Signatures */}
+                <CertificateCanvas
+                  id="verified-certificate-canvas"
+                  template={resolvedTemplate}
+                  certificateNumber={certificate.certificateNumber}
+                  eventId={certificate.eventId}
+                  eventTitle={certificate.eventTitle}
+                  organizationName={certificate.organizationName}
+                  company={certificate.company}
+                  issueDate={certificate.issueDate}
+                  recipientName={certificate.recipientName}
+                  studentId={certificate.studentId}
+                  institution={certificate.company}
+                  category={resolveCategoryFromCertificate(certificate)}
+                  roleLabel={
+                    certificate.roleLabel || certificate.role.toUpperCase()
+                  }
+                  rank={certificate.rank}
+                  groupName={certificate.groupName}
+                  groupMembers={certificate.groupMembers}
+                  verified={certificate.verified}
+                />
               </div>
             ) : (
               <div className="max-w-[600px] mx-auto py-12 px-6 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl text-center">
@@ -189,7 +248,7 @@ export const VerifyPage: React.FC = () => {
                 </p>
                 <Button
                   variant="accent"
-                  onClick={() => handleQuickFill("CNV-2026-ITB-8821")}
+                  onClick={() => handleQuickFill('CNV-2026-ITB-8821')}
                 >
                   Coba Contoh Valid (ITB)
                 </Button>
@@ -199,5 +258,5 @@ export const VerifyPage: React.FC = () => {
         )
       )}
     </div>
-  );
-};
+  )
+}
