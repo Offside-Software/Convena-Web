@@ -11,11 +11,11 @@ import { CreateEventPage } from '../pages/dashboard/CreateEventPage.tsx'
 import { SponsorshipPage } from '../pages/sponsorship/SponsorshipPage.tsx'
 import { FinancesPage } from '../pages/finances/FinancesPage.tsx'
 import { OrganizationPage } from '../pages/organization/OrganizationPage.tsx'
-import { VerifyPage } from '../pages/verify/VerifyPage.tsx'
+import { VerifyPage } from '../pages/certification/VerifyPage.tsx'
 import { LoginPage } from '../pages/auth/LoginPage.tsx'
 import { RegisterPage } from '../pages/auth/RegisterPage.tsx'
 import { NotFoundPage } from '../pages/not-found/NotFoundPage.tsx'
-import { CertificatePage } from '../pages/verify/CertificatePage.tsx'
+import { CertificatePage } from '../pages/certification/CertificatePage.tsx'
 
 const TaskManagementPage = lazy(() =>
   import('../pages/dashboard/TaskManagementPage.tsx').then((module) => ({
