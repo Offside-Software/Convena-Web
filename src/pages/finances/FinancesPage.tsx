@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { Plus, Calendar, AlertCircle, RefreshCw } from 'lucide-react'
+import { Plus, Calendar, AlertCircle, RefreshCw, ChevronDown, Search, X, Check } from 'lucide-react'
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
-import { Select } from '../../components/common/Select.tsx'
 import { Toast, type ToastType } from '../../components/common/Toast.tsx'
 import { financeService } from '../../services/finance.service.ts'
 import { eventsService } from '../../services/events.service.ts'
@@ -18,6 +17,18 @@ import { BudgetSummaryCards } from './components/BudgetSummaryCards.tsx'
 import { BudgetVarianceTracker } from './components/BudgetVarianceTracker.tsx'
 import { ExpenseSpjTable } from './components/ExpenseSpjTable.tsx'
 import { AddExpenseModal } from './components/AddExpenseModal.tsx'
+
+function isEventCompleted(evt: Event): boolean {
+  if (evt.status === 'completed' || evt.status === 'cancelled') return true
+  if (evt.status === 'ongoing') return false
+  if (evt.endDate) {
+    const endMs = new Date(evt.endDate).getTime()
+    if (!Number.isNaN(endMs) && endMs < Date.now()) {
+      return true
+    }
+  }
+  return false
+}
 
 const FinanceDetailsSkeleton: React.FC = () => (
   <div className="space-y-8 animate-pulse">
@@ -121,6 +132,23 @@ export const FinancesPage: React.FC = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingExpense, setEditingExpense] = useState<ExpenseRecord | null>(null)
+
+  // State khusus dropdown pemilih event di halaman Finance
+  const eventSelectorRef = useRef<HTMLDivElement>(null)
+  const [eventDropdownOpen, setEventDropdownOpen] = useState(false)
+  const [eventSearchQuery, setEventSearchQuery] = useState('')
+  const [eventStatusFilter, setEventStatusFilter] = useState<'all' | 'ongoing' | 'completed'>('all')
+
+  useEffect(() => {
+    if (!eventDropdownOpen) return
+    const handleClickOutside = (e: MouseEvent) => {
+      if (eventSelectorRef.current && !eventSelectorRef.current.contains(e.target as Node)) {
+        setEventDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [eventDropdownOpen])
 
   const [toast, setToast] = useState<{
     open: boolean
@@ -346,6 +374,23 @@ export const FinancesPage: React.FC = () => {
   }
 
   const selectedEvent = events.find((e) => e.id === selectedEventId)
+  const ongoingEventsCount = events.filter((e) => !isEventCompleted(e)).length
+  const completedEventsCount = events.filter((e) => isEventCompleted(e)).length
+
+  const filteredSelectorEvents = events.filter((evt) => {
+    const completed = isEventCompleted(evt)
+    if (eventStatusFilter === 'ongoing' && completed) return false
+    if (eventStatusFilter === 'completed' && !completed) return false
+
+    if (eventSearchQuery.trim()) {
+      const q = eventSearchQuery.toLowerCase()
+      const matchTitle = evt.title.toLowerCase().includes(q)
+      const matchOrg = (evt.organizationName || '').toLowerCase().includes(q)
+      const matchCompany = (evt.company || '').toLowerCase().includes(q)
+      return matchTitle || matchOrg || matchCompany
+    }
+    return true
+  })
 
   if (eventsLoading) {
     return (
@@ -448,9 +493,22 @@ export const FinancesPage: React.FC = () => {
             <Calendar size={18} />
           </div>
           <div className="min-w-0 flex-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#9C9C9C] block">
-              Event Aktif Terpilih
-            </span>
+            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#9C9C9C]">
+                Event Aktif Terpilih
+              </span>
+              {selectedEvent && (
+                <span
+                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide ${
+                    isEventCompleted(selectedEvent)
+                      ? 'bg-[#262626] text-[#9C9C9C] border border-[#3D3D3D]'
+                      : 'bg-[#CFFE06]/15 text-[#CFFE06] border border-[#CFFE06]/40'
+                  }`}
+                >
+                  {isEventCompleted(selectedEvent) ? 'Selesai' : 'Ongoing'}
+                </span>
+              )}
+            </div>
             <div className="text-sm sm:text-base font-bold text-white break-words leading-snug">
               {selectedEvent?.title || 'Pilih Event'}
             </div>
@@ -463,23 +521,141 @@ export const FinancesPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2.5 w-full lg:w-auto shrink-0">
-          <div className="w-full lg:w-80 xl:w-96">
-            <Select
+          <div ref={eventSelectorRef} className="relative w-full lg:w-96 xl:w-[440px]">
+            <button
+              type="button"
               aria-label="Pilih Event"
-              value={selectedEventId}
-              onChange={(eventId) => handleSelectEvent(eventId)}
-              options={events.map((evt) => ({
-                label: evt.title,
-                value: evt.id,
-                description: evt.organizationName ? `${evt.organizationName} • ${evt.company || ''}` : undefined,
-              }))}
-              size="md"
-              variant="default"
-              fullWidth
-              searchable
-              searchPlaceholder="Cari nama event..."
-              className="!mb-0"
-            />
+              aria-expanded={eventDropdownOpen}
+              onClick={() => setEventDropdownOpen((prev) => !prev)}
+              className={`w-full flex items-center justify-between gap-2.5 py-2.5 px-3.5 rounded-xl bg-[#202020] border transition-all text-left cursor-pointer ${
+                eventDropdownOpen
+                  ? 'border-[#CFFE06] shadow-[0_0_12px_rgba(207,254,6,0.2)]'
+                  : 'border-[#3D3D3D] hover:border-[#555555]'
+              }`}
+            >
+              <span className="text-xs sm:text-sm font-medium text-white break-words whitespace-normal leading-snug flex-1">
+                {selectedEvent ? selectedEvent.title : 'Pilih Event...'}
+              </span>
+              <ChevronDown
+                size={16}
+                className={`text-[#9C9C9C] shrink-0 transition-transform duration-200 ${
+                  eventDropdownOpen ? 'rotate-180 text-[#CFFE06]' : ''
+                }`}
+              />
+            </button>
+
+            {eventDropdownOpen && (
+              <div className="absolute left-0 right-0 top-full mt-1.5 z-50 bg-[#161616] border border-[#333333] rounded-xl shadow-[0_12px_36px_rgba(0,0,0,0.85)] p-2 overflow-hidden">
+                {/* Input Search Nama Event */}
+                <div className="flex items-center gap-2 px-2.5 py-1.5 bg-[#1F1F1F] rounded-lg border border-[#333333] focus-within:border-[#CFFE06] mb-2">
+                  <Search size={14} className="text-[#9C9C9C] shrink-0" />
+                  <input
+                    type="text"
+                    data-search-input="true"
+                    value={eventSearchQuery}
+                    onChange={(e) => setEventSearchQuery(e.target.value)}
+                    placeholder="Cari nama event atau organisasi..."
+                    className="search-bar-input w-full bg-transparent border-none outline-none text-xs text-white placeholder:text-[#9C9C9C]/60"
+                    autoFocus
+                  />
+                  {eventSearchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setEventSearchQuery('')}
+                      className="text-[#9C9C9C] hover:text-white cursor-pointer"
+                    >
+                      <X size={12} />
+                    </button>
+                  )}
+                </div>
+
+                {/* Filter Tab Status Event: Semua | Ongoing | Selesai */}
+                <div className="flex items-center gap-1.5 pb-2 mb-1.5 border-b border-[#262626] flex-wrap">
+                  {(
+                    [
+                      { id: 'all', label: `Semua (${events.length})` },
+                      { id: 'ongoing', label: `Ongoing (${ongoingEventsCount})` },
+                      { id: 'completed', label: `Selesai (${completedEventsCount})` },
+                    ] as const
+                  ).map((tab) => {
+                    const active = eventStatusFilter === tab.id
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setEventStatusFilter(tab.id)}
+                        className={`text-[11px] font-semibold px-2.5 py-1 rounded-full cursor-pointer transition-all ${
+                          active
+                            ? 'bg-[#CFFE06] text-black'
+                            : 'bg-[#202020] text-[#9C9C9C] hover:text-white border border-[#333333]'
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    )
+                  })}
+                </div>
+
+                {/* Daftar Pilihan Event */}
+                <div className="max-h-60 overflow-y-auto space-y-1 pr-0.5 custom-scrollbar">
+                  {filteredSelectorEvents.length === 0 ? (
+                    <div className="py-6 px-3 text-center text-xs text-[#9C9C9C]">
+                      Tidak ada event yang cocok dengan filter pencarian
+                    </div>
+                  ) : (
+                    filteredSelectorEvents.map((evt) => {
+                      const isSelected = evt.id === selectedEventId
+                      const completed = isEventCompleted(evt)
+
+                      return (
+                        <div
+                          key={evt.id}
+                          role="option"
+                          aria-selected={isSelected}
+                          onClick={() => {
+                            handleSelectEvent(evt.id)
+                            setEventDropdownOpen(false)
+                            setEventSearchQuery('')
+                          }}
+                          className={`flex items-start justify-between gap-2.5 px-3 py-2.5 rounded-lg text-xs cursor-pointer transition-colors ${
+                            isSelected
+                              ? 'bg-[#CFFE06]/15 text-[#CFFE06] font-semibold'
+                              : 'text-[#CCCCCC] hover:bg-[#202020] hover:text-white'
+                          }`}
+                        >
+                          <div className="min-w-0 flex-1">
+                            <div className="break-words whitespace-normal font-medium leading-snug">
+                              {evt.title}
+                            </div>
+                            {(evt.organizationName || evt.company) && (
+                              <div className="text-[10px] text-[#888888] break-words whitespace-normal mt-0.5">
+                                {evt.organizationName}
+                                {evt.company ? ` • ${evt.company}` : ''}
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="flex items-center gap-1.5 shrink-0 pt-0.5">
+                            <span
+                              className={`text-[9px] font-bold px-1.5 py-0.5 rounded uppercase ${
+                                completed
+                                  ? 'bg-[#262626] text-[#9C9C9C]'
+                                  : 'bg-[#CFFE06]/20 text-[#CFFE06]'
+                              }`}
+                            >
+                              {completed ? 'Selesai' : 'Ongoing'}
+                            </span>
+                            {isSelected && (
+                              <Check size={14} className="text-[#CFFE06] stroke-[2.5]" />
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           <button

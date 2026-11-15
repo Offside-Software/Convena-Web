@@ -93,9 +93,8 @@ export function Select<T extends string = string>({
   // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (disabled) return
-    const isSearchInput = (e.target as HTMLElement)?.tagName === 'INPUT'
 
-    if (e.key === 'Enter' || (e.key === ' ' && !isSearchInput)) {
+    if (e.key === 'Enter' || e.key === ' ') {
       if (!isOpen) {
         e.preventDefault()
         setIsOpen(true)
@@ -217,7 +216,7 @@ export function Select<T extends string = string>({
             </span>
           )}
           <span
-            className={`break-words whitespace-normal leading-snug font-medium ${
+            className={`truncate font-medium ${
               selectedOption ? 'text-white' : 'text-[#9C9C9C]/70'
             }`}
           >
@@ -251,14 +250,13 @@ export function Select<T extends string = string>({
                 <Search size={14} className="text-[#9C9C9C] shrink-0" />
                 <input
                   type="text"
-                  data-search-input="true"
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value)
                     setHighlightedIndex(0)
                   }}
                   placeholder={searchPlaceholder}
-                  className="search-bar-input w-full bg-transparent border-none outline-none text-xs text-white placeholder:text-[#9C9C9C]/60"
+                  className="w-full bg-transparent border-none outline-none text-xs text-white placeholder:text-[#9C9C9C]/60"
                   autoFocus
                 />
                 {searchQuery && (
@@ -308,9 +306,9 @@ export function Select<T extends string = string>({
                         </span>
                       )}
                       <div className="min-w-0 flex-1">
-                        <div className="break-words whitespace-normal font-medium leading-snug">{opt.label}</div>
+                        <div className="truncate font-medium">{opt.label}</div>
                         {opt.description && (
-                          <div className="text-[10px] text-[#888888] break-words whitespace-normal mt-0.5">
+                          <div className="text-[10px] text-[#888888] truncate mt-0.5">
                             {opt.description}
                           </div>
                         )}
