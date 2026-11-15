@@ -93,8 +93,9 @@ export function Select<T extends string = string>({
   // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (disabled) return
+    const isSearchInput = (e.target as HTMLElement)?.tagName === 'INPUT'
 
-    if (e.key === 'Enter' || e.key === ' ') {
+    if (e.key === 'Enter' || (e.key === ' ' && !isSearchInput)) {
       if (!isOpen) {
         e.preventDefault()
         setIsOpen(true)
@@ -250,13 +251,14 @@ export function Select<T extends string = string>({
                 <Search size={14} className="text-[#9C9C9C] shrink-0" />
                 <input
                   type="text"
+                  data-search-input="true"
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value)
                     setHighlightedIndex(0)
                   }}
                   placeholder={searchPlaceholder}
-                  className="w-full bg-transparent border-none outline-none text-xs text-white placeholder:text-[#9C9C9C]/60"
+                  className="search-bar-input w-full bg-transparent border-none outline-none text-xs text-white placeholder:text-[#9C9C9C]/60"
                   autoFocus
                 />
                 {searchQuery && (

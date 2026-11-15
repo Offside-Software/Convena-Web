@@ -476,7 +476,8 @@ export const FinancesPage: React.FC = () => {
               size="sm"
               variant="default"
               fullWidth
-              searchable={events.length > 5}
+              searchable
+              searchPlaceholder="Cari nama event..."
               className="!mb-0"
             />
           </div>
