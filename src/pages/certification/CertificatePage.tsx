@@ -13,8 +13,6 @@ import {
   Eye,
   Sparkles,
   CheckCircle2,
-  Maximize2,
-  Minimize2,
 } from 'lucide-react'
 import { Button } from '../../components/common/Button.tsx'
 import { Badge } from '../../components/common/Badge.tsx'
@@ -77,19 +75,6 @@ export const CertificatePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
     'design' | 'recipients' | 'issued'
   >('design')
-  const [editorExpanded, setEditorExpanded] = useState(false)
-
-  const handleToggleExpandEditor = () => {
-    const next = !editorExpanded
-    setEditorExpanded(next)
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(
-        new CustomEvent('convena:toggle-desktop-sidebar', {
-          detail: { hidden: next },
-        })
-      )
-    }
-  }
 
   // Active certificate category & per-category template designs so winners/attendees/groups can vary
   const [activeCategory, setActiveCategory] =
@@ -625,23 +610,6 @@ export const CertificatePage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
-          <Button
-            type="button"
-            variant="dark"
-            size="sm"
-            icon={
-              editorExpanded ? (
-                <Minimize2 size={14} className="text-[#CFFE06]" />
-              ) : (
-                <Maximize2 size={14} className="text-[#CFFE06]" />
-              )
-            }
-            onClick={handleToggleExpandEditor}
-          >
-            {editorExpanded
-              ? 'Tampilkan Sidebar'
-              : 'Perluas Editor (Sembunyikan Sidebar)'}
-          </Button>
           <Link to="/dashboard/verify" className="no-underline">
             <Button
               variant="secondary"
