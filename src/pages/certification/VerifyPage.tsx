@@ -21,20 +21,20 @@ export const VerifyPage: React.FC = () => {
   const performVerification = async (certCode: string) => {
     if (!certCode.trim()) return;
 
-    setLoading(true);
-    setHasSearched(false);
-    setCertificate(null);
+    setLoading(true)
+    setHasSearched(false)
+    setCertificate(null)
 
     try {
-      const result = await certificateService.verifyCertificate(certCode);
-      setCertificate(result);
-      setHasSearched(true);
+      const result = await certificateService.verifyCertificate(certCode)
+      setCertificate(result)
+      setHasSearched(true)
     } catch (error) {
-      console.error("Gagal memverifikasi sertifikat:", error);
-      setCertificate(null);
-      setHasSearched(true);
+      console.error('Gagal memverifikasi sertifikat:', error)
+      setCertificate(null)
+      setHasSearched(true)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -46,10 +46,10 @@ export const VerifyPage: React.FC = () => {
 
   // Mengisi kode contoh tanpa langsung melakukan verifikasi
   const handleQuickFill = (sampleCode: string) => {
-    setCode(sampleCode);
-    setCertificate(null);
-    setHasSearched(false);
-  };
+    setCode(sampleCode)
+    setCertificate(null)
+    setHasSearched(false)
+  }
 
   return (
     <div className="max-w-[1080px] mx-auto py-8 px-4 sm:px-6 pb-24 font-['Montserrat',sans-serif] bg-black text-white">
@@ -163,7 +163,8 @@ export const VerifyPage: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <CheckCircle2 size={18} className="text-[#CFFE06]" />
                     <span className="font-bold text-xs uppercase tracking-wider text-[#CFFE06]">
-                      SERTIFIKAT RESMI TERVERIFIKASI
+                      SERTIFIKAT RESMI TERVERIFIKASI • EVENT:{' '}
+                      {certificate.eventTitle}
                     </span>
                   </div>
 
@@ -291,5 +292,5 @@ export const VerifyPage: React.FC = () => {
       </div>
 
     </div>
-  );
-};
+  )
+}
