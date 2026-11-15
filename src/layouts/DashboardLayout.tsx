@@ -7,6 +7,7 @@ import {
   Calendar,
   ShieldCheck,
   Building2,
+  PaintBucket,
   LogOut,
   ListTodo,
   ChevronLeft,
@@ -159,7 +160,7 @@ export const DashboardLayout: React.FC = () => {
       {
         label: 'Design Sertifikat',
         path: '/dashboard/certificate',
-        icon: <ShieldCheck size={18} />,
+        icon: <PaintBucket size={18} />,
         visible: canAccessCertificates,
       },
       {
