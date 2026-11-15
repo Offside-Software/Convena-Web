@@ -187,7 +187,7 @@ export const LocationPickerMap: React.FC<LocationPickerMapProps> = ({
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-white">
         <span className="font-mono">
           Koordinat:{' '}
-          <strong className="text-slate-900">
+          <strong className="text-white">
             {activeLat.toFixed(5)}, {activeLng.toFixed(5)}
           </strong>
           {venueName ? ` — ${venueName}` : ''}
