@@ -20,49 +20,49 @@ import { ExpenseSpjTable } from './components/ExpenseSpjTable.tsx'
 import { AddExpenseModal } from './components/AddExpenseModal.tsx'
 
 const FinanceDetailsSkeleton: React.FC = () => (
-  <div className="space-y-8 animate-pulse">
+  <div className="space-y-4 animate-pulse">
     {/* 4 Budget Summary Cards Skeleton */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
       {[1, 2, 3, 4].map((i) => (
         <div
           key={i}
-          className="p-5 bg-[#151515] border border-[#262626] rounded-xl space-y-3"
+          className="p-3 bg-[#151515] border border-[#262626] rounded-xl space-y-2"
         >
-          <div className="h-3 w-36 bg-[#242424] rounded" />
-          <div className="h-8 w-44 bg-[#242424] rounded-lg" />
-          <div className="h-3 w-28 bg-[#202020] rounded" />
+          <div className="h-3 w-32 bg-[#242424] rounded" />
+          <div className="h-6 w-36 bg-[#242424] rounded-lg" />
+          <div className="h-2.5 w-24 bg-[#202020] rounded" />
         </div>
       ))}
     </div>
 
     {/* Budget Variance Tracker Skeleton */}
     <div className="bg-[#151515] border border-[#262626] rounded-xl overflow-hidden">
-      <div className="px-6 py-4 bg-[#202020] border-b border-[#262626]">
-        <div className="h-5 w-64 bg-[#2c2c2c] rounded" />
+      <div className="px-4 py-2.5 bg-[#202020] border-b border-[#262626]">
+        <div className="h-4 w-56 bg-[#2c2c2c] rounded" />
       </div>
-      <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="p-3.5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <div
             key={i}
-            className="border border-[#262626] bg-[#181818] rounded-xl p-4 space-y-3"
+            className="border border-[#262626] bg-[#181818] rounded-xl p-3 space-y-2"
           >
             <div className="flex justify-between items-center">
-              <div className="h-4 w-36 bg-[#262626] rounded" />
-              <div className="h-4 w-16 bg-[#262626] rounded-full" />
+              <div className="h-3.5 w-32 bg-[#262626] rounded" />
+              <div className="h-3.5 w-14 bg-[#262626] rounded-full" />
             </div>
-            <div className="h-2 w-full bg-[#262626] rounded-full" />
-            <div className="space-y-2 pt-1">
+            <div className="h-1.5 w-full bg-[#262626] rounded-full" />
+            <div className="space-y-1.5 pt-1">
               <div className="flex justify-between">
-                <div className="h-3 w-16 bg-[#242424] rounded" />
-                <div className="h-3 w-28 bg-[#242424] rounded" />
+                <div className="h-2.5 w-14 bg-[#242424] rounded" />
+                <div className="h-2.5 w-24 bg-[#242424] rounded" />
               </div>
               <div className="flex justify-between">
-                <div className="h-3 w-16 bg-[#242424] rounded" />
-                <div className="h-3 w-24 bg-[#242424] rounded" />
+                <div className="h-2.5 w-14 bg-[#242424] rounded" />
+                <div className="h-2.5 w-20 bg-[#242424] rounded" />
               </div>
               <div className="flex justify-between pt-1 border-t border-[#262626]">
-                <div className="h-3 w-16 bg-[#242424] rounded" />
-                <div className="h-3 w-24 bg-[#242424] rounded" />
+                <div className="h-2.5 w-14 bg-[#242424] rounded" />
+                <div className="h-2.5 w-20 bg-[#242424] rounded" />
               </div>
             </div>
           </div>
@@ -72,31 +72,31 @@ const FinanceDetailsSkeleton: React.FC = () => (
 
     {/* Expense SPJ Table Skeleton */}
     <div className="bg-[#151515] border border-[#262626] rounded-xl overflow-hidden">
-      <div className="px-6 py-4 bg-[#202020] border-b border-[#262626]">
-        <div className="h-5 w-72 bg-[#2c2c2c] rounded" />
+      <div className="px-4 py-2.5 bg-[#202020] border-b border-[#262626]">
+        <div className="h-4 w-60 bg-[#2c2c2c] rounded" />
       </div>
-      <div className="p-6 space-y-4">
-        <div className="flex gap-2">
+      <div className="p-3.5 space-y-3">
+        <div className="flex gap-1.5">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-7 w-24 bg-[#242424] rounded-full" />
+            <div key={i} className="h-6 w-20 bg-[#242424] rounded-full" />
           ))}
         </div>
-        <div className="space-y-3 pt-2">
+        <div className="space-y-2 pt-1">
           {[1, 2, 3, 4].map((row) => (
             <div
               key={row}
-              className="flex items-center justify-between gap-4 py-3 px-3 border-b border-[#202020]"
+              className="flex items-center justify-between gap-3 py-2 px-2.5 border-b border-[#202020]"
             >
-              <div className="space-y-2 flex-1">
-                <div className="h-4 w-56 bg-[#262626] rounded" />
-                <div className="h-3 w-40 bg-[#202020] rounded" />
+              <div className="space-y-1.5 flex-1">
+                <div className="h-3.5 w-48 bg-[#262626] rounded" />
+                <div className="h-2.5 w-32 bg-[#202020] rounded" />
               </div>
-              <div className="h-4 w-28 bg-[#242424] rounded hidden sm:block" />
-              <div className="h-4 w-28 bg-[#262626] rounded" />
-              <div className="h-5 w-24 bg-[#242424] rounded-full hidden md:block" />
-              <div className="flex gap-2">
-                <div className="h-7 w-16 bg-[#262626] rounded-lg" />
-                <div className="h-7 w-8 bg-[#242424] rounded-lg" />
+              <div className="h-3.5 w-24 bg-[#242424] rounded hidden sm:block" />
+              <div className="h-3.5 w-24 bg-[#262626] rounded" />
+              <div className="h-4 w-20 bg-[#242424] rounded-full hidden md:block" />
+              <div className="flex gap-1.5">
+                <div className="h-6 w-14 bg-[#262626] rounded-lg" />
+                <div className="h-6 w-6 bg-[#242424] rounded-lg" />
               </div>
             </div>
           ))}
@@ -412,20 +412,20 @@ export const FinancesPage: React.FC = () => {
       />
 
       {/* Header */}
-      <div className="flex items-start justify-between mb-6 flex-wrap gap-4">
+      <div className="flex items-start justify-between mb-4 flex-wrap gap-3">
         <div>
-          <div className="mb-2 flex items-center gap-2 flex-wrap">
-            <Badge variant="accent">MANAJEMEN KEUANGAN EVENT</Badge>
+          <div className="mb-1 flex items-center gap-1.5 flex-wrap">
+            <Badge variant="accent" className="text-[10px] py-0 px-2">MANAJEMEN KEUANGAN EVENT</Badge>
             {selectedEvent?.myRole && (
-              <Badge variant="dark" className="capitalize">
+              <Badge variant="dark" className="capitalize text-[10px] py-0 px-2">
                 Role: {selectedEvent.myRole}
               </Badge>
             )}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight m-0">
+          <h1 className="!text-lg sm:!text-xl font-extrabold !text-white tracking-tight m-0 !leading-snug">
             Anggaran RAB & SPJ Kuitansi
           </h1>
-          <p className="text-xs sm:text-sm text-[#9C9C9C] mt-1">
+          <p className="!text-xs !text-[#9C9C9C] mt-0.5 m-0 !leading-normal">
             Pelacakan anggaran pos biaya, pencatatan pengeluaran, dan audit verifikasi bukti SPJ spesifik per event.
           </p>
         </div>
@@ -433,7 +433,8 @@ export const FinancesPage: React.FC = () => {
         <Button
           variant="accent"
           size="sm"
-          icon={<Plus size={15} />}
+          className="!py-1.5 !px-3 !text-xs"
+          icon={<Plus size={14} />}
           onClick={handleOpenCreateModal}
           disabled={!selectedEventId}
         >
@@ -442,28 +443,28 @@ export const FinancesPage: React.FC = () => {
       </div>
 
       {/* Event Context Selector Bar */}
-      <div className="p-4 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-10 h-10 rounded-xl bg-[#202020] border border-[#3D3D3D] flex items-center justify-center text-[#CFFE06] shrink-0">
-            <Calendar size={18} />
+      <div className="p-2.5 px-3 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-8 h-8 rounded-lg bg-[#202020] border border-[#3D3D3D] flex items-center justify-center text-[#CFFE06] shrink-0">
+            <Calendar size={15} />
           </div>
           <div className="min-w-0">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#9C9C9C] block">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#9C9C9C] block leading-tight">
               Event Aktif Terpilih
             </span>
-            <div className="text-sm sm:text-base font-bold text-white truncate">
+            <div className="text-xs sm:text-sm font-bold text-white truncate leading-tight mt-0.5">
               {selectedEvent?.title || 'Pilih Event'}
             </div>
             {selectedEvent && (
-              <div className="text-xs text-[#9C9C9C] truncate">
+              <div className="text-[11px] text-[#9C9C9C] truncate leading-tight mt-0.5">
                 {selectedEvent.organizationName} • {selectedEvent.company}
               </div>
             )}
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5 w-full sm:w-auto">
-          <div className="w-full sm:w-72">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="w-full sm:w-64">
             <Select
               aria-label="Pilih Event"
               value={selectedEventId}
@@ -485,23 +486,24 @@ export const FinancesPage: React.FC = () => {
             type="button"
             onClick={() => loadFinanceData(selectedEventId)}
             title="Muat Ulang Data Keuangan"
-            className="p-2.5 rounded-xl bg-[#202020] border border-[#3D3D3D] text-[#9C9C9C] hover:text-[#CFFE06] hover:border-[#CFFE06] cursor-pointer transition-colors shrink-0"
+            className="p-2 rounded-lg bg-[#202020] border border-[#3D3D3D] text-[#9C9C9C] hover:text-[#CFFE06] hover:border-[#CFFE06] cursor-pointer transition-colors shrink-0"
           >
-            <RefreshCw size={16} className={financeLoading ? 'animate-spin text-[#CFFE06]' : ''} />
+            <RefreshCw size={14} className={financeLoading ? 'animate-spin text-[#CFFE06]' : ''} />
           </button>
         </div>
       </div>
 
       {/* Error Alert */}
       {errorMessage && (
-        <div className="bg-[#200010] border border-[#DF00D0] text-[#FF88EC] rounded-xl p-4 text-xs sm:text-sm font-semibold flex items-center justify-between gap-3 mb-6">
-          <div className="flex items-center gap-2.5">
-            <AlertCircle size={18} className="shrink-0 text-[#DF00D0]" />
+        <div className="bg-[#200010] border border-[#DF00D0] text-[#FF88EC] rounded-xl p-3 text-xs font-semibold flex items-center justify-between gap-2.5 mb-4">
+          <div className="flex items-center gap-2">
+            <AlertCircle size={16} className="shrink-0 text-[#DF00D0]" />
             <span>{errorMessage}</span>
           </div>
           <Button
             variant="outline"
             size="sm"
+            className="!py-1 !px-2.5 !text-xs"
             onClick={() => loadFinanceData(selectedEventId)}
           >
             Coba Lagi

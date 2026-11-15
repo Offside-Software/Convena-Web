@@ -44,11 +44,12 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
 
   return (
     <Card
+      compact
       headerColor="dark"
       headerTitle="Alokasi Anggaran (RAB) per Pos Biaya"
-      className="mb-8 font-['Montserrat',sans-serif]"
+      className="mb-4 font-['Montserrat',sans-serif]"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {categories.map((cat) => {
           const sisa = cat.plannedAmount - cat.spentAmount
           const isOver = sisa < 0
@@ -57,12 +58,13 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
           return (
             <div
               key={cat.category}
-              className={`border rounded-xl p-4 transition-colors ${isOver ? 'border-[#DF00D0]/50 bg-[#1e151d]' : 'border-[#3D3D3D]/60 bg-[#151515]'
-                }`}
+              className={`border rounded-xl p-2.5 transition-colors ${
+                isOver ? 'border-[#DF00D0]/50 bg-[#1e151d]' : 'border-[#3D3D3D]/60 bg-[#151515]'
+              }`}
             >
-              <div className="flex justify-between items-center mb-2">
-                <strong className="text-sm font-bold text-white">{cat.label}</strong>
-                <Badge variant={isOver ? 'pink' : 'accent'} className="text-[10px]">
+              <div className="flex justify-between items-center mb-1.5">
+                <strong className="text-xs font-bold text-white">{cat.label}</strong>
+                <Badge variant={isOver ? 'pink' : 'accent'} className="text-[10px] py-0 px-1.5">
                   {isOver ? 'OVER BUDGET' : 'AMAN'}
                 </Badge>
               </div>
@@ -71,15 +73,16 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
                 value={cat.spentAmount}
                 max={cat.plannedAmount || 1}
                 color={isOver ? 'pink' : 'accent'}
-                height={8}
+                height={6}
                 showPercentage={false}
+                className="mb-1"
               />
 
-              <div className="text-xs mt-3 flex flex-col gap-1.5">
+              <div className="text-[11px] mt-2 flex flex-col gap-1">
                 <div className="flex justify-between items-center">
                   <span className="text-[#9C9C9C]">Pagu RAB:</span>
                   {isEditing ? (
-                    <div className="flex gap-1.5 items-center">
+                    <div className="flex gap-1 items-center">
                       <input
                         type="text"
                         inputMode="numeric"
@@ -91,29 +94,29 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
                           if (e.key === 'Enter') handleSave(cat.category)
                           if (e.key === 'Escape' && !isLoading) setEditingCategory(null)
                         }}
-                        className="w-32 !py-1.5 !px-2.5 text-xs font-mono bg-[#202020] border border-[#3D3D3D] focus:border-[#CFFE06] focus:outline-none rounded-lg text-white disabled:opacity-50"
+                        className="w-28 !py-1 !px-2 text-xs font-mono bg-[#202020] border border-[#3D3D3D] focus:border-[#CFFE06] focus:outline-none rounded-md text-white disabled:opacity-50"
                       />
                       <Button
                         variant="accent"
                         size="sm"
                         disabled={isLoading}
-                        icon={isLoading ? <Loader2 size={12} className="animate-spin" /> : undefined}
+                        icon={isLoading ? <Loader2 size={11} className="animate-spin" /> : undefined}
                         onClick={() => handleSave(cat.category)}
-                        className="!py-1 !px-2.5 text-xs"
+                        className="!py-0.5 !px-2 text-xs"
                       >
                         {isLoading ? 'Menyimpan...' : 'OK'}
                       </Button>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2">
-                      <strong className="text-white font-mono">
+                    <div className="flex items-center gap-1.5">
+                      <strong className="text-white font-mono text-xs">
                         Rp {cat.plannedAmount.toLocaleString('id-ID')}
                       </strong>
                       <button
                         type="button"
                         disabled={isLoading}
                         onClick={() => handleEditClick(cat)}
-                        className="text-[11px] underline bg-transparent border-none cursor-pointer font-semibold text-[#CFFE06] disabled:opacity-40 disabled:cursor-not-allowed"
+                        className="text-[10px] underline bg-transparent border-none cursor-pointer font-semibold text-[#CFFE06] disabled:opacity-40 disabled:cursor-not-allowed"
                       >
                         Ubah
                       </button>
@@ -123,7 +126,7 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
 
                 <div className="flex justify-between">
                   <span className="text-[#9C9C9C]">Terpakai:</span>
-                  <strong className="text-white font-mono">
+                  <strong className="text-white font-mono text-xs">
                     Rp {cat.spentAmount.toLocaleString('id-ID')}
                   </strong>
                 </div>
@@ -131,8 +134,9 @@ export const BudgetVarianceTracker: React.FC<BudgetVarianceTrackerProps> = ({
                 <div className="flex justify-between pt-1 border-t border-[#3D3D3D]/40">
                   <span className="text-[#9C9C9C]">Sisa Saldo:</span>
                   <strong
-                    className={`font-mono ${isOver ? 'text-[#DF00D0]' : 'text-[#CFFE06]'
-                      }`}
+                    className={`font-mono text-xs ${
+                      isOver ? 'text-[#DF00D0]' : 'text-[#CFFE06]'
+                    }`}
                   >
                     Rp {sisa.toLocaleString('id-ID')}
                   </strong>

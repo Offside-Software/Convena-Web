@@ -80,79 +80,79 @@ export const DashboardPage: React.FC = () => {
 
   if (authLoading || dataLoading) {
     return (
-      <div className="font-['Montserrat',sans-serif] bg-[#000000] text-white space-y-8 animate-pulse">
+      <div className="font-['Montserrat',sans-serif] bg-[#000000] text-white space-y-4 animate-pulse">
         {/* Header Bar Skeleton */}
-        <div className="flex items-start justify-between flex-wrap gap-4">
-          <div className="space-y-2.5">
+        <div className="flex items-start justify-between flex-wrap gap-3">
+          <div className="space-y-1.5">
             <div className="flex items-center gap-2">
-              <div className="h-5 w-24 bg-[#242424] rounded-full" />
-              <div className="h-4 w-36 bg-[#202020] rounded" />
+              <div className="h-4 w-20 bg-[#242424] rounded-full" />
+              <div className="h-3.5 w-28 bg-[#202020] rounded" />
             </div>
-            <div className="h-8 w-72 sm:w-96 bg-[#262626] rounded-lg" />
-            <div className="h-4 w-64 sm:w-[440px] bg-[#1c1c1c] rounded" />
+            <div className="h-6 w-60 sm:w-72 bg-[#262626] rounded-lg" />
+            <div className="h-3.5 w-56 sm:w-96 bg-[#1c1c1c] rounded" />
           </div>
-          <div className="flex gap-2.5">
-            <div className="h-10 w-40 bg-[#262626] rounded-full" />
-            <div className="h-10 w-32 bg-[#202020] rounded-full" />
+          <div className="flex gap-2">
+            <div className="h-8 w-32 bg-[#262626] rounded-full" />
+            <div className="h-8 w-24 bg-[#202020] rounded-full" />
           </div>
         </div>
 
         {/* 4 Metric Stat Cards Skeleton */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
-              className="p-5 bg-[#151515] border border-[#262626] rounded-xl space-y-3"
+              className="p-3.5 bg-[#151515] border border-[#262626] rounded-xl space-y-2"
             >
               <div className="flex justify-between items-center">
-                <div className="h-3.5 w-28 bg-[#242424] rounded" />
-                <div className="w-8 h-8 rounded-lg bg-[#242424]" />
+                <div className="h-3 w-24 bg-[#242424] rounded" />
+                <div className="w-7 h-7 rounded-full bg-[#242424]" />
               </div>
-              <div className="h-7 w-32 bg-[#262626] rounded" />
-              <div className="h-3 w-36 bg-[#202020] rounded" />
+              <div className="h-6 w-24 bg-[#262626] rounded" />
+              <div className="h-3 w-28 bg-[#202020] rounded" />
             </div>
           ))}
         </div>
 
         {/* Two Column Section Skeleton */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6">
-          <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-4">
+          <div className="space-y-4">
             <div className="bg-[#151515] border border-[#262626] rounded-xl overflow-hidden">
-              <div className="px-6 py-4 bg-[#202020] border-b border-[#262626]">
-                <div className="h-5 w-48 bg-[#2c2c2c] rounded" />
+              <div className="px-4 py-2.5 bg-[#202020] border-b border-[#262626]">
+                <div className="h-4 w-44 bg-[#2c2c2c] rounded" />
               </div>
-              <div className="p-6 space-y-3">
+              <div className="p-3.5 space-y-2">
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="flex items-center justify-between p-3.5 border border-[#262626] rounded-xl bg-[#181818]"
+                    className="flex items-center justify-between p-2.5 border border-[#262626] rounded-lg bg-[#181818]"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-lg bg-[#262626]" />
-                      <div className="space-y-2">
-                        <div className="h-4 w-48 bg-[#262626] rounded" />
-                        <div className="h-3 w-36 bg-[#202020] rounded" />
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-9 h-9 rounded-md bg-[#262626]" />
+                      <div className="space-y-1.5">
+                        <div className="h-3.5 w-40 bg-[#262626] rounded" />
+                        <div className="h-3 w-32 bg-[#202020] rounded" />
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <div className="h-8 w-24 bg-[#242424] rounded-full" />
-                      <div className="h-8 w-20 bg-[#242424] rounded-full" />
+                    <div className="flex gap-1.5">
+                      <div className="h-7 w-20 bg-[#242424] rounded-full" />
+                      <div className="h-7 w-16 bg-[#242424] rounded-full" />
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[1, 2].map((i) => (
                 <div
                   key={i}
-                  className="p-5 bg-[#151515] border border-[#262626] rounded-xl flex items-center gap-3.5"
+                  className="p-3 bg-[#151515] border border-[#262626] rounded-lg flex items-center gap-3"
                 >
-                  <div className="w-10 h-10 rounded-full bg-[#242424] shrink-0" />
-                  <div className="space-y-2 flex-1">
-                    <div className="h-4 w-36 bg-[#262626] rounded" />
-                    <div className="h-3 w-44 bg-[#202020] rounded" />
+                  <div className="w-8 h-8 rounded-full bg-[#242424] shrink-0" />
+                  <div className="space-y-1.5 flex-1">
+                    <div className="h-3.5 w-28 bg-[#262626] rounded" />
+                    <div className="h-3 w-36 bg-[#202020] rounded" />
                   </div>
                 </div>
               ))}
@@ -160,30 +160,30 @@ export const DashboardPage: React.FC = () => {
           </div>
 
           <div className="bg-[#151515] border border-[#262626] rounded-xl overflow-hidden">
-            <div className="px-6 py-4 bg-[#202020] border-b border-[#262626]">
-              <div className="h-5 w-56 bg-[#2c2c2c] rounded" />
+            <div className="px-4 py-2.5 bg-[#202020] border-b border-[#262626]">
+              <div className="h-4 w-48 bg-[#2c2c2c] rounded" />
             </div>
-            <div className="p-6 space-y-4">
-              <div className="space-y-2">
+            <div className="p-3.5 space-y-3">
+              <div className="space-y-1.5">
                 <div className="flex justify-between">
-                  <div className="h-3 w-32 bg-[#242424] rounded" />
                   <div className="h-3 w-28 bg-[#242424] rounded" />
+                  <div className="h-3 w-24 bg-[#242424] rounded" />
                 </div>
-                <div className="h-2 w-full bg-[#262626] rounded-full" />
-                <div className="h-3 w-40 bg-[#202020] rounded" />
+                <div className="h-1.5 w-full bg-[#262626] rounded-full" />
+                <div className="h-3 w-36 bg-[#202020] rounded" />
               </div>
-              <div className="pt-4 border-t border-[#262626] space-y-3">
+              <div className="pt-3 border-t border-[#262626] space-y-2">
                 {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="space-y-1.5">
+                  <div key={i} className="space-y-1">
                     <div className="flex justify-between">
-                      <div className="h-3 w-36 bg-[#242424] rounded" />
-                      <div className="h-3 w-20 bg-[#242424] rounded" />
+                      <div className="h-3 w-32 bg-[#242424] rounded" />
+                      <div className="h-3 w-16 bg-[#242424] rounded" />
                     </div>
                     <div className="h-1.5 w-full bg-[#262626] rounded-full" />
                   </div>
                 ))}
               </div>
-              <div className="h-9 w-full bg-[#242424] rounded-full mt-4" />
+              <div className="h-8 w-full bg-[#242424] rounded-full mt-3" />
             </div>
           </div>
         </div>
@@ -201,36 +201,37 @@ export const DashboardPage: React.FC = () => {
   return (
     <div className="font-['Montserrat',sans-serif] bg-[#000000] text-white">
       {/* Header Bar */}
-      <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
+      <div className="flex items-start justify-between mb-4 flex-wrap gap-3">
         <div>
-          <div className="mb-2 flex items-center gap-2">
-            <Badge variant="accent">
+          <div className="mb-1 flex items-center gap-2">
+            <Badge variant="accent" className="text-[10px] py-0 px-2">
               WORKSPACE
             </Badge>
-            <span className="text-xs text-[#9C9C9C]">
+            <span className="text-[11px] text-[#9C9C9C]">
               Halo, <span className="text-white font-bold">{currentUser.displayName || currentUser.name}</span>
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight m-0">
+          <h1 className="!text-lg sm:!text-xl font-extrabold !text-white tracking-tight m-0 !leading-snug">
             Ringkasan Manajemen Ormawa
           </h1>
-          <p className="text-xs sm:text-sm text-[#9C9C9C] mt-1">
+          <p className="!text-xs !text-[#9C9C9C] mt-0.5 mb-0 !leading-normal">
             Pantau kinerja kegiatan, serapan anggaran SPJ kuitansi, dan kesepakatan sponsorship.
           </p>
         </div>
 
-        <div className="flex gap-2.5">
+        <div className="flex gap-2">
           <Link to="/dashboard/events/create" className="no-underline">
             <Button
               variant="accent"
               size="sm"
-              icon={<Plus size={15} />}
+              className="!py-1.5 !px-3 !text-xs"
+              icon={<Plus size={14} />}
             >
               Buat Event Baru
             </Button>
           </Link>
           <Link to="/dashboard/finances" className="no-underline">
-            <Button variant="outline" size="sm" icon={<Receipt size={15} />}>
+            <Button variant="outline" size="sm" className="!py-1.5 !px-3 !text-xs" icon={<Receipt size={14} />}>
               Catat SPJ
             </Button>
           </Link>
@@ -238,107 +239,112 @@ export const DashboardPage: React.FC = () => {
       </div>
 
       {/* 4 Primary Metric Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
         <StatCard
+          compact
           title="Total Pendaftar"
           value={totalAttendees.toLocaleString('id-ID')}
           change="+18.4%"
           isPositive={true}
-          icon={<Users size={18} />}
+          icon={<Users size={14} />}
           subtitle="dari target 1.750"
         />
 
         <StatCard
+          compact
           title="Sponsor Terkumpul"
           value={`Rp ${(totalSponsorValue / 1000000).toFixed(1)} jt`}
           change="3 Deal Baru"
           isPositive={true}
-          icon={<Sparkles size={18} />}
+          icon={<Sparkles size={14} />}
           subtitle="Pipeline aktif Rp 100 jt"
         />
 
         <StatCard
+          compact
           title="Realisasi Pengeluaran"
           value={budget ? `Rp ${(budget.totalExpenseRealized / 1000000).toFixed(1)} jt` : 'Rp 0'}
           change={`${budget ? Math.round((budget.totalExpenseRealized / budget.totalBudgetPlanned) * 100) : 0}%`}
           isPositive={true}
-          icon={<DollarSign size={18} />}
+          icon={<DollarSign size={14} />}
           subtitle="dari pagu anggaran"
         />
 
         <StatCard
+          compact
           title="Kuitansi SPJ Pending"
           value={budget?.pendingSpjCount || 0}
           change="Perlu review"
           isPositive={false}
-          icon={<Receipt size={18} />}
+          icon={<Receipt size={14} />}
           subtitle="Bendahara Organisasi"
         />
       </div>
 
       {/* Two Column Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-4">
         {/* Left Column: Active Events Management */}
-        <div className="space-y-6">
-          <Card headerColor="dark" headerTitle="Event Aktif Kepengurusan">
+        <div className="space-y-4">
+          <Card compact headerColor="dark" headerTitle="Event Aktif Kepengurusan">
             {events.length === 0 ? (
-              <div className="p-8 text-center bg-[#151515] rounded-xl border border-dashed border-[#3D3D3D]">
-                <CalendarCheck size={36} className="text-[#9C9C9C] mx-auto mb-2" />
-                <h4 className="font-bold text-sm text-white mb-1">
+              <div className="p-5 text-center bg-[#151515] rounded-lg border border-dashed border-[#3D3D3D]">
+                <CalendarCheck size={28} className="text-[#9C9C9C] mx-auto mb-1.5" />
+                <h4 className="font-bold text-xs text-white mb-1">
                   Belum Ada Event Aktif
                 </h4>
-                <p className="text-xs text-[#9C9C9C] mb-4">
+                <p className="!text-xs !text-[#9C9C9C] mb-3 !leading-snug">
                   Buat event pertama Anda sekarang untuk mulai mengelola tiket, anggaran, dan sponsorship.
                 </p>
                 <Link to="/dashboard/events/create" className="no-underline">
                   <Button
                     variant="accent"
                     size="sm"
-                    icon={<Plus size={15} />}
+                    className="!py-1.5 !px-3 !text-xs"
+                    icon={<Plus size={14} />}
                   >
                     Buat Event Pertama
                   </Button>
                 </Link>
               </div>
             ) : (
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2">
                 {events.map((evt) => (
                   <div
                     key={evt.id}
-                    className="flex items-center justify-between p-3.5 border border-[#3D3D3D]/50 rounded-xl bg-[#151515] hover:border-[#CFFE06]/40 transition-colors"
+                    className="flex items-center justify-between gap-2.5 flex-wrap sm:flex-nowrap p-2.5 px-3 border border-[#3D3D3D]/50 rounded-lg bg-[#151515] hover:border-[#CFFE06]/40 transition-colors"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2.5 min-w-0">
                       <img
                         src={evt.bannerUrl || ''}
                         alt=""
-                        className="w-12 h-12 rounded-lg border border-[#3D3D3D] object-cover"
+                        className="w-9 h-9 rounded-md border border-[#3D3D3D] object-cover shrink-0"
                       />
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-sm text-white">{evt.title}</span>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-bold text-xs text-white truncate">{evt.title}</span>
                           {evt.myRole && (
                             <Badge
                               variant="accent"
-                              className="text-[10px] py-0.5 px-2 capitalize"
+                              className="text-[10px] py-0 px-1.5 capitalize shrink-0"
                             >
                               {evt.myRole}
                             </Badge>
                           )}
                         </div>
-                        <div className="text-xs text-[#9C9C9C] mt-0.5">
+                        <div className="text-[11px] text-[#9C9C9C] mt-0.5 truncate">
                           {evt.attendeeCount} / {evt.totalCapacity} Tiket Terbit • {evt.category}
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 shrink-0">
                       <Link to={`/dashboard/finances?eventId=${evt.id}`} className="no-underline">
-                        <Button variant="outline" size="sm" icon={<Receipt size={14} />}>
+                        <Button variant="outline" size="sm" className="!py-1 !px-2.5 !text-[11px]" icon={<Receipt size={12} />}>
                           RAB & SPJ
                         </Button>
                       </Link>
                       <Link to={`/dashboard/events/${evt.id}/edit`} className="no-underline">
-                        <Button variant="outline" size="sm" icon={<ArrowUpRight size={14} />}>
+                        <Button variant="outline" size="sm" className="!py-1 !px-2.5 !text-[11px]" icon={<ArrowUpRight size={12} />}>
                           Kelola
                         </Button>
                       </Link>
@@ -350,17 +356,17 @@ export const DashboardPage: React.FC = () => {
           </Card>
 
           {/* Quick Action Tiles */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Link to="/dashboard/sponsorship" className="no-underline">
-              <div className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl hover:border-[#CFFE06]/50 transition-colors flex items-center gap-3.5 cursor-pointer">
-                <div className="w-10 h-10 rounded-full bg-[#202020] text-[#CFFE06] flex items-center justify-center shrink-0">
-                  <Sparkles size={20} />
+              <div className="p-3 bg-[#151515] border border-[#3D3D3D]/60 rounded-lg hover:border-[#CFFE06]/50 transition-colors flex items-center gap-3 cursor-pointer">
+                <div className="w-8 h-8 rounded-full bg-[#202020] text-[#CFFE06] flex items-center justify-center shrink-0">
+                  <Sparkles size={16} />
                 </div>
-                <div>
-                  <h4 className="text-sm font-bold text-white m-0">
+                <div className="min-w-0">
+                  <h4 className="!text-xs font-bold !text-white m-0 truncate">
                     Sponsorship CRM
                   </h4>
-                  <p className="m-0 text-xs text-[#9C9C9C] mt-0.5">
+                  <p className="m-0 !text-[11px] !text-[#9C9C9C] mt-0.5 !leading-tight truncate">
                     Buka kanban pipeline mitra
                   </p>
                 </div>
@@ -368,15 +374,15 @@ export const DashboardPage: React.FC = () => {
             </Link>
 
             <Link to="/dashboard/verify" className="no-underline">
-              <div className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl hover:border-[#CFFE06]/50 transition-colors flex items-center gap-3.5 cursor-pointer">
-                <div className="w-10 h-10 rounded-full bg-[#202020] text-[#CFFE06] flex items-center justify-center shrink-0">
-                  <FileCheck size={20} />
+              <div className="p-3 bg-[#151515] border border-[#3D3D3D]/60 rounded-lg hover:border-[#CFFE06]/50 transition-colors flex items-center gap-3 cursor-pointer">
+                <div className="w-8 h-8 rounded-full bg-[#202020] text-[#CFFE06] flex items-center justify-center shrink-0">
+                  <FileCheck size={16} />
                 </div>
-                <div>
-                  <h4 className="text-sm font-bold text-white m-0">
+                <div className="min-w-0">
+                  <h4 className="!text-xs font-bold !text-white m-0 truncate">
                     Validasi Sertifikat
                   </h4>
-                  <p className="m-0 text-xs text-[#9C9C9C] mt-0.5">
+                  <p className="m-0 !text-[11px] !text-[#9C9C9C] mt-0.5 !leading-tight truncate">
                     Validasi sertifikat di workspace
                   </p>
                 </div>
@@ -386,8 +392,9 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         {/* Right Column: Financial Burn Rate & SPJ Audit Status */}
-        <div className="space-y-6">
+        <div className="space-y-4">
           <Card
+            compact
             headerColor="dark"
             headerTitle={
               events[0]
@@ -397,8 +404,8 @@ export const DashboardPage: React.FC = () => {
           >
             {budget ? (
               <div>
-                <div className="mb-5">
-                  <div className="flex justify-between text-xs mb-1.5">
+                <div className="mb-3.5">
+                  <div className="flex justify-between text-[11px] mb-1">
                     <span className="text-[#9C9C9C]">
                       Pagu: Rp {budget.totalBudgetPlanned.toLocaleString('id-ID')}
                     </span>
@@ -410,49 +417,51 @@ export const DashboardPage: React.FC = () => {
                     value={budget.totalExpenseRealized}
                     max={budget.totalBudgetPlanned || 1}
                     color="accent"
-                    height={8}
+                    height={6}
+                    className="mb-1"
                   />
-                  <div className="text-xs text-[#9C9C9C] mt-1.5">
+                  <div className="text-[11px] text-[#9C9C9C]">
                     Sisa Anggaran: <span className="text-white font-semibold">Rp {budget.remainingBudget.toLocaleString('id-ID')}</span>
                   </div>
                 </div>
 
-                <div className="border-t border-[#3D3D3D]/50 pt-4">
-                  <h4 className="text-xs font-bold text-white mb-3 uppercase tracking-wider">
+                <div className="border-t border-[#3D3D3D]/50 pt-3">
+                  <h4 className="!text-[11px] font-bold text-white mb-2 uppercase tracking-wider">
                     Alokasi per Pos Biaya
                   </h4>
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-2">
                     {budget.categories.map((c) => (
                       <div key={c.category}>
-                        <div className="flex justify-between text-xs text-[#9C9C9C] mb-1">
-                          <span>{c.label}</span>
-                          <span className="text-white font-medium">Rp {(c.spentAmount / 1000000).toFixed(1)} jt</span>
+                        <div className="flex justify-between text-[11px] text-[#9C9C9C] mb-0.5">
+                          <span className="truncate pr-2">{c.label}</span>
+                          <span className="text-white font-medium shrink-0">Rp {(c.spentAmount / 1000000).toFixed(1)} jt</span>
                         </div>
                         <ProgressBar
                           value={c.spentAmount}
                           max={c.plannedAmount || 1}
                           color={c.plannedAmount > 0 && c.spentAmount >= c.plannedAmount ? 'purple' : 'accent'}
                           showPercentage={false}
-                          height={6}
+                          height={5}
+                          className="mb-0"
                         />
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="mt-5">
+                <div className="mt-3.5">
                   <Link
                     to={events[0] ? `/dashboard/finances?eventId=${events[0].id}` : '/dashboard/finances'}
                     className="no-underline"
                   >
-                    <Button variant="outline" fullWidth size="sm">
+                    <Button variant="outline" fullWidth size="sm" className="!py-1.5 !text-xs">
                       Buka Rincian SPJ & Kuitansi →
                     </Button>
                   </Link>
                 </div>
               </div>
             ) : (
-              <div className="p-6 text-center text-xs text-[#9C9C9C]">
+              <div className="p-4 text-center text-xs text-[#9C9C9C]">
                 Pilih atau buat event terlebih dahulu untuk memantau anggaran RAB dan kuitansi SPJ.
               </div>
             )}

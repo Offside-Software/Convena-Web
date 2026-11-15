@@ -6,6 +6,7 @@ export interface CardProps {
   headerTitle?: string
   headerAction?: React.ReactNode
   hoverable?: boolean
+  compact?: boolean
   className?: string
   style?: React.CSSProperties
   onClick?: () => void
@@ -17,6 +18,7 @@ export const Card: React.FC<CardProps> = ({
   headerTitle,
   headerAction,
   hoverable = true,
+  compact = false,
   className = '',
   style,
   onClick,
@@ -33,18 +35,20 @@ export const Card: React.FC<CardProps> = ({
     >
       {headerColor !== 'none' && (
         <div
-          className="border-b border-[#3D3D3D]/60 bg-[#151515] py-3 px-5 flex items-center justify-between font-['Montserrat',sans-serif]"
+          className={`border-b border-[#3D3D3D]/60 bg-[#151515] flex items-center justify-between font-['Montserrat',sans-serif] ${
+            compact ? 'py-2.5 px-4' : 'py-3 px-5'
+          }`}
         >
           {headerTitle && (
-            <h4 className="m-0 text-sm font-bold tracking-tight text-white flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#CFFE06]" />
+            <h4 className={`m-0 font-bold tracking-tight text-white flex items-center gap-2 ${compact ? '!text-xs sm:!text-sm' : 'text-sm'}`}>
+              <span className={`${compact ? 'w-1.5 h-1.5' : 'w-2 h-2'} rounded-full bg-[#CFFE06]`} />
               {headerTitle}
             </h4>
           )}
           {headerAction && <div>{headerAction}</div>}
         </div>
       )}
-      <div className="p-5">{children}</div>
+      <div className={compact ? 'p-3.5' : 'p-5'}>{children}</div>
     </div>
   )
 }

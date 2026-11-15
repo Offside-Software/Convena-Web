@@ -214,35 +214,35 @@ export const TaskManagementPage: React.FC = () => {
   }
 
   const renderTask = (task: CommitteeTask) => (
-    <article key={task.id} className="bg-[#151515] border border-[#303030] rounded-xl p-4 space-y-3">
-      <div className="flex items-start justify-between gap-3">
-        <div className="space-y-1">
-          <Badge variant="dark" className="text-[10px]">
+    <article key={task.id} className="bg-[#151515] border border-[#303030] rounded-xl p-2.5 space-y-2">
+      <div className="flex items-start justify-between gap-2">
+        <div className="space-y-0.5 min-w-0">
+          <Badge variant="dark" className="text-[10px] py-0 px-1.5">
             {task.division || 'Umum'}
           </Badge>
-          <h3 className="text-sm font-bold text-white m-0 break-words">{task.title}</h3>
+          <h3 className="text-xs font-bold text-white m-0 break-words leading-snug">{task.title}</h3>
         </div>
         <button
           type="button"
           onClick={() => handleDeleteTask(task.id)}
-          className="text-[#777] hover:text-[#DF00D0] bg-transparent border-none p-1 cursor-pointer"
+          className="text-[#777] hover:text-[#DF00D0] bg-transparent border-none p-1 cursor-pointer shrink-0"
           aria-label={`Hapus task ${task.title}`}
           title="Hapus task"
         >
-          <Trash2 size={15} />
+          <Trash2 size={13} />
         </button>
       </div>
       {task.description && (
-        <p className="text-xs text-[#9C9C9C] m-0 whitespace-pre-line">{task.description}</p>
+        <p className="!text-[11px] !text-[#9C9C9C] m-0 whitespace-pre-line !leading-tight">{task.description}</p>
       )}
-      <div className="flex flex-wrap gap-x-4 gap-y-2 text-[11px] text-[#9C9C9C]">
-        <span className="flex items-center gap-1.5">
-          <UserRound size={13} className="text-[#CFFE06]" />
+      <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-[#9C9C9C]">
+        <span className="flex items-center gap-1">
+          <UserRound size={12} className="text-[#CFFE06]" />
           {task.assignee}
         </span>
-        <span className={`flex items-center gap-1.5 ${isOverdue(task) ? 'text-[#DF00D0]' : ''}`}>
+        <span className={`flex items-center gap-1 ${isOverdue(task) ? 'text-[#DF00D0]' : ''}`}>
           <CalendarDays
-            size={13}
+            size={12}
             className={isOverdue(task) ? 'text-[#DF00D0]' : 'text-[#CFFE06]'}
           />
           {formatDueDate(task.dueDate)}
@@ -257,7 +257,7 @@ export const TaskManagementPage: React.FC = () => {
         options={TASK_STATUSES}
         size="sm"
         variant="surface"
-        className="!w-auto !mb-0"
+        className="!w-auto !mb-0 !py-1 !text-[11px]"
         fullWidth={false}
       />
     </article>
@@ -265,22 +265,23 @@ export const TaskManagementPage: React.FC = () => {
 
   return (
     <div className="font-['Montserrat',sans-serif] bg-[#000000] text-white">
-      <div className="flex flex-wrap items-start justify-between gap-4 mb-7">
+      <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
         <div>
-          <div className="mb-2">
-            <Badge variant="accent">MANAJEMEN TASK PANITIA PER EVENT</Badge>
+          <div className="mb-1">
+            <Badge variant="accent" className="text-[10px] py-0 px-2">MANAJEMEN TASK PANITIA PER EVENT</Badge>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight m-0">
+          <h1 className="!text-lg sm:!text-xl font-extrabold !text-white tracking-tight m-0 !leading-snug">
             Task Panitia Event
           </h1>
-          <p className="text-xs sm:text-sm text-[#9C9C9C] mt-1">
+          <p className="!text-xs !text-[#9C9C9C] mt-0.5 m-0 !leading-normal">
             Setiap event memiliki manajemen tugas panitia tersendiri yang terhubung dengan susunan anggota & divisi event.
           </p>
         </div>
         <Button
           variant="accent"
           size="sm"
-          icon={<Plus size={15} />}
+          className="!py-1.5 !px-3 !text-xs"
+          icon={<Plus size={14} />}
           disabled={!selectedEventId}
           onClick={() => setShowForm((open) => !open)}
         >
@@ -291,7 +292,7 @@ export const TaskManagementPage: React.FC = () => {
       {error && (
         <div
           role="alert"
-          className="rounded-xl border border-[#DF00D0]/40 bg-[#DF00D0]/10 p-3 mb-5 text-xs text-[#ff80f3]"
+          className="rounded-xl border border-[#DF00D0]/40 bg-[#DF00D0]/10 p-2.5 mb-3.5 text-xs text-[#ff80f3]"
         >
           {error}
         </div>
@@ -300,23 +301,23 @@ export const TaskManagementPage: React.FC = () => {
       {showForm && (
         <form
           onSubmit={handleCreateTask}
-          className="bg-[#151515] border border-[#3D3D3D]/60 rounded-xl p-5 mb-5 space-y-4"
+          className="bg-[#151515] border border-[#3D3D3D]/60 rounded-xl p-3.5 mb-3.5 space-y-2.5"
         >
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-bold text-white m-0">
+            <h2 className="text-xs sm:text-sm font-bold text-white m-0">
               Buat Task Panitia — {selectedEvent?.title}
             </h2>
-            <Badge variant="accent" className="text-[10px]">
+            <Badge variant="accent" className="text-[10px] py-0 px-1.5">
               Tersinkron ke Database Event
             </Badge>
           </div>
 
           {eventMembers.length > 0 && (
             <div>
-              <label className="block text-[11px] font-semibold text-[#9C9C9C] mb-1.5">
+              <label className="block text-[10px] font-semibold text-[#9C9C9C] mb-1">
                 Pilih Cepat Penanggung Jawab dari Panitia Event Ini:
               </label>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1">
                 {eventMembers.map((m) => (
                   <button
                     key={m.userId}
@@ -326,7 +327,7 @@ export const TaskManagementPage: React.FC = () => {
                       setAssignee(m.displayName)
                       if (m.division) setDivision(m.division)
                     }}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer ${
+                    className={`px-2 py-0.5 rounded-md text-[11px] font-semibold border transition cursor-pointer ${
                       assignee === m.displayName
                         ? 'bg-[#CFFE06] text-black border-[#CFFE06]'
                         : 'bg-[#202020] text-[#CCCCCC] border-[#333333] hover:border-[#CFFE06]/50'
@@ -339,11 +340,11 @@ export const TaskManagementPage: React.FC = () => {
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
             <div>
               <label
                 htmlFor="task-title"
-                className="block text-xs font-semibold text-[#9C9C9C] mb-1.5"
+                className="block text-[11px] font-semibold text-[#9C9C9C] mb-1"
               >
                 Nama Tugas *
               </label>
@@ -354,14 +355,14 @@ export const TaskManagementPage: React.FC = () => {
                 required
                 maxLength={150}
                 placeholder="Contoh: Finalisasi izin penggunaan gedung & bandwidth"
-                className="w-full px-3.5 py-2 rounded-xl bg-[#101010] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
+                className="w-full px-3 py-1.5 rounded-lg bg-[#101010] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
               />
             </div>
 
             <div>
               <label
                 htmlFor="task-assignee"
-                className="block text-xs font-semibold text-[#9C9C9C] mb-1.5"
+                className="block text-[11px] font-semibold text-[#9C9C9C] mb-1"
               >
                 Penanggung Jawab (PIC) *
               </label>
@@ -372,14 +373,14 @@ export const TaskManagementPage: React.FC = () => {
                 required
                 maxLength={100}
                 placeholder="Nama anggota panitia"
-                className="w-full px-3.5 py-2 rounded-xl bg-[#101010] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
+                className="w-full px-3 py-1.5 rounded-lg bg-[#101010] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
               />
             </div>
 
             <div>
               <label
                 htmlFor="task-division"
-                className="block text-xs font-semibold text-[#9C9C9C] mb-1.5"
+                className="block text-[11px] font-semibold text-[#9C9C9C] mb-1"
               >
                 Divisi Kepanitiaan *
               </label>
@@ -387,7 +388,7 @@ export const TaskManagementPage: React.FC = () => {
                 id="task-division"
                 value={division}
                 onChange={(e) => setDivision(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-xl bg-[#101010] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
+                className="w-full px-3 py-1.5 rounded-lg bg-[#101010] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
               >
                 {DIVISION_OPTIONS.map((div) => (
                   <option key={div} value={div}>
@@ -400,7 +401,7 @@ export const TaskManagementPage: React.FC = () => {
             <div>
               <label
                 htmlFor="task-due-date"
-                className="block text-xs font-semibold text-[#9C9C9C] mb-1.5"
+                className="block text-[11px] font-semibold text-[#9C9C9C] mb-1"
               >
                 Tenggat Waktu *
               </label>
@@ -410,14 +411,14 @@ export const TaskManagementPage: React.FC = () => {
                 value={dueDate}
                 onChange={(event) => setDueDate(event.target.value)}
                 required
-                className="w-full px-3.5 py-2 rounded-xl bg-[#101010] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
+                className="w-full px-3 py-1.5 rounded-lg bg-[#101010] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
               />
             </div>
 
             <div className="md:col-span-2">
               <label
                 htmlFor="task-description"
-                className="block text-xs font-semibold text-[#9C9C9C] mb-1.5"
+                className="block text-[11px] font-semibold text-[#9C9C9C] mb-1"
               >
                 Deskripsi & Catatan Teknis (Opsional)
               </label>
@@ -428,22 +429,22 @@ export const TaskManagementPage: React.FC = () => {
                 rows={2}
                 maxLength={1000}
                 placeholder="Rincian deliverable atau koordinasi lintas divisi..."
-                className="w-full px-3.5 py-2 rounded-xl bg-[#101010] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
+                className="w-full px-3 py-1.5 rounded-lg bg-[#101010] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
               />
             </div>
           </div>
-          <Button type="submit" variant="accent" size="sm" icon={<Plus size={14} />}>
+          <Button type="submit" variant="accent" size="sm" className="!py-1.5 !px-3 !text-xs" icon={<Plus size={13} />}>
             Simpan Task ke Event
           </Button>
         </form>
       )}
 
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-[#151515] border border-[#3D3D3D]/50 rounded-xl p-4 mb-5">
-        <div className="flex items-center gap-3 flex-wrap">
-          <label htmlFor="task-event" className="text-xs font-semibold text-[#9C9C9C]">
+      <div className="flex flex-wrap items-center justify-between gap-2.5 bg-[#151515] border border-[#3D3D3D]/50 rounded-xl p-2.5 px-3 mb-3.5">
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <label htmlFor="task-event" className="text-[11px] font-semibold text-[#9C9C9C]">
             Event:
           </label>
-          <div className="min-w-64">
+          <div className="min-w-56">
             <Select
               id="task-event"
               value={selectedEventId}
@@ -468,12 +469,12 @@ export const TaskManagementPage: React.FC = () => {
           </div>
 
           {availableDivisions.length > 0 && (
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <Layers size={14} className="text-[#CFFE06] ml-1" />
+            <div className="flex items-center gap-1 flex-wrap">
+              <Layers size={13} className="text-[#CFFE06] ml-0.5" />
               <button
                 type="button"
                 onClick={() => setDivisionFilter('all')}
-                className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border cursor-pointer ${
+                className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border cursor-pointer ${
                   divisionFilter === 'all'
                     ? 'bg-[#CFFE06] text-black border-[#CFFE06]'
                     : 'bg-[#202020] text-[#9C9C9C] border-[#333333]'
@@ -486,7 +487,7 @@ export const TaskManagementPage: React.FC = () => {
                   key={div}
                   type="button"
                   onClick={() => setDivisionFilter(div)}
-                  className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border cursor-pointer ${
+                  className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border cursor-pointer ${
                     divisionFilter === div
                       ? 'bg-[#CFFE06] text-black border-[#CFFE06]'
                       : 'bg-[#202020] text-[#9C9C9C] border-[#333333]'
@@ -499,40 +500,40 @@ export const TaskManagementPage: React.FC = () => {
           )}
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1">
           <button
             type="button"
             onClick={() => setView('board')}
             aria-pressed={view === 'board'}
-            className={`p-2 rounded-lg border cursor-pointer ${
+            className={`p-1.5 rounded-md border cursor-pointer ${
               view === 'board'
                 ? 'bg-[#CFFE06] text-black border-[#CFFE06]'
                 : 'bg-[#202020] text-[#9C9C9C] border-[#3D3D3D]'
             }`}
             title="Tampilan Kanban"
           >
-            <LayoutGrid size={16} />
+            <LayoutGrid size={15} />
           </button>
           <button
             type="button"
             onClick={() => setView('list')}
             aria-pressed={view === 'list'}
-            className={`p-2 rounded-lg border cursor-pointer ${
+            className={`p-1.5 rounded-md border cursor-pointer ${
               view === 'list'
                 ? 'bg-[#CFFE06] text-black border-[#CFFE06]'
                 : 'bg-[#202020] text-[#9C9C9C] border-[#3D3D3D]'
             }`}
             title="Tampilan daftar"
           >
-            <List size={16} />
+            <List size={15} />
           </button>
         </div>
       </div>
 
       {selectedEvent && (
-        <div className="flex flex-wrap items-center gap-4 mb-5 text-xs text-[#9C9C9C]">
-          <span className="flex items-center gap-1.5">
-            <ClipboardList size={14} className="text-[#CFFE06]" />
+        <div className="flex flex-wrap items-center gap-3 mb-3 text-[11px] text-[#9C9C9C]">
+          <span className="flex items-center gap-1">
+            <ClipboardList size={13} className="text-[#CFFE06]" />
             {taskCounts.total} total task
           </span>
           <span>{taskCounts.todo} belum dimulai</span>
@@ -543,36 +544,36 @@ export const TaskManagementPage: React.FC = () => {
       )}
 
       {!loadingEvents && events.length === 0 ? (
-        <div className="text-center bg-[#151515] border border-[#3D3D3D]/50 rounded-xl p-10">
-          <h2 className="text-lg font-bold text-white mb-2">Belum ada event</h2>
-          <p className="text-xs text-[#9C9C9C] mb-5">
+        <div className="text-center bg-[#151515] border border-[#3D3D3D]/50 rounded-xl p-8">
+          <h2 className="text-base font-bold text-white mb-1.5">Belum ada event</h2>
+          <p className="!text-xs !text-[#9C9C9C] mb-4">
             Buat event terlebih dahulu untuk mulai mengatur task panitia.
           </p>
           <Link to="/dashboard/events/create" className="no-underline">
-            <Button variant="accent" size="sm">
+            <Button variant="accent" size="sm" className="!py-1.5 !px-3 !text-xs">
               Buat Event
             </Button>
           </Link>
         </div>
       ) : view === 'board' ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 items-start">
           {TASK_STATUSES.map((status) => {
             const columnTasks = filteredTasks.filter((task) => task.status === status.value)
             return (
               <section
                 key={status.value}
-                className="bg-[#101010] border border-[#262626] rounded-xl p-3 min-h-48"
+                className="bg-[#101010] border border-[#262626] rounded-xl p-2.5 min-h-36"
               >
-                <div className="flex items-center justify-between px-1 pb-3">
-                  <label className="text-sm font-bold text-white m-0">{status.label}</label>
-                  <span className="text-[11px] text-[#9C9C9C] bg-[#202020] rounded-full px-2 py-0.5">
+                <div className="flex items-center justify-between px-1 pb-2">
+                  <label className="text-xs font-bold text-white m-0">{status.label}</label>
+                  <span className="text-[10px] text-[#9C9C9C] bg-[#202020] rounded-full px-2 py-0.5">
                     {columnTasks.length}
                   </span>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {columnTasks.map(renderTask)}
                   {columnTasks.length === 0 && (
-                    <p className="text-xs text-[#707070] text-center py-7">Belum ada task</p>
+                    <p className="!text-xs !text-[#707070] text-center py-5 m-0">Belum ada task</p>
                   )}
                 </div>
               </section>
@@ -584,38 +585,38 @@ export const TaskManagementPage: React.FC = () => {
           <table className="w-full text-left text-xs min-w-[700px]">
             <thead className="text-[#9C9C9C] border-b border-[#303030]">
               <tr>
-                <th className="px-4 py-3 font-semibold">Tugas</th>
-                <th className="px-4 py-3 font-semibold">Divisi</th>
-                <th className="px-4 py-3 font-semibold">Penanggung Jawab</th>
-                <th className="px-4 py-3 font-semibold">Tenggat</th>
-                <th className="px-4 py-3 font-semibold">Status</th>
-                <th className="px-4 py-3 font-semibold">Aksi</th>
+                <th className="px-3 py-2 text-[11px] font-semibold">Tugas</th>
+                <th className="px-3 py-2 text-[11px] font-semibold">Divisi</th>
+                <th className="px-3 py-2 text-[11px] font-semibold">Penanggung Jawab</th>
+                <th className="px-3 py-2 text-[11px] font-semibold">Tenggat</th>
+                <th className="px-3 py-2 text-[11px] font-semibold">Status</th>
+                <th className="px-3 py-2 text-[11px] font-semibold">Aksi</th>
               </tr>
             </thead>
             <tbody>
               {filteredTasks.map((task) => (
-                <tr key={task.id} className="border-b border-[#262626] last:border-0">
-                  <td className="px-4 py-3">
-                    <div className="font-bold text-white">{task.title}</div>
+                <tr key={task.id} className="border-b border-[#262626] last:border-0 hover:bg-[#1a1a1a]/50">
+                  <td className="px-3 py-2">
+                    <div className="font-bold text-white text-xs">{task.title}</div>
                     {task.description && (
-                      <div className="text-[#9C9C9C] mt-1">{task.description}</div>
+                      <div className="text-[11px] text-[#9C9C9C] mt-0.5">{task.description}</div>
                     )}
                   </td>
-                  <td className="px-4 py-3">
-                    <Badge variant="dark" className="text-[10px]">
+                  <td className="px-3 py-2">
+                    <Badge variant="dark" className="text-[10px] py-0 px-1.5">
                       {task.division || 'Umum'}
                     </Badge>
                   </td>
-                  <td className="px-4 py-3 text-[#CFFE06]">{task.assignee}</td>
+                  <td className="px-3 py-2 text-[#CFFE06] text-xs">{task.assignee}</td>
                   <td
-                    className={`px-4 py-3 ${
+                    className={`px-3 py-2 text-xs ${
                       isOverdue(task) ? 'text-[#DF00D0]' : 'text-[#9C9C9C]'
                     }`}
                   >
                     {formatDueDate(task.dueDate)}
                     {isOverdue(task) && ' · Terlambat'}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-3 py-2">
                     <Select
                       aria-label={`Status task ${task.title}`}
                       value={task.status}
@@ -623,25 +624,25 @@ export const TaskManagementPage: React.FC = () => {
                       options={TASK_STATUSES}
                       size="sm"
                       variant="surface"
-                      className="!w-auto !mb-0"
+                      className="!w-auto !mb-0 !py-1 !text-[11px]"
                       fullWidth={false}
                     />
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-3 py-2">
                     <button
                       type="button"
                       onClick={() => handleDeleteTask(task.id)}
                       className="text-[#777] hover:text-[#DF00D0] bg-transparent border-none p-1 cursor-pointer"
                       aria-label={`Hapus task ${task.title}`}
                     >
-                      <Trash2 size={15} />
+                      <Trash2 size={13} />
                     </button>
                   </td>
                 </tr>
               ))}
               {filteredTasks.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-[#707070]">
+                  <td colSpan={6} className="px-3 py-6 text-center text-[#707070] text-xs">
                     Belum ada task untuk event ini.
                   </td>
                 </tr>
