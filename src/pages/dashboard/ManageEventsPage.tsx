@@ -346,21 +346,21 @@ export const ManageEventsPage: React.FC = () => {
   return (
     <div className="font-['Montserrat',sans-serif] bg-[#000000] text-white">
       {/* Header */}
-      <div className="flex items-start justify-between mb-6 flex-wrap gap-4">
+      <div className="flex items-start justify-between mb-4 flex-wrap gap-3">
         <div>
-          <div className="mb-2">
-            <Badge variant="accent">MANAJEMEN KEGIATAN ORGANISASI</Badge>
+          <div className="mb-1">
+            <Badge variant="accent" className="text-[10px] py-0 px-2">MANAJEMEN KEGIATAN ORGANISASI</Badge>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight m-0">
+          <h1 className="!text-lg sm:!text-xl font-extrabold !text-white tracking-tight m-0 !leading-snug">
             Kelola Event Organisasi
           </h1>
-          <p className="text-xs sm:text-sm text-[#9C9C9C] mt-1">
+          <p className="!text-xs !text-[#9C9C9C] mt-0.5 m-0 !leading-normal">
             Revisi event kapan saja, atur penugasan Role & Divisi anggota per event, dan buat QR Presensi peserta.
           </p>
         </div>
 
         <Link to="/dashboard/events/create" className="no-underline">
-          <Button variant="accent" size="sm" icon={<Plus size={15} />}>
+          <Button variant="accent" size="sm" className="!py-1.5 !px-3 !text-xs" icon={<Plus size={14} />}>
             Buat Event Baru
           </Button>
         </Link>
@@ -368,14 +368,14 @@ export const ManageEventsPage: React.FC = () => {
 
       {/* Organization Scope Selector */}
       {userOrgs.length > 0 && (
-        <div className="mb-4 flex items-center gap-2 flex-wrap">
-          <span className="text-xs font-semibold text-[#9C9C9C] flex items-center gap-1.5 mr-1">
-            <Building2 size={14} className="text-[#CFFE06]" /> Organisasi:
+        <div className="mb-3 flex items-center gap-1.5 flex-wrap">
+          <span className="text-[11px] font-semibold text-[#9C9C9C] flex items-center gap-1 mr-0.5">
+            <Building2 size={13} className="text-[#CFFE06]" /> Organisasi:
           </span>
           <button
             type="button"
             onClick={() => setOrgFilter('all')}
-            className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
+            className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-all cursor-pointer ${
               orgFilter === 'all'
                 ? 'bg-[#CFFE06] text-black border-[#CFFE06]'
                 : 'bg-[#151515] text-[#9C9C9C] border-[#333333] hover:text-white'
@@ -388,7 +388,7 @@ export const ManageEventsPage: React.FC = () => {
               key={org.id}
               type="button"
               onClick={() => setOrgFilter(org.id)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
+              className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-all cursor-pointer ${
                 orgFilter === org.id
                   ? 'bg-[#CFFE06] text-black border-[#CFFE06]'
                   : 'bg-[#151515] text-[#9C9C9C] border-[#333333] hover:text-white'
@@ -401,7 +401,7 @@ export const ManageEventsPage: React.FC = () => {
       )}
 
       {/* Filter and Search Bar */}
-      <div className="p-4 bg-[#151515] border border-[#3D3D3D]/50 rounded-xl mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="p-2.5 px-3 bg-[#151515] border border-[#3D3D3D]/50 rounded-xl mb-3.5 flex flex-col sm:flex-row items-center justify-between gap-2.5">
         <SearchBar
           containerClassName="w-full sm:w-auto flex-1"
           inputContainerClassName="rounded-full"
@@ -412,7 +412,7 @@ export const ManageEventsPage: React.FC = () => {
           clearable
         />
 
-        <div className="flex items-center gap-2 self-start sm:self-center">
+        <div className="flex items-center gap-1.5 self-start sm:self-center">
           {(
             [
               { id: 'all', label: 'Semua Event' },
@@ -426,7 +426,7 @@ export const ManageEventsPage: React.FC = () => {
                 key={tab.id}
                 type="button"
                 onClick={() => setStatusFilter(tab.id)}
-                className={`text-xs font-semibold py-1.5 px-3.5 rounded-full transition-all cursor-pointer ${
+                className={`text-[11px] font-semibold py-1 px-2.5 rounded-full transition-all cursor-pointer ${
                   active
                     ? 'bg-[#CFFE06] text-black shadow-[0_0_10px_rgba(207,254,6,0.2)]'
                     : 'bg-[#202020] text-[#9C9C9C] hover:text-white border border-[#3D3D3D]'
@@ -441,30 +441,30 @@ export const ManageEventsPage: React.FC = () => {
 
       {/* Events List */}
       {loading ? (
-        <div className="space-y-4 animate-pulse">
+        <div className="space-y-3 animate-pulse">
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="p-5 bg-[#151515] border border-[#262626] rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-5"
+              className="p-3 bg-[#151515] border border-[#262626] rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-3"
             >
-              <div className="h-20 w-full bg-[#202020] rounded-xl" />
+              <div className="h-16 w-full bg-[#202020] rounded-lg" />
             </div>
           ))}
         </div>
       ) : filteredEvents.length === 0 ? (
-        <div className="py-16 text-center p-8 bg-[#151515] border border-[#3D3D3D]/50 rounded-xl max-w-lg mx-auto">
-          <h3 className="font-bold text-lg text-white mb-2">Belum Ada Event</h3>
-          <p className="text-[#9C9C9C] text-xs mb-6">
+        <div className="py-12 text-center p-6 bg-[#151515] border border-[#3D3D3D]/50 rounded-xl max-w-lg mx-auto">
+          <h3 className="font-bold text-base text-white mb-1.5">Belum Ada Event</h3>
+          <p className="!text-xs !text-[#9C9C9C] mb-4">
             Tidak ada event yang sesuai dengan pencarian atau filter organisasi Anda.
           </p>
           <Link to="/dashboard/events/create" className="no-underline">
-            <Button variant="accent" size="sm" icon={<Plus size={15} />}>
+            <Button variant="accent" size="sm" className="!py-1.5 !px-3 !text-xs" icon={<Plus size={14} />}>
               Buat Event Baru
             </Button>
           </Link>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-2.5">
           {filteredEvents.map((evt) => {
             const dateStr = new Date(evt.startDate).toLocaleDateString('id-ID', {
               day: 'numeric',
@@ -474,49 +474,49 @@ export const ManageEventsPage: React.FC = () => {
             return (
               <div
                 key={evt.id}
-                className="p-5 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl hover:border-[#CFFE06]/40 transition-colors flex flex-col xl:flex-row items-start xl:items-center justify-between gap-5"
+                className="p-3 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl hover:border-[#CFFE06]/40 transition-colors flex flex-col xl:flex-row items-start xl:items-center justify-between gap-3"
               >
                 {/* Left: Thumbnail & Details */}
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-3">
                   <img
                     src={evt.bannerUrl || ''}
                     alt={evt.title}
-                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl border border-[#3D3D3D] object-cover shrink-0"
+                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg border border-[#3D3D3D] object-cover shrink-0"
                   />
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <Badge variant="accent" className="text-[10px] py-0 px-2">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <Badge variant="accent" className="text-[10px] py-0 px-1.5">
                         {evt.category.toUpperCase()}
                       </Badge>
                       <Badge
                         variant={evt.status === 'published' ? 'accent' : 'grey'}
-                        className="text-[10px] py-0 px-2"
+                        className="text-[10px] py-0 px-1.5"
                       >
                         {evt.status === 'published' ? 'PUBLISHED' : 'DRAFT'}
                       </Badge>
-                      <span className="text-xs text-[#CFFE06] font-semibold">
+                      <span className="text-[11px] text-[#CFFE06] font-semibold">
                         {evt.organizationName}
                       </span>
-                      <span className="text-xs text-[#9C9C9C]">• {evt.company}</span>
+                      <span className="text-[11px] text-[#9C9C9C]">• {evt.company}</span>
                     </div>
 
-                    <h3 className="text-base sm:text-lg font-bold text-white m-0">{evt.title}</h3>
+                    <h3 className="text-sm sm:text-base font-bold text-white m-0 leading-snug">{evt.title}</h3>
 
-                    <div className="flex items-center gap-4 text-xs text-[#9C9C9C] flex-wrap">
-                      <div className="flex items-center gap-1.5">
-                        <Calendar size={13} className="text-[#CFFE06]" />
+                    <div className="flex items-center gap-3 text-[11px] text-[#9C9C9C] flex-wrap">
+                      <div className="flex items-center gap-1">
+                        <Calendar size={12} className="text-[#CFFE06]" />
                         <span>{dateStr}</span>
                       </div>
-                      <div className="flex items-center gap-1.5">
-                        <MapPin size={13} className="text-[#CFFE06]" />
+                      <div className="flex items-center gap-1">
+                        <MapPin size={12} className="text-[#CFFE06]" />
                         <span>
                           {evt.location.venueName ||
                             (evt.location.type === 'online' ? 'Online' : 'Venue Acara')}
                         </span>
                       </div>
                       {evt.myRole && (
-                        <Badge variant="dark" className="text-[10px]">
-                          Role Anda: {evt.myRole.toUpperCase()}
+                        <Badge variant="dark" className="text-[10px] py-0 px-1.5">
+                          Role: {evt.myRole.toUpperCase()}
                           {evt.myDivision ? ` • ${evt.myDivision}` : ''}
                         </Badge>
                       )}
@@ -525,11 +525,11 @@ export const ManageEventsPage: React.FC = () => {
                 </div>
 
                 {/* Right: Attendees Progress & Comprehensive Actions */}
-                <div className="w-full xl:w-auto flex flex-col sm:flex-row xl:flex-col items-start xl:items-end justify-between gap-4 pt-3 xl:pt-0 border-t xl:border-t-0 border-[#202020]">
-                  <div className="w-full sm:w-52">
-                    <div className="flex justify-between text-xs text-[#9C9C9C] mb-1">
+                <div className="w-full xl:w-auto flex flex-col sm:flex-row xl:flex-col items-start xl:items-end justify-between gap-2.5 pt-2 xl:pt-0 border-t xl:border-t-0 border-[#202020]">
+                  <div className="w-full sm:w-44">
+                    <div className="flex justify-between text-[11px] text-[#9C9C9C] mb-0.5">
                       <span className="flex items-center gap-1">
-                        <Users size={12} className="text-[#CFFE06]" /> Kuota Tiket
+                        <Users size={11} className="text-[#CFFE06]" /> Kuota Tiket
                       </span>
                       <span className="text-white font-semibold">
                         {evt.attendeeCount} / {evt.totalCapacity}
@@ -540,13 +540,14 @@ export const ManageEventsPage: React.FC = () => {
                       max={evt.totalCapacity}
                       color="accent"
                       showPercentage={false}
-                      height={6}
+                      height={5}
+                      className="mb-0"
                     />
                   </div>
 
-                  <div className="flex items-center gap-2 flex-wrap">
+                  <div className="flex items-center gap-1.5 flex-wrap">
                     <Link to={`/dashboard/events/${evt.id}/edit`} className="no-underline">
-                      <Button variant="outline" size="sm" icon={<Edit3 size={14} />}>
+                      <Button variant="outline" size="sm" className="!py-1 !px-2.5 !text-[11px]" icon={<Edit3 size={12} />}>
                         Edit / Revisi
                       </Button>
                     </Link>
@@ -554,7 +555,8 @@ export const ManageEventsPage: React.FC = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      icon={<UserPlus size={14} />}
+                      className="!py-1 !px-2.5 !text-[11px]"
+                      icon={<UserPlus size={12} />}
                       onClick={() => openTeamModal(evt)}
                     >
                       Tim & Divisi
@@ -563,26 +565,27 @@ export const ManageEventsPage: React.FC = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      icon={<QrCode size={14} />}
+                      className="!py-1 !px-2.5 !text-[11px]"
+                      icon={<QrCode size={12} />}
                       onClick={() => openQrModal(evt)}
                     >
                       QR Presensi
                     </Button>
 
                     <Link to={`/dashboard/tasks?eventId=${evt.id}`} className="no-underline">
-                      <Button variant="outline" size="sm" icon={<ListTodo size={14} />}>
+                      <Button variant="outline" size="sm" className="!py-1 !px-2.5 !text-[11px]" icon={<ListTodo size={12} />}>
                         Task Panitia
                       </Button>
                     </Link>
 
                     <Link to={`/dashboard/finances?eventId=${evt.id}`} className="no-underline">
-                      <Button variant="accent" size="sm" icon={<DollarSign size={14} />}>
+                      <Button variant="accent" size="sm" className="!py-1 !px-2.5 !text-[11px]" icon={<DollarSign size={12} />}>
                         Anggaran & SPJ
                       </Button>
                     </Link>
 
                     <Link to={`/events/${evt.id}`} className="no-underline">
-                      <Button variant="outline" size="sm" icon={<ArrowUpRight size={14} />}>
+                      <Button variant="outline" size="sm" className="!py-1 !px-2.5 !text-[11px]" icon={<ArrowUpRight size={12} />}>
                         Halaman Publik
                       </Button>
                     </Link>
@@ -598,31 +601,31 @@ export const ManageEventsPage: React.FC = () => {
       {/* MODAL 1: ASSIGN ORGANIZATION MEMBER TO ROLE & DIVISION PER EVENT  */}
       {/* ================================================================= */}
       {teamModalEvent && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-[#151515] border border-[#333333] rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6">
-            <div className="flex items-start justify-between gap-4 border-b border-[#262626] pb-4">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-3">
+          <div className="bg-[#151515] border border-[#333333] rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-4 space-y-3.5">
+            <div className="flex items-start justify-between gap-3 border-b border-[#262626] pb-3">
               <div>
-                <Badge variant="accent" className="mb-1">
+                <Badge variant="accent" className="mb-0.5 text-[10px] py-0 px-1.5">
                   PENUGASAN PANITIA PER EVENT
                 </Badge>
-                <h2 className="text-lg font-extrabold text-white m-0">
+                <h2 className="!text-sm sm:!text-base font-extrabold text-white m-0">
                   Tim, Role & Divisi — {teamModalEvent.title}
                 </h2>
-                <p className="text-xs text-[#9C9C9C] m-0 mt-1">
+                <p className="!text-[11px] !text-[#9C9C9C] m-0 mt-0.5">
                   Pilih anggota dari organisasi ({teamModalEvent.organizationName}) dan tetapkan Role serta Divisi khusus untuk event ini.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setTeamModalEvent(null)}
-                className="p-2 rounded-lg bg-[#202020] text-[#9C9C9C] hover:text-white border border-[#333333] cursor-pointer"
+                className="p-1.5 rounded-lg bg-[#202020] text-[#9C9C9C] hover:text-white border border-[#333333] cursor-pointer"
               >
-                <X size={16} />
+                <X size={15} />
               </button>
             </div>
 
             {teamFeedback && (
-              <div className="p-3 rounded-xl bg-[#1e240a] border border-[#CFFE06]/50 text-xs text-[#CFFE06] font-semibold">
+              <div className="p-2.5 rounded-lg bg-[#1e240a] border border-[#CFFE06]/50 text-xs text-[#CFFE06] font-semibold">
                 {teamFeedback}
               </div>
             )}
@@ -630,24 +633,24 @@ export const ManageEventsPage: React.FC = () => {
             {/* Assignment Form */}
             <form
               onSubmit={handleAssignMember}
-              className="p-4 rounded-xl bg-[#1C1C1C] border border-[#2E2E2E] space-y-4"
+              className="p-3 rounded-lg bg-[#1C1C1C] border border-[#2E2E2E] space-y-2.5"
             >
-              <div className="text-xs font-bold text-[#CFFE06] uppercase tracking-wider">
+              <div className="text-[11px] font-bold text-[#CFFE06] uppercase tracking-wider">
                 Tugaskan Anggota Organisasi ke Event Ini
               </div>
 
               {orgMembers.length > 0 && (
                 <div>
-                  <label className="block text-[11px] font-semibold text-[#9C9C9C] mb-1.5">
+                  <label className="block text-[10px] font-semibold text-[#9C9C9C] mb-1">
                     Pilih Cepat dari Anggota Organisasi ({teamModalEvent.organizationName}):
                   </label>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-1">
                     {orgMembers.map((om) => (
                       <button
                         key={om.userId}
                         type="button"
                         onClick={() => setAssignEmail(om.email)}
-                        className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer ${
+                        className={`px-2 py-0.5 rounded-md text-[11px] font-semibold border transition cursor-pointer ${
                           assignEmail === om.email
                             ? 'bg-[#CFFE06] text-black border-[#CFFE06]'
                             : 'bg-[#242424] text-[#CCCCCC] border-[#383838] hover:border-[#CFFE06]/50'
@@ -660,9 +663,9 @@ export const ManageEventsPage: React.FC = () => {
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 <div>
-                  <label className="block text-[11px] font-bold text-[#CCCCCC] mb-1">
+                  <label className="block text-[10px] font-bold text-[#CCCCCC] mb-1">
                     Email Anggota *
                   </label>
                   <input
@@ -671,18 +674,18 @@ export const ManageEventsPage: React.FC = () => {
                     value={assignEmail}
                     onChange={(e) => setAssignEmail(e.target.value)}
                     placeholder="email@student.itb.ac.id"
-                    className="w-full px-3 py-2 rounded-xl bg-[#121212] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-[#121212] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-[#CCCCCC] mb-1">
+                  <label className="block text-[10px] font-bold text-[#CCCCCC] mb-1">
                     Role di Event Ini *
                   </label>
                   <select
                     value={assignRole}
                     onChange={(e) => setAssignRole(e.target.value as EventRole)}
-                    className="w-full px-3 py-2 rounded-xl bg-[#121212] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-[#121212] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
                   >
                     {ROLE_OPTIONS.map((r) => (
                       <option key={r.value} value={r.value}>
@@ -693,13 +696,13 @@ export const ManageEventsPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-[#CCCCCC] mb-1">
+                  <label className="block text-[10px] font-bold text-[#CCCCCC] mb-1">
                     Divisi Kepanitiaan *
                   </label>
                   <select
                     value={assignDivision}
                     onChange={(e) => setAssignDivision(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-[#121212] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-[#121212] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
                   >
                     {DIVISION_OPTIONS.map((div) => (
                       <option key={div} value={div}>
@@ -710,7 +713,7 @@ export const ManageEventsPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-[#CCCCCC] mb-1">
+                  <label className="block text-[10px] font-bold text-[#CCCCCC] mb-1">
                     Jabatan Spesifik (Opsional)
                   </label>
                   <input
@@ -718,55 +721,55 @@ export const ManageEventsPage: React.FC = () => {
                     value={assignTitle}
                     onChange={(e) => setAssignTitle(e.target.value)}
                     placeholder="e.g. Koordinator Lapangan / Staff Acara"
-                    className="w-full px-3 py-2 rounded-xl bg-[#121212] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-[#121212] border border-[#333333] text-xs text-white outline-none focus:border-[#CFFE06]"
                   />
                 </div>
               </div>
 
               <div className="flex justify-end">
-                <Button type="submit" variant="accent" size="sm" icon={<UserPlus size={14} />}>
+                <Button type="submit" variant="accent" size="sm" className="!py-1 !px-2.5 !text-xs" icon={<UserPlus size={13} />}>
                   Simpan Penugasan ke Event
                 </Button>
               </div>
             </form>
 
             {/* Existing Event Members List */}
-            <div className="space-y-3">
-              <div className="text-xs font-bold text-white uppercase tracking-wider">
+            <div className="space-y-2">
+              <div className="text-[11px] font-bold text-white uppercase tracking-wider">
                 Susunan Panitia Aktif di Event Ini ({eventMembers.length})
               </div>
               {loadingTeam ? (
                 <div className="text-xs text-[#9C9C9C]">Memuat daftar panitia event...</div>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
                   {eventMembers.map((m) => (
                     <div
                       key={m.id}
-                      className="p-3 rounded-xl bg-[#1C1C1C] border border-[#2A2A2A] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+                      className="p-2.5 rounded-lg bg-[#1C1C1C] border border-[#2A2A2A] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5"
                     >
                       <div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5">
                           <span className="text-xs font-bold text-white">{m.displayName}</span>
-                          <Badge variant="accent" className="text-[10px]">
+                          <Badge variant="accent" className="text-[10px] py-0 px-1.5">
                             {m.role.toUpperCase()}
                           </Badge>
-                          <Badge variant="dark" className="text-[10px]">
+                          <Badge variant="dark" className="text-[10px] py-0 px-1.5">
                             {m.division || 'Umum'}
                           </Badge>
                         </div>
-                        <div className="text-[11px] text-[#9C9C9C] mt-0.5">
+                        <div className="text-[10px] text-[#9C9C9C] mt-0.5">
                           {m.email} {m.customTitle ? `• ${m.customTitle}` : ''}
                         </div>
                       </div>
 
                       {m.role !== 'owner' && (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5">
                           <select
                             value={m.division || 'Umum'}
                             onChange={(e) =>
                               handleUpdateMemberDivisionOrRole(m, m.role, e.target.value)
                             }
-                            className="px-2.5 py-1 rounded-lg bg-[#121212] border border-[#333333] text-[11px] text-white"
+                            className="px-2 py-0.5 rounded-md bg-[#121212] border border-[#333333] text-[10px] text-white"
                           >
                             {DIVISION_OPTIONS.map((div) => (
                               <option key={div} value={div}>
@@ -777,10 +780,10 @@ export const ManageEventsPage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => handleRemoveMember(m.userId)}
-                            className="p-1.5 rounded-lg bg-[#2A1215] text-[#FF6B6B] hover:text-white border border-[#5C1E24] cursor-pointer"
+                            className="p-1 rounded-md bg-[#2A1215] text-[#FF6B6B] hover:text-white border border-[#5C1E24] cursor-pointer"
                             title="Hapus dari event"
                           >
-                            <Trash2 size={13} />
+                            <Trash2 size={12} />
                           </button>
                         </div>
                       )}
@@ -797,25 +800,25 @@ export const ManageEventsPage: React.FC = () => {
       {/* MODAL 2: EVENT ATTENDANCE QR GENERATOR & LIVE CHECK-IN MONITOR    */}
       {/* ================================================================= */}
       {qrModalEvent && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-3">
           {/* Floating Real-Time Toast Notification */}
           {realtimeToast && (
             <div
               role="status"
               aria-live="polite"
-              className="fixed top-5 right-5 z-[60] max-w-md w-full bg-[#141A05] border-2 border-[#CFFE06] rounded-2xl p-4 shadow-[0_12px_36px_rgba(207,254,6,0.22)] flex items-start gap-3 animate-in fade-in slide-in-from-top-3 duration-200"
+              className="fixed top-4 right-4 z-[60] max-w-sm w-full bg-[#141A05] border border-[#CFFE06] rounded-xl p-3 shadow-[0_12px_36px_rgba(207,254,6,0.22)] flex items-start gap-2.5 animate-in fade-in slide-in-from-top-3 duration-200"
             >
-              <div className="w-9 h-9 rounded-xl bg-[#CFFE06] text-black flex items-center justify-center shrink-0">
-                <BellRing size={18} />
+              <div className="w-7 h-7 rounded-lg bg-[#CFFE06] text-black flex items-center justify-center shrink-0">
+                <BellRing size={15} />
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#CFFE06] text-black">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider px-1.5 py-0.2 rounded-full bg-[#CFFE06] text-black">
                     {realtimeToast.eventType === 'attendance.checked_in'
                       ? 'PRESENSI REAL-TIME'
                       : 'PENDAFTARAN BARU'}
                   </span>
-                  <span className="text-[11px] font-mono text-[#9C9C9C]">
+                  <span className="text-[10px] font-mono text-[#9C9C9C]">
                     {new Date(realtimeToast.timestamp).toLocaleTimeString('id-ID', {
                       hour: '2-digit',
                       minute: '2-digit',
@@ -823,16 +826,16 @@ export const ManageEventsPage: React.FC = () => {
                     })}
                   </span>
                 </div>
-                <div className="text-sm font-extrabold text-white mt-1 truncate">
+                <div className="text-xs font-extrabold text-white mt-0.5 truncate">
                   {realtimeToast.registration.attendeeName}{' '}
-                  <span className="font-mono text-xs text-[#CFFE06]">
+                  <span className="font-mono text-[11px] text-[#CFFE06]">
                     ({realtimeToast.registration.ticketCode})
                   </span>
                 </div>
-                <p className="text-xs text-[#D5E69C] m-0 mt-0.5">
+                <p className="!text-[11px] !text-[#D5E69C] m-0 mt-0.5 !leading-tight">
                   {realtimeToast.message}
                 </p>
-                <div className="text-[11px] text-[#9C9C9C] mt-1">
+                <div className="text-[10px] text-[#9C9C9C] mt-0.5">
                   Kategori: <span className="text-white font-semibold">{realtimeToast.registration.tierName}</span>
                   {realtimeToast.registration.attendeeInstitution
                     ? ` • ${realtimeToast.registration.attendeeInstitution}`
@@ -842,92 +845,94 @@ export const ManageEventsPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setRealtimeToast(null)}
-                className="p-1 rounded-lg text-[#9C9C9C] hover:text-white cursor-pointer"
+                className="p-1 rounded-md text-[#9C9C9C] hover:text-white cursor-pointer"
                 aria-label="Tutup notifikasi"
               >
-                <X size={15} />
+                <X size={13} />
               </button>
             </div>
           )}
 
-          <div className="bg-[#151515] border border-[#333333] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6">
-            <div className="flex items-start justify-between gap-4 border-b border-[#262626] pb-4">
+          <div className="bg-[#151515] border border-[#333333] rounded-xl max-w-xl w-full max-h-[90vh] overflow-y-auto p-4 space-y-3.5">
+            <div className="flex items-start justify-between gap-3 border-b border-[#262626] pb-3">
               <div>
-                <div className="flex items-center gap-2 flex-wrap mb-1">
-                  <Badge variant="accent">QR PRESENSI KEHADIRAN RESMI</Badge>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#192205] border border-[#CFFE06]/50 text-[10px] font-bold text-[#CFFE06]">
-                    <Radio size={11} className="animate-pulse" />
-                    LIVE EVENT STREAM AKTIF
+                <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
+                  <Badge variant="accent" className="text-[10px] py-0 px-1.5">QR PRESENSI KEHADIRAN RESMI</Badge>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.2 rounded-full bg-[#192205] border border-[#CFFE06]/50 text-[10px] font-bold text-[#CFFE06]">
+                    <Radio size={10} className="animate-pulse" />
+                    LIVE STREAM
                   </span>
                 </div>
-                <h2 className="!text-lg font-extrabold text-white m-0">
+                <h2 className="!text-sm sm:!text-base font-extrabold text-white m-0">
                   QR Presensi — {qrModalEvent.title}
                 </h2>
-                <p className="text-xs text-[#9C9C9C] m-0 mt-1">
-                  Tampilkan QR ini di meja registrasi. Saat peserta memindai QR dari aplikasi Mobile atau Web, status kehadiran di bawah akan diperbarui secara langsung (real-time).
+                <p className="!text-[11px] !text-[#9C9C9C] m-0 mt-0.5">
+                  Tampilkan QR ini di meja registrasi untuk pemindaian presensi peserta secara real-time.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setQrModalEvent(null)}
-                className="p-2 rounded-lg bg-[#202020] text-[#9C9C9C] hover:text-white border border-[#333333] cursor-pointer"
+                className="p-1.5 rounded-lg bg-[#202020] text-[#9C9C9C] hover:text-white border border-[#333333] cursor-pointer"
               >
-                <X size={16} />
+                <X size={15} />
               </button>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-6 p-5 rounded-2xl bg-[#1C1C1C] border border-[#2E2E2E]">
-              <div className="p-4 bg-white rounded-2xl shrink-0 shadow-lg">
+            <div className="flex flex-col sm:flex-row items-center gap-4 p-3.5 rounded-xl bg-[#1C1C1C] border border-[#2E2E2E]">
+              <div className="p-2.5 bg-white rounded-xl shrink-0 shadow-md">
                 {qrPayload ? (
-                  <QRCodeSVG value={qrPayload} size={180} level="M" />
+                  <QRCodeSVG value={qrPayload} size={130} level="M" />
                 ) : (
-                  <div className="w-[180px] h-[180px] flex items-center justify-center text-black text-xs">
+                  <div className="w-[130px] h-[130px] flex items-center justify-center text-black text-xs">
                     Memuat QR...
                   </div>
                 )}
               </div>
 
-              <div className="space-y-3 flex-1">
+              <div className="space-y-2 flex-1 min-w-0">
                 <div>
-                  <span className="text-[11px] font-bold text-[#9C9C9C] uppercase tracking-wider block">
+                  <span className="text-[10px] font-bold text-[#9C9C9C] uppercase tracking-wider block">
                     Token Presensi Aktif
                   </span>
-                  <div className="text-base font-mono font-extrabold text-[#CFFE06] mt-0.5">
+                  <div className="text-sm font-mono font-extrabold text-[#CFFE06] mt-0.5">
                     {qrToken}
                   </div>
-                  <div className="text-[11px] font-mono text-[#888888] break-all mt-1">
+                  <div className="text-[10px] font-mono text-[#888888] break-all mt-0.5 truncate">
                     Payload: {qrPayload}
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-[#121212] border border-[#282828] text-xs text-[#CCCCCC] space-y-1">
-                  <div className="font-bold text-white flex items-center gap-1.5">
-                    <CheckCircle2 size={14} className="text-[#CFFE06]" />
-                    Validasi Otomatis & Event System Real-Time:
+                <div className="p-2 rounded-lg bg-[#121212] border border-[#282828] text-xs text-[#CCCCCC] space-y-0.5">
+                  <div className="font-bold text-white text-[11px] flex items-center gap-1">
+                    <CheckCircle2 size={12} className="text-[#CFFE06]" />
+                    Validasi Otomatis & Event System Real-Time
                   </div>
-                  <p className="m-0 text-[11px] text-[#9C9C9C]">
-                    Sistem otomatis menolak peserta yang belum terdaftar atau belum lunas, dan langsung memancarkan event kehadiran ke layar ini begitu scan berhasil.
+                  <p className="m-0 !text-[10px] !text-[#9C9C9C] !leading-tight">
+                    Sistem otomatis menolak peserta yang belum terdaftar dan langsung memancarkan kehadiran begitu scan berhasil.
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-1.5 flex-wrap">
                   <Button
                     type="button"
                     variant="accent"
                     size="sm"
-                    icon={<Copy size={14} />}
+                    className="!py-1 !px-2.5 !text-xs"
+                    icon={<Copy size={13} />}
                     onClick={() => {
                       navigator.clipboard.writeText(qrPayload)
                       setCopiedQr(true)
                     }}
                   >
-                    {copiedQr ? 'Kode Tersalin!' : 'Salin Kode QR'}
+                    {copiedQr ? 'Tersalin!' : 'Salin Kode QR'}
                   </Button>
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
-                    icon={<RefreshCw size={14} />}
+                    className="!py-1 !px-2.5 !text-xs"
+                    icon={<RefreshCw size={13} />}
                     onClick={handleRegenerateQr}
                     disabled={loadingQr}
                   >
@@ -939,38 +944,38 @@ export const ManageEventsPage: React.FC = () => {
 
             {/* Inline Real-Time Attendance Event Banner */}
             {realtimeFeed.length > 0 && (
-              <div className="p-3.5 rounded-2xl bg-[#161F05] border border-[#CFFE06]/60 space-y-2">
+              <div className="p-2.5 rounded-xl bg-[#161F05] border border-[#CFFE06]/60 space-y-1.5">
                 <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 text-xs font-extrabold text-[#CFFE06]">
-                    <CheckCircle2 size={15} />
-                    <span>AKTIVITAS PRESENSI REAL-TIME TERBARU</span>
+                  <div className="flex items-center gap-1.5 text-[11px] font-extrabold text-[#CFFE06]">
+                    <CheckCircle2 size={13} />
+                    <span>AKTIVITAS PRESENSI TERBARU</span>
                   </div>
                   <button
                     type="button"
                     onClick={() => setRealtimeFeed([])}
-                    className="text-[11px] text-[#9C9C9C] hover:text-white cursor-pointer"
+                    className="text-[10px] text-[#9C9C9C] hover:text-white cursor-pointer"
                   >
-                    Bersihkan Log
+                    Bersihkan
                   </button>
                 </div>
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   {realtimeFeed.map((item, idx) => (
                     <div
                       key={`${item.registration.id}-${item.timestamp}-${idx}`}
-                      className="flex items-center justify-between gap-2 text-xs px-3 py-2 rounded-xl bg-[#101603] border border-[#2C3B0A]"
+                      className="flex items-center justify-between gap-2 text-xs px-2.5 py-1.5 rounded-lg bg-[#101603] border border-[#2C3B0A]"
                     >
-                      <div className="min-w-0">
-                        <span className="font-bold text-white">
+                      <div className="min-w-0 truncate">
+                        <span className="font-bold text-white text-xs">
                           {item.registration.attendeeName}
                         </span>{' '}
-                        <span className="font-mono text-[11px] text-[#CFFE06]">
+                        <span className="font-mono text-[10px] text-[#CFFE06]">
                           ({item.registration.ticketCode})
                         </span>
-                        <span className="text-[#B8C78E] ml-1.5">
-                          — {item.eventType === 'attendance.checked_in' ? 'Berhasil Check-In Hadir' : 'Mendaftar Tiket'}
+                        <span className="text-[#B8C78E] ml-1 text-[11px]">
+                          — {item.eventType === 'attendance.checked_in' ? 'Check-In Hadir' : 'Mendaftar'}
                         </span>
                       </div>
-                      <span className="text-[11px] font-mono text-[#9C9C9C] shrink-0">
+                      <span className="text-[10px] font-mono text-[#9C9C9C] shrink-0">
                         {new Date(item.timestamp).toLocaleTimeString('id-ID', {
                           hour: '2-digit',
                           minute: '2-digit',
@@ -984,64 +989,64 @@ export const ManageEventsPage: React.FC = () => {
             )}
 
             {/* Live Attendance & Registration Check */}
-            <div className="space-y-3">
+            <div className="space-y-2">
               <div className="flex items-center justify-between gap-2 flex-wrap">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-white uppercase tracking-wider">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[11px] font-bold text-white uppercase tracking-wider">
                     Peserta Terdaftar & Status Kehadiran
                   </span>
                   <button
                     type="button"
                     onClick={handleRefreshRegistrations}
-                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#202020] hover:bg-[#2A2A2A] border border-[#333333] text-[11px] text-[#CCCCCC] cursor-pointer"
+                    className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded-md bg-[#202020] hover:bg-[#2A2A2A] border border-[#333333] text-[10px] text-[#CCCCCC] cursor-pointer"
                     title="Sinkronkan daftar peserta"
                   >
-                    <RefreshCw size={11} />
+                    <RefreshCw size={10} />
                     Sinkronkan
                   </button>
                 </div>
-                <Badge variant="accent">
-                  Hadir: {checkedInCount} / {registrations.length} Terdaftar
+                <Badge variant="accent" className="text-[10px] py-0 px-1.5">
+                  Hadir: {checkedInCount} / {registrations.length}
                 </Badge>
               </div>
 
               {registrations.length === 0 ? (
-                <div className="p-4 rounded-xl bg-[#1C1C1C] border border-[#2A2A2A] text-xs text-[#9C9C9C] text-center">
+                <div className="p-3 rounded-lg bg-[#1C1C1C] border border-[#2A2A2A] text-xs text-[#9C9C9C] text-center">
                   Belum ada peserta yang mendaftar melalui sistem untuk event ini.
                 </div>
               ) : (
-                <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
                   {registrations.map((reg) => {
                     const isRecentlyCheckedIn = Boolean(recentlyCheckedInIds[reg.id])
                     const isCheckedIn = reg.status === 'checked_in'
                     return (
                       <div
                         key={reg.id}
-                        className={`p-3 rounded-xl border transition-all flex items-center justify-between gap-3 ${
+                        className={`p-2.5 rounded-lg border transition-all flex items-center justify-between gap-2.5 ${
                           isRecentlyCheckedIn
-                            ? 'bg-[#172006] border-[#CFFE06] shadow-[0_0_20px_rgba(207,254,6,0.12)]'
+                            ? 'bg-[#172006] border-[#CFFE06] shadow-[0_0_15px_rgba(207,254,6,0.12)]'
                             : 'bg-[#1C1C1C] border-[#2A2A2A]'
                         }`}
                       >
                         <div className="min-w-0">
-                          <div className="text-xs font-bold text-white flex items-center gap-2 flex-wrap">
-                            <span>{reg.attendeeName}</span>
-                            <span className="font-mono text-[11px] text-[#CFFE06]">
+                          <div className="text-xs font-bold text-white flex items-center gap-1.5 flex-wrap">
+                            <span className="truncate">{reg.attendeeName}</span>
+                            <span className="font-mono text-[10px] text-[#CFFE06]">
                               ({reg.ticketCode})
                             </span>
                             {isRecentlyCheckedIn && (
-                              <span className="px-2 py-0.5 rounded-full bg-[#CFFE06] text-black text-[9px] font-extrabold uppercase tracking-wider">
-                                BARU SAJA HADIR
+                              <span className="px-1.5 py-0.2 rounded-full bg-[#CFFE06] text-black text-[8px] font-extrabold uppercase tracking-wider">
+                                BARU HADIR
                               </span>
                             )}
                           </div>
-                          <div className="text-[11px] text-[#9C9C9C] mt-0.5">
+                          <div className="text-[10px] text-[#9C9C9C] mt-0.5 truncate">
                             {reg.tierName} •{' '}
                             {reg.price === 0
                               ? 'Tiket Gratis'
                               : `Rp ${reg.price.toLocaleString('id-ID')} (${reg.paymentMethod.toUpperCase()})`}
                             {isCheckedIn && reg.checkedInAt && (
-                              <span className="text-[#CFFE06] ml-2 font-mono">
+                              <span className="text-[#CFFE06] ml-1.5 font-mono">
                                 • Check-in{' '}
                                 {new Date(reg.checkedInAt).toLocaleTimeString('id-ID', {
                                   hour: '2-digit',
@@ -1052,29 +1057,29 @@ export const ManageEventsPage: React.FC = () => {
                             )}
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
+                        <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
                           <Badge
                             variant={reg.paymentStatus === 'paid' ? 'accent' : 'grey'}
-                            className="text-[10px]"
+                            className="text-[10px] py-0 px-1"
                           >
                             {reg.paymentStatus === 'paid' ? 'LUNAS' : 'PENDING'}
                           </Badge>
                           <Badge
                             variant={isCheckedIn ? 'accent' : 'dark'}
-                            className="text-[10px]"
+                            className="text-[10px] py-0 px-1"
                           >
-                            {isCheckedIn ? 'HADIR (CHECKED-IN)' : 'TERDAFTAR'}
+                            {isCheckedIn ? 'HADIR' : 'TERDAFTAR'}
                           </Badge>
                           {!isCheckedIn && reg.paymentStatus === 'paid' && (
                             <button
                               type="button"
                               onClick={() => handleManualCheckIn(reg)}
                               disabled={checkingInId === reg.id}
-                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#222B07] hover:bg-[#CFFE06] text-[#CFFE06] hover:text-black border border-[#CFFE06]/50 text-[10px] font-bold transition-colors cursor-pointer disabled:opacity-50"
+                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#222B07] hover:bg-[#CFFE06] text-[#CFFE06] hover:text-black border border-[#CFFE06]/50 text-[10px] font-bold transition-colors cursor-pointer disabled:opacity-50"
                               title="Verifikasi kehadiran peserta secara langsung"
                             >
-                              <UserCheck size={12} />
-                              {checkingInId === reg.id ? 'Memproses...' : 'Tandai Hadir'}
+                              <UserCheck size={11} />
+                              {checkingInId === reg.id ? '...' : 'Hadir'}
                             </button>
                           )}
                         </div>

@@ -322,15 +322,15 @@ export const CreateEventPage: React.FC = () => {
   }
 
   return (
-    <div className="font-['Montserrat',sans-serif] bg-[#000000] text-white min-h-screen pb-20">
+    <div className="font-['Montserrat',sans-serif] bg-[#000000] text-white min-h-screen pb-12">
       {/* Top Header / Navigation Breadcrumb */}
-      <div className="border-b border-[#202020] pb-6 mb-8">
-        <div className="flex items-center gap-2 mb-3">
+      <div className="border-b border-[#202020] pb-3 mb-4">
+        <div className="flex items-center gap-2 mb-2">
           <Link
             to="/dashboard/events"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#9C9C9C] hover:text-[#CFFE06] transition-colors no-underline"
           >
-            <ArrowLeft size={14} /> Kembali ke Kelola Event
+            <ArrowLeft size={13} /> Kembali ke Kelola Event
           </Link>
           <span className="text-xs text-[#555555]">/</span>
           <span className="text-xs text-[#CFFE06] font-semibold">
@@ -338,20 +338,20 @@ export const CreateEventPage: React.FC = () => {
           </span>
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <Badge variant="accent">
+              <Badge variant="accent" className="text-[10px] py-0 px-2">
                 {isEditMode ? `REVISI EVENT (${currentStatus.toUpperCase()})` : 'PANEL PEMBUATAN EVENT'}
               </Badge>
-              <Badge variant="dark" className="text-[11px]">
+              <Badge variant="dark" className="text-[10px] py-0 px-2">
                 {locationType.toUpperCase()}
               </Badge>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white m-0">
+            <h1 className="!text-lg sm:!text-xl font-extrabold tracking-tight !text-white m-0 !leading-snug">
               {isEditMode ? 'Edit & Revisi Event' : 'Buat & Publikasikan Event'}
             </h1>
-            <p className="text-xs sm:text-sm text-[#9C9C9C] mt-1 max-w-2xl">
+            <p className="!text-xs !text-[#9C9C9C] mt-0.5 max-w-2xl !leading-normal m-0">
               {isEditMode
                 ? 'Perbarui detail event kapan saja termasuk event yang sudah dipublikasikan untuk revisi mendesak.'
                 : 'Lengkapi 6 kelompok data berikut secara terperinci untuk mengaktifkan halaman registrasi, penjualan tiket, dan manajemen kepanitiaan Anda.'}
@@ -359,12 +359,13 @@ export const CreateEventPage: React.FC = () => {
           </div>
 
           {/* Quick Header Action Buttons — Prioritize Save as Draft */}
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
             <Button
               type="button"
               variant="accent"
               size="sm"
-              icon={<Save size={15} />}
+              className="!py-1.5 !px-3 !text-xs"
+              icon={<Save size={13} />}
               onClick={() => handleSave('draft')}
               disabled={isLoading}
             >
@@ -374,7 +375,8 @@ export const CreateEventPage: React.FC = () => {
               type="button"
               variant="outline"
               size="sm"
-              icon={<Send size={15} />}
+              className="!py-1.5 !px-3 !text-xs"
+              icon={<Send size={13} />}
               onClick={() => handleSave('published')}
               disabled={isLoading}
             >
@@ -386,34 +388,34 @@ export const CreateEventPage: React.FC = () => {
 
       {/* Global Error Notification */}
       {errorMessage && (
-        <div className="bg-[#200010] border border-[#DF00D0] text-[#FF88EC] rounded-2xl p-4 text-xs sm:text-sm font-semibold flex items-center gap-3 mb-8 shadow-[0_0_20px_rgba(223,0,208,0.15)]">
-          <AlertCircle size={20} className="shrink-0 text-[#DF00D0]" />
+        <div className="bg-[#200010] border border-[#DF00D0] text-[#FF88EC] rounded-xl p-3 text-xs font-semibold flex items-center gap-2.5 mb-4 shadow-[0_0_20px_rgba(223,0,208,0.15)]">
+          <AlertCircle size={16} className="shrink-0 text-[#DF00D0]" />
           <span>{errorMessage}</span>
         </div>
       )}
 
       {/* FORM BODY: 6 SEPARATED GROUPS */}
-      <form onSubmit={(e) => e.preventDefault()} className="space-y-8">
+      <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
         {/* ========================================================= */}
         {/* GROUP 1: INFORMASI UMUM (GENERAL) */}
         {/* ========================================================= */}
-        <section className="bg-[#121212] border border-[#2A2A2A] rounded-2xl p-6 sm:p-8 hover:border-[#3D3D3D] transition-colors">
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[#202020]">
-            <div className="w-9 h-9 rounded-xl bg-[#CFFE06]/10 border border-[#CFFE06]/30 flex items-center justify-center text-[#CFFE06] font-bold text-sm">
+        <section className="bg-[#121212] border border-[#2A2A2A] rounded-xl p-3.5 sm:p-4 hover:border-[#3D3D3D] transition-colors">
+          <div className="flex items-center gap-2.5 mb-3.5 pb-2.5 border-b border-[#202020]">
+            <div className="w-7 h-7 rounded-lg bg-[#CFFE06]/10 border border-[#CFFE06]/30 flex items-center justify-center text-[#CFFE06] font-bold text-xs shrink-0">
               1
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white m-0">Informasi Umum (General)</h2>
-              <p className="text-xs text-[#9C9C9C] m-0">
+              <h2 className="!text-sm sm:!text-base font-bold !text-white m-0">Informasi Umum (General)</h2>
+              <p className="!text-[11px] !text-[#9C9C9C] m-0 !leading-tight">
                 Judul utama, ringkasan, kategori, serta tanggal pelaksanaan acara.
               </p>
             </div>
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-3">
             {/* Title */}
             <div>
-              <label className="block text-xs font-bold text-[#E0E0E0] uppercase tracking-wider mb-2">
+              <label className="block text-[11px] font-bold text-[#E0E0E0] uppercase tracking-wider mb-1">
                 Judul Kegiatan / Acara *
               </label>
               <input
@@ -422,16 +424,16 @@ export const CreateEventPage: React.FC = () => {
                 placeholder="e.g. Arkavidia 9.0: National Tech Festival & Hackathon"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] focus:ring-1 focus:ring-[#CFFE06] transition-all"
+                className="w-full px-3 py-2 bg-[#1A1A1A] border border-[#333333] rounded-lg text-xs font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] focus:ring-1 focus:ring-[#CFFE06] transition-all"
               />
             </div>
 
             {/* Category Select Grid */}
             <div>
-              <label className="block text-xs font-bold text-[#E0E0E0] uppercase tracking-wider mb-2">
+              <label className="block text-[11px] font-bold text-[#E0E0E0] uppercase tracking-wider mb-1">
                 Kategori Acara *
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                 {CATEGORY_OPTIONS.map((cat) => {
                   const isSelected = category === cat.id
                   return (
@@ -439,19 +441,19 @@ export const CreateEventPage: React.FC = () => {
                       key={cat.id}
                       type="button"
                       onClick={() => setCategory(cat.id)}
-                      className={`text-left p-3.5 rounded-xl border transition-all cursor-pointer ${
+                      className={`text-left p-2.5 rounded-lg border transition-all cursor-pointer ${
                         isSelected
-                          ? 'bg-[#1e240a] border-[#CFFE06] shadow-[0_0_15px_rgba(207,254,6,0.15)]'
+                          ? 'bg-[#1e240a] border-[#CFFE06] shadow-[0_0_12px_rgba(207,254,6,0.15)]'
                           : 'bg-[#181818] border-[#2A2A2A] hover:border-[#3D3D3D] text-[#9C9C9C]'
                       }`}
                     >
-                      <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center justify-between mb-0.5">
                         <span className={`text-xs font-bold ${isSelected ? 'text-[#CFFE06]' : 'text-white'}`}>
                           {cat.label}
                         </span>
-                        {isSelected && <Check size={14} className="text-[#CFFE06]" />}
+                        {isSelected && <Check size={13} className="text-[#CFFE06]" />}
                       </div>
-                      <p className="text-[11px] text-[#888888] leading-tight m-0">{cat.desc}</p>
+                      <p className="!text-[10px] !text-[#888888] !leading-tight m-0">{cat.desc}</p>
                     </button>
                   )
                 })}
@@ -459,10 +461,10 @@ export const CreateEventPage: React.FC = () => {
             </div>
 
             {/* Date and Time: Start & End */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
               <div>
-                <label className="block text-xs font-bold text-[#E0E0E0] uppercase tracking-wider mb-2">
-                  <Calendar size={13} className="inline mr-1.5 text-[#CFFE06]" />
+                <label className="block text-[11px] font-bold text-[#E0E0E0] uppercase tracking-wider mb-1">
+                  <Calendar size={12} className="inline mr-1 text-[#CFFE06]" />
                   Waktu Mulai Acara *
                 </label>
                 <input
@@ -470,13 +472,13 @@ export const CreateEventPage: React.FC = () => {
                   required
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-[#1A1A1A] border border-[#333333] rounded-xl text-sm font-medium text-white outline-none focus:border-[#CFFE06] transition-all [color-scheme:dark]"
+                  className="w-full px-3 py-1.5 bg-[#1A1A1A] border border-[#333333] rounded-lg text-xs font-medium text-white outline-none focus:border-[#CFFE06] transition-all [color-scheme:dark]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#E0E0E0] uppercase tracking-wider mb-2">
-                  <Calendar size={13} className="inline mr-1.5 text-[#CFFE06]" />
+                <label className="block text-[11px] font-bold text-[#E0E0E0] uppercase tracking-wider mb-1">
+                  <Calendar size={12} className="inline mr-1 text-[#CFFE06]" />
                   Waktu Selesai Acara *
                 </label>
                 <input
@@ -484,18 +486,18 @@ export const CreateEventPage: React.FC = () => {
                   required
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-[#1A1A1A] border border-[#333333] rounded-xl text-sm font-medium text-white outline-none focus:border-[#CFFE06] transition-all [color-scheme:dark]"
+                  className="w-full px-3 py-1.5 bg-[#1A1A1A] border border-[#333333] rounded-lg text-xs font-medium text-white outline-none focus:border-[#CFFE06] transition-all [color-scheme:dark]"
                 />
               </div>
             </div>
 
             {/* Short Description */}
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-bold text-[#E0E0E0] uppercase tracking-wider">
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-[11px] font-bold text-[#E0E0E0] uppercase tracking-wider">
                   Ringkasan Singkat (Short Description)
                 </label>
-                <span className="text-[10px] text-[#777777]">Maks. 160 karakter untuk kartu event</span>
+                <span className="text-[10px] text-[#777777]">Maks. 160 karakter</span>
               </div>
               <input
                 type="text"
@@ -503,21 +505,21 @@ export const CreateEventPage: React.FC = () => {
                 placeholder="e.g. Festival teknologi tahunan mahasiswa dengan kompetisi hackathon, talkshow, dan expo prototipe inovatif."
                 value={shortDescription}
                 onChange={(e) => setShortDescription(e.target.value)}
-                className="w-full px-4 py-2.5 bg-[#1A1A1A] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
+                className="w-full px-3 py-1.5 bg-[#1A1A1A] border border-[#333333] rounded-lg text-xs font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
               />
             </div>
 
             {/* Full Description */}
             <div>
-              <label className="block text-xs font-bold text-[#E0E0E0] uppercase tracking-wider mb-2">
+              <label className="block text-[11px] font-bold text-[#E0E0E0] uppercase tracking-wider mb-1">
                 Deskripsi Lengkap Kegiatan
               </label>
               <textarea
-                rows={5}
+                rows={3}
                 placeholder="Jelaskan secara mendalam mengenai latar belakang kegiatan, susunan agenda, profil narasumber atau juri, syarat & ketentuan peserta, serta benefit yang diperoleh..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all leading-relaxed"
+                className="w-full px-3 py-2 bg-[#1A1A1A] border border-[#333333] rounded-lg text-xs font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all leading-relaxed"
               />
             </div>
           </div>
@@ -526,44 +528,44 @@ export const CreateEventPage: React.FC = () => {
         {/* ========================================================= */}
         {/* GROUP 2: FORMAT & LOKASI PENYELENGGARAAN (LOCATION) */}
         {/* ========================================================= */}
-        <section className="bg-[#121212] border border-[#2A2A2A] rounded-2xl p-6 sm:p-8 hover:border-[#3D3D3D] transition-colors">
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[#202020]">
-            <div className="w-9 h-9 rounded-xl bg-[#CFFE06]/10 border border-[#CFFE06]/30 flex items-center justify-center text-[#CFFE06] font-bold text-sm">
+        <section className="bg-[#121212] border border-[#2A2A2A] rounded-xl p-3.5 sm:p-4 hover:border-[#3D3D3D] transition-colors">
+          <div className="flex items-center gap-2.5 mb-3.5 pb-2.5 border-b border-[#202020]">
+            <div className="w-7 h-7 rounded-lg bg-[#CFFE06]/10 border border-[#CFFE06]/30 flex items-center justify-center text-[#CFFE06] font-bold text-xs shrink-0">
               2
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white m-0">Format & Lokasi Penyelenggaraan (Location)</h2>
-              <p className="text-xs text-[#9C9C9C] m-0">
+              <h2 className="!text-sm sm:!text-base font-bold !text-white m-0">Format & Lokasi Penyelenggaraan (Location)</h2>
+              <p className="!text-[11px] !text-[#9C9C9C] m-0 !leading-tight">
                 Pilih format tatap muka, daring penuh, atau hybrid serta rincian venue/tautan meeting.
               </p>
             </div>
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-3">
             {/* Format Penyelenggaraan selector */}
             <div>
-              <label className="block text-xs font-bold text-[#E0E0E0] uppercase tracking-wider mb-2">
+              <label className="block text-[11px] font-bold text-[#E0E0E0] uppercase tracking-wider mb-1">
                 Format Penyelenggaraan *
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 {[
                   {
                     id: 'offline' as LocationType,
                     label: 'Tatap Muka (Offline)',
-                    desc: 'Acara berlangsung secara fisik di venue tertentu',
-                    icon: <MapPin size={18} className="text-[#CFFE06]" />,
+                    desc: 'Acara fisik di venue tertentu',
+                    icon: <MapPin size={15} className="text-[#CFFE06]" />,
                   },
                   {
                     id: 'online' as LocationType,
                     label: 'Daring Penuh (Online)',
-                    desc: 'Diselenggarakan melalui Zoom, GMeet, atau streaming',
-                    icon: <Video size={18} className="text-[#DF00D0]" />,
+                    desc: 'Via Zoom, GMeet, atau streaming',
+                    icon: <Video size={15} className="text-[#DF00D0]" />,
                   },
                   {
                     id: 'hybrid' as LocationType,
                     label: 'Campuran (Hybrid)',
-                    desc: 'Peserta dapat hadir langsung atau melalui online meeting',
-                    icon: <Radio size={18} className="text-[#CFFE06]" />,
+                    desc: 'Hadir langsung atau online meeting',
+                    icon: <Radio size={15} className="text-[#CFFE06]" />,
                   },
                 ].map((fmt) => {
                   const isSelected = locationType === fmt.id
@@ -572,21 +574,21 @@ export const CreateEventPage: React.FC = () => {
                       key={fmt.id}
                       type="button"
                       onClick={() => setLocationType(fmt.id)}
-                      className={`text-left p-4 rounded-xl border transition-all cursor-pointer flex flex-col justify-between ${
+                      className={`text-left p-2.5 rounded-lg border transition-all cursor-pointer flex flex-col justify-between ${
                         isSelected
-                          ? 'bg-[#1e240a] border-[#CFFE06] shadow-[0_0_15px_rgba(207,254,6,0.15)]'
+                          ? 'bg-[#1e240a] border-[#CFFE06] shadow-[0_0_12px_rgba(207,254,6,0.15)]'
                           : 'bg-[#181818] border-[#2A2A2A] hover:border-[#3D3D3D]'
                       }`}
                     >
-                      <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center justify-between mb-1.5">
                         {fmt.icon}
-                        {isSelected && <Check size={16} className="text-[#CFFE06]" />}
+                        {isSelected && <Check size={14} className="text-[#CFFE06]" />}
                       </div>
                       <div>
-                        <span className={`block text-xs font-bold mb-1 ${isSelected ? 'text-[#CFFE06]' : 'text-white'}`}>
+                        <span className={`block text-xs font-bold mb-0.5 ${isSelected ? 'text-[#CFFE06]' : 'text-white'}`}>
                           {fmt.label}
                         </span>
-                        <p className="text-[11px] text-[#888888] leading-tight m-0">{fmt.desc}</p>
+                        <p className="!text-[10px] !text-[#888888] !leading-tight m-0">{fmt.desc}</p>
                       </div>
                     </button>
                   )
@@ -596,11 +598,11 @@ export const CreateEventPage: React.FC = () => {
 
             {/* Offline/Hybrid Physical Venue Fields */}
             {locationType !== 'online' && (
-              <div className="space-y-4 pt-2 border-t border-[#202020]">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-3 pt-1 border-t border-[#202020]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-bold text-[#E0E0E0] uppercase tracking-wider mb-2">
-                      <MapPin size={13} className="inline mr-1 text-[#CFFE06]" />
+                    <label className="block text-[11px] font-bold text-[#E0E0E0] uppercase tracking-wider mb-1">
+                      <MapPin size={12} className="inline mr-1 text-[#CFFE06]" />
                       Nama Gedung / Venue
                     </label>
                     <input
@@ -608,12 +610,12 @@ export const CreateEventPage: React.FC = () => {
                       placeholder="e.g. Telkom University Convention Hall / Aula Barat ITB"
                       value={venueName}
                       onChange={(e) => setVenueName(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-[#1A1A1A] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
+                      className="w-full px-3 py-1.5 bg-[#1A1A1A] border border-[#333333] rounded-lg text-xs font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-[#E0E0E0] uppercase tracking-wider mb-2">
+                    <label className="block text-[11px] font-bold text-[#E0E0E0] uppercase tracking-wider mb-1">
                       Kota Pelaksanaan
                     </label>
                     <input
@@ -621,13 +623,13 @@ export const CreateEventPage: React.FC = () => {
                       placeholder="e.g. Bandung, Jawa Barat"
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-[#1A1A1A] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
+                      className="w-full px-3 py-1.5 bg-[#1A1A1A] border border-[#333333] rounded-lg text-xs font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#E0E0E0] uppercase tracking-wider mb-2">
+                  <label className="block text-[11px] font-bold text-[#E0E0E0] uppercase tracking-wider mb-1">
                     Alamat Lengkap Venue
                   </label>
                   <input
@@ -635,7 +637,7 @@ export const CreateEventPage: React.FC = () => {
                     placeholder="e.g. Jl. Telekomunikasi No. 1, Terusan Buahbatu, Sukapura, Kec. Dayeuhkolot"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-[#1A1A1A] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
+                    className="w-full px-3 py-1.5 bg-[#1A1A1A] border border-[#333333] rounded-lg text-xs font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
                   />
                 </div>
 
@@ -655,9 +657,9 @@ export const CreateEventPage: React.FC = () => {
 
             {/* Online/Hybrid Meeting URL Fields */}
             {locationType !== 'offline' && (
-              <div className="pt-2 border-t border-[#202020]">
-                <label className="block text-xs font-bold text-[#E0E0E0] uppercase tracking-wider mb-2">
-                  <Globe size={13} className="inline mr-1 text-[#CFFE06]" />
+              <div className="pt-1 border-t border-[#202020]">
+                <label className="block text-[11px] font-bold text-[#E0E0E0] uppercase tracking-wider mb-1">
+                  <Globe size={12} className="inline mr-1 text-[#CFFE06]" />
                   Tautan Pertemuan Online (Online Meeting URL)
                 </label>
                 <input
@@ -665,9 +667,9 @@ export const CreateEventPage: React.FC = () => {
                   placeholder="https://zoom.us/j/... atau https://meet.google.com/..."
                   value={onlineUrl}
                   onChange={(e) => setOnlineUrl(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-[#1A1A1A] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
+                  className="w-full px-3 py-1.5 bg-[#1A1A1A] border border-[#333333] rounded-lg text-xs font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
                 />
-                <p className="text-[11px] text-[#888888] mt-1.5 m-0">
+                <p className="!text-[10px] !text-[#888888] mt-1 m-0">
                   Tautan ini akan diberikan kepada peserta yang telah mengantongi tiket valid saat mendekati hari H.
                 </p>
               </div>
@@ -678,25 +680,25 @@ export const CreateEventPage: React.FC = () => {
         {/* ========================================================= */}
         {/* GROUP 3: PENYELENGGARA & PERUSAHAAN (ORGANIZATION) */}
         {/* ========================================================= */}
-        <section className="bg-[#121212] border border-[#2A2A2A] rounded-2xl p-6 sm:p-8 hover:border-[#3D3D3D] transition-colors">
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[#202020]">
-            <div className="w-9 h-9 rounded-xl bg-[#CFFE06]/10 border border-[#CFFE06]/30 flex items-center justify-center text-[#CFFE06] font-bold text-sm">
+        <section className="bg-[#121212] border border-[#2A2A2A] rounded-xl p-3.5 sm:p-4 hover:border-[#3D3D3D] transition-colors">
+          <div className="flex items-center gap-2.5 mb-3.5 pb-2.5 border-b border-[#202020]">
+            <div className="w-7 h-7 rounded-lg bg-[#CFFE06]/10 border border-[#CFFE06]/30 flex items-center justify-center text-[#CFFE06] font-bold text-xs shrink-0">
               3
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white m-0">Penyelenggara & Instansi (Organization)</h2>
-              <p className="text-xs text-[#9C9C9C] m-0">
+              <h2 className="!text-sm sm:!text-base font-bold !text-white m-0">Penyelenggara & Instansi (Organization)</h2>
+              <p className="!text-[11px] !text-[#9C9C9C] m-0 !leading-tight">
                 Identitas badan pelaksana acara serta nama institusi atau perusahaan induk.
               </p>
             </div>
           </div>
 
           {userOrgs.length > 0 && (
-            <div className="mb-4 p-3 bg-[#1A1A1A] border border-[#2B2B2B] rounded-xl">
-              <span className="text-[11px] font-semibold text-[#9C9C9C] block mb-2">
+            <div className="mb-3 p-2.5 bg-[#1A1A1A] border border-[#2B2B2B] rounded-lg">
+              <span className="text-[11px] font-semibold text-[#9C9C9C] block mb-1.5">
                 Pilih Organisasi Induk Event Ini *:
               </span>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {userOrgs.map((org) => {
                   const isSelected = organizationId === org.id || (!organizationId && organizationName === org.name)
                   return (
@@ -708,7 +710,7 @@ export const CreateEventPage: React.FC = () => {
                         setOrganizationName(org.name)
                         if (org.company) setCompany(org.company)
                       }}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+                      className={`px-2.5 py-1 rounded-md text-[11px] font-semibold border transition-all cursor-pointer ${
                         isSelected
                           ? 'bg-[#CFFE06]/15 border-[#CFFE06] text-[#CFFE06]'
                           : 'bg-[#222222] border-[#333333] text-[#CCCCCC] hover:text-white hover:border-[#555555]'
@@ -722,10 +724,10 @@ export const CreateEventPage: React.FC = () => {
             </div>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-[#E0E0E0] uppercase tracking-wider mb-2">
-                <Building size={13} className="inline mr-1 text-[#CFFE06]" />
+              <label className="block text-[11px] font-bold text-[#E0E0E0] uppercase tracking-wider mb-1">
+                <Building size={12} className="inline mr-1 text-[#CFFE06]" />
                 Nama Organisasi / Kepanitiaan
               </label>
               <input
@@ -733,13 +735,13 @@ export const CreateEventPage: React.FC = () => {
                 placeholder="e.g. BEM Kema Tel-U / HMIF ITB"
                 value={organizationName}
                 onChange={(e) => setOrganizationName(e.target.value)}
-                className="w-full px-4 py-2.5 bg-[#1A1A1A] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
+                className="w-full px-3 py-1.5 bg-[#1A1A1A] border border-[#333333] rounded-lg text-xs font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#E0E0E0] uppercase tracking-wider mb-2">
-                <Building size={13} className="inline mr-1 text-[#CFFE06]" />
+              <label className="block text-[11px] font-bold text-[#E0E0E0] uppercase tracking-wider mb-1">
+                <Building size={12} className="inline mr-1 text-[#CFFE06]" />
                 Nama Perusahaan / Institusi (Company)
               </label>
               <input
@@ -747,10 +749,10 @@ export const CreateEventPage: React.FC = () => {
                 placeholder="e.g. Telkom University / PT Convena Global / ITB"
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
-                className="w-full px-4 py-2.5 bg-[#1A1A1A] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
+                className="w-full px-3 py-1.5 bg-[#1A1A1A] border border-[#333333] rounded-lg text-xs font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
               />
-              <p className="text-[11px] text-[#888888] mt-1.5 m-0">
-                Dapat berupa nama kampus, perusahaan korporasi sponsor, atau institusi asosiasi.
+              <p className="!text-[10px] !text-[#888888] mt-1 m-0">
+                Dapat berupa nama kampus, perusahaan sponsor, atau institusi asosiasi.
               </p>
             </div>
           </div>
@@ -759,15 +761,15 @@ export const CreateEventPage: React.FC = () => {
         {/* ========================================================= */}
         {/* GROUP 4: DESAIN SAMPUL & BANNER (DESIGN) */}
         {/* ========================================================= */}
-        <section className="bg-[#121212] border border-[#2A2A2A] rounded-2xl p-6 sm:p-8 hover:border-[#3D3D3D] transition-colors">
-          <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#202020] flex-wrap gap-2">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#CFFE06]/10 border border-[#CFFE06]/30 flex items-center justify-center text-[#CFFE06] font-bold text-sm">
+        <section className="bg-[#121212] border border-[#2A2A2A] rounded-xl p-3.5 sm:p-4 hover:border-[#3D3D3D] transition-colors">
+          <div className="flex items-center justify-between mb-3.5 pb-2.5 border-b border-[#202020] flex-wrap gap-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-[#CFFE06]/10 border border-[#CFFE06]/30 flex items-center justify-center text-[#CFFE06] font-bold text-xs shrink-0">
                 4
               </div>
               <div>
-                <h2 className="text-lg font-bold text-white m-0">Desain Sampul & Banner (Design)</h2>
-                <p className="text-xs text-[#9C9C9C] m-0">
+                <h2 className="!text-sm sm:!text-base font-bold !text-white m-0">Desain Sampul & Banner (Design)</h2>
+                <p className="!text-[11px] !text-[#9C9C9C] m-0 !leading-tight">
                   Pilih dari koleksi template resolusi tinggi atau input URL poster mandiri.
                 </p>
               </div>
@@ -776,16 +778,16 @@ export const CreateEventPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsCustomBanner(!isCustomBanner)}
-              className="text-xs font-bold text-[#CFFE06] hover:underline cursor-pointer bg-transparent border-none flex items-center gap-1"
+              className="text-[11px] font-bold text-[#CFFE06] hover:underline cursor-pointer bg-transparent border-none flex items-center gap-1"
             >
               {isCustomBanner ? 'Pilih Template Tersedia' : 'Gunakan URL Banner Sendiri'}
             </button>
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-3">
             {isCustomBanner ? (
               <div>
-                <label className="block text-xs font-bold text-[#E0E0E0] uppercase tracking-wider mb-2">
+                <label className="block text-[11px] font-bold text-[#E0E0E0] uppercase tracking-wider mb-1">
                   Tautan URL Banner Gambar (Direct Image URL)
                 </label>
                 <input
@@ -793,15 +795,15 @@ export const CreateEventPage: React.FC = () => {
                   placeholder="https://example.com/banner-event.jpg"
                   value={customBannerUrl}
                   onChange={(e) => setCustomBannerUrl(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-[#1A1A1A] border border-[#333333] rounded-xl text-sm font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
+                  className="w-full px-3 py-1.5 bg-[#1A1A1A] border border-[#333333] rounded-lg text-xs font-medium text-white placeholder:text-[#9C9C9C]/50 outline-none focus:border-[#CFFE06] transition-all"
                 />
               </div>
             ) : (
               <div>
-                <label className="block text-xs font-bold text-[#E0E0E0] uppercase tracking-wider mb-2">
+                <label className="block text-[11px] font-bold text-[#E0E0E0] uppercase tracking-wider mb-1">
                   Pilihan Template Banner
                 </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
                   {DEFAULT_BANNERS.map((url, i) => {
                     const isSelected = bannerUrl === url
                     return (
@@ -809,9 +811,9 @@ export const CreateEventPage: React.FC = () => {
                         key={i}
                         type="button"
                         onClick={() => setBannerUrl(url)}
-                        className={`relative rounded-xl overflow-hidden border cursor-pointer transition-all aspect-video group ${
+                        className={`relative rounded-lg overflow-hidden border cursor-pointer transition-all aspect-video group ${
                           isSelected
-                            ? 'border-[#CFFE06] ring-2 ring-[#CFFE06]'
+                            ? 'border-[#CFFE06] ring-1 ring-[#CFFE06]'
                             : 'border-[#2A2A2A] opacity-60 hover:opacity-100 hover:border-[#444444]'
                         }`}
                       >
@@ -821,8 +823,8 @@ export const CreateEventPage: React.FC = () => {
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                         />
                         {isSelected && (
-                          <div className="absolute top-1.5 right-1.5 bg-[#CFFE06] text-black rounded-full p-0.5 shadow-md">
-                            <Check size={12} className="stroke-[3]" />
+                          <div className="absolute top-1 right-1 bg-[#CFFE06] text-black rounded-full p-0.5 shadow-md">
+                            <Check size={10} className="stroke-[3]" />
                           </div>
                         )}
                       </button>
@@ -834,25 +836,25 @@ export const CreateEventPage: React.FC = () => {
 
             {/* Live Preview Display */}
             <div>
-              <span className="block text-xs font-bold text-[#9C9C9C] uppercase tracking-wider mb-2">
+              <span className="block text-[11px] font-bold text-[#9C9C9C] uppercase tracking-wider mb-1">
                 Pratinjau Banner Sampul
               </span>
-              <div className="relative h-44 sm:h-56 w-full rounded-2xl overflow-hidden border border-[#333333] bg-[#161616]">
+              <div className="relative h-32 sm:h-40 w-full rounded-xl overflow-hidden border border-[#333333] bg-[#161616]">
                 <img
                   src={activeBanner}
                   alt="Banner Preview"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
+                <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between">
                   <div>
-                    <Badge variant="accent" className="mb-1 text-[10px]">
+                    <Badge variant="accent" className="mb-0.5 text-[10px] py-0 px-1.5">
                       {category.toUpperCase()}
                     </Badge>
-                    <h3 className="text-base sm:text-lg font-bold text-white m-0 drop-shadow-md">
+                    <h3 className="!text-sm sm:!text-base font-bold !text-white m-0 drop-shadow-md">
                       {title || 'Judul Acara Anda'}
                     </h3>
-                    <p className="text-xs text-[#E0E0E0] m-0 drop-shadow">
+                    <p className="!text-[11px] !text-[#E0E0E0] m-0 drop-shadow">
                       {organizationName || 'Penyelenggara Acara'} • {company || 'Nama Perusahaan/Institusi'}
                     </p>
                   </div>
@@ -865,15 +867,15 @@ export const CreateEventPage: React.FC = () => {
         {/* ========================================================= */}
         {/* GROUP 5: KATEGORI TIKET (TICKETING) */}
         {/* ========================================================= */}
-        <section className="bg-[#121212] border border-[#2A2A2A] rounded-2xl p-6 sm:p-8 hover:border-[#3D3D3D] transition-colors">
-          <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#202020] flex-wrap gap-2">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#CFFE06]/10 border border-[#CFFE06]/30 flex items-center justify-center text-[#CFFE06] font-bold text-sm">
+        <section className="bg-[#121212] border border-[#2A2A2A] rounded-xl p-3.5 sm:p-4 hover:border-[#3D3D3D] transition-colors">
+          <div className="flex items-center justify-between mb-3.5 pb-2.5 border-b border-[#202020] flex-wrap gap-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-[#CFFE06]/10 border border-[#CFFE06]/30 flex items-center justify-center text-[#CFFE06] font-bold text-xs shrink-0">
                 5
               </div>
               <div>
-                <h2 className="text-lg font-bold text-white m-0">Kategori Tiket & Kuota (Ticketing)</h2>
-                <p className="text-xs text-[#9C9C9C] m-0">
+                <h2 className="!text-sm sm:!text-base font-bold !text-white m-0">Kategori Tiket & Kuota (Ticketing)</h2>
+                <p className="!text-[11px] !text-[#9C9C9C] m-0 !leading-tight">
                   Tersedia default Standard, Gold, dan Platinum yang dapat Anda sesuaikan, tambahkan, atau hapus.
                 </p>
               </div>
@@ -883,31 +885,32 @@ export const CreateEventPage: React.FC = () => {
               type="button"
               variant="outline"
               size="sm"
-              icon={<Plus size={14} />}
+              className="!py-1 !px-2.5 !text-xs"
+              icon={<Plus size={13} />}
               onClick={handleAddTier}
             >
               Tambah Kategori Tiket
             </Button>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-3">
             {ticketTiers.map((tier, idx) => {
               const isFree = Number(tier.price) === 0
               return (
                 <div
                   key={tier.id}
-                  className="p-5 bg-[#171717] border border-[#2E2E2E] rounded-xl hover:border-[#3E3E3E] transition-all space-y-4"
+                  className="p-3 bg-[#171717] border border-[#2E2E2E] rounded-lg hover:border-[#3E3E3E] transition-all space-y-2.5"
                 >
-                  <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-[#242424]">
+                  <div className="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-[#242424]">
                     <div className="flex items-center gap-2">
-                      <Ticket size={16} className="text-[#CFFE06]" />
-                      <span className="text-sm font-extrabold text-white">
+                      <Ticket size={14} className="text-[#CFFE06]" />
+                      <span className="text-xs font-extrabold text-white">
                         Tier #{idx + 1}: {tier.name}
                       </span>
-                      <Badge variant={isFree ? 'accent' : 'dark'}>
+                      <Badge variant={isFree ? 'accent' : 'dark'} className="text-[10px] py-0 px-1.5">
                         {isFree ? 'GRATIS' : `Rp ${Number(tier.price).toLocaleString('id-ID')}`}
                       </Badge>
-                      <Badge variant="grey" className="text-[10px]">
+                      <Badge variant="grey" className="text-[10px] py-0 px-1.5">
                         Kuota: {tier.quota} Tiket
                       </Badge>
                     </div>
@@ -915,29 +918,29 @@ export const CreateEventPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => handleRemoveTier(tier.id)}
-                      className="text-xs text-[#FF6B6B] hover:text-white hover:bg-[#FF3B30]/20 px-2 py-1 rounded-lg transition-colors cursor-pointer bg-transparent border-none flex items-center gap-1"
+                      className="text-[11px] text-[#FF6B6B] hover:text-white hover:bg-[#FF3B30]/20 px-2 py-0.5 rounded transition-colors cursor-pointer bg-transparent border-none flex items-center gap-1"
                     >
-                      <Trash2 size={13} /> Hapus Tier
+                      <Trash2 size={12} /> Hapus Tier
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                     {/* Tier Name */}
                     <div>
-                      <label className="block text-[11px] font-bold text-[#AAAAAA] uppercase tracking-wider mb-1.5">
+                      <label className="block text-[10px] font-bold text-[#AAAAAA] uppercase tracking-wider mb-1">
                         Nama Kategori Tiket
                       </label>
                       <input
                         type="text"
                         value={tier.name}
                         onChange={(e) => handleUpdateTier(tier.id, { name: e.target.value })}
-                        className="w-full px-3.5 py-2 bg-[#1F1F1F] border border-[#333333] rounded-xl text-sm font-semibold text-white outline-none focus:border-[#CFFE06]"
+                        className="w-full px-2.5 py-1.5 bg-[#1F1F1F] border border-[#333333] rounded-md text-xs font-semibold text-white outline-none focus:border-[#CFFE06]"
                       />
                     </div>
 
                     {/* Price */}
                     <div>
-                      <label className="block text-[11px] font-bold text-[#AAAAAA] uppercase tracking-wider mb-1.5">
+                      <label className="block text-[10px] font-bold text-[#AAAAAA] uppercase tracking-wider mb-1">
                         Harga Tiket (Rp)
                       </label>
                       <input
@@ -946,14 +949,14 @@ export const CreateEventPage: React.FC = () => {
                         step={5000}
                         value={tier.price}
                         onChange={(e) => handleUpdateTier(tier.id, { price: Number(e.target.value) })}
-                        className="w-full px-3.5 py-2 bg-[#1F1F1F] border border-[#333333] rounded-xl text-sm font-semibold text-white outline-none focus:border-[#CFFE06]"
+                        className="w-full px-2.5 py-1.5 bg-[#1F1F1F] border border-[#333333] rounded-md text-xs font-semibold text-white outline-none focus:border-[#CFFE06]"
                       />
                       <span className="text-[10px] text-[#777777]">Isi 0 untuk tiket gratis</span>
                     </div>
 
                     {/* Quota */}
                     <div>
-                      <label className="block text-[11px] font-bold text-[#AAAAAA] uppercase tracking-wider mb-1.5">
+                      <label className="block text-[10px] font-bold text-[#AAAAAA] uppercase tracking-wider mb-1">
                         Kuota Tiket (Pax)
                       </label>
                       <input
@@ -961,23 +964,23 @@ export const CreateEventPage: React.FC = () => {
                         min={1}
                         value={tier.quota}
                         onChange={(e) => handleUpdateTier(tier.id, { quota: Number(e.target.value) })}
-                        className="w-full px-3.5 py-2 bg-[#1F1F1F] border border-[#333333] rounded-xl text-sm font-semibold text-white outline-none focus:border-[#CFFE06]"
+                        className="w-full px-2.5 py-1.5 bg-[#1F1F1F] border border-[#333333] rounded-md text-xs font-semibold text-white outline-none focus:border-[#CFFE06]"
                       />
                     </div>
                   </div>
 
                   {/* Tier Benefits */}
                   <div>
-                    <label className="block text-[11px] font-bold text-[#AAAAAA] uppercase tracking-wider mb-1.5">
+                    <label className="block text-[10px] font-bold text-[#AAAAAA] uppercase tracking-wider mb-1">
                       Fasilitas & Keuntungan (Benefits)
                     </label>
-                    <div className="flex flex-wrap gap-2 mb-2.5">
+                    <div className="flex flex-wrap gap-1.5 mb-2">
                       {tier.benefits.map((benefit, bIdx) => (
                         <span
                           key={bIdx}
-                          className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#222222] border border-[#383838] rounded-full text-xs text-[#E0E0E0]"
+                          className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-[#222222] border border-[#383838] rounded-full text-[11px] text-[#E0E0E0]"
                         >
-                          <Check size={12} className="text-[#CFFE06]" />
+                          <Check size={10} className="text-[#CFFE06]" />
                           <span>{benefit}</span>
                           <button
                             type="button"
@@ -991,7 +994,7 @@ export const CreateEventPage: React.FC = () => {
                     </div>
 
                     {/* Add Benefit input */}
-                    <div className="flex gap-2">
+                    <div className="flex gap-1.5">
                       <input
                         type="text"
                         placeholder="Tambah keuntungan (e.g. Akses VIP Lounge, Lunch box, Merchandise)..."
@@ -1005,12 +1008,13 @@ export const CreateEventPage: React.FC = () => {
                             handleAddBenefit(tier.id)
                           }
                         }}
-                        className="flex-1 px-3.5 py-1.5 bg-[#1A1A1A] border border-[#333333] rounded-lg text-xs text-white placeholder:text-[#666666] outline-none focus:border-[#CFFE06]"
+                        className="flex-1 px-2.5 py-1 bg-[#1A1A1A] border border-[#333333] rounded-md text-xs text-white placeholder:text-[#666666] outline-none focus:border-[#CFFE06]"
                       />
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
+                        className="!py-1 !px-2.5 !text-xs"
                         onClick={() => handleAddBenefit(tier.id)}
                       >
                         Tambah
@@ -1021,71 +1025,72 @@ export const CreateEventPage: React.FC = () => {
               )
             })}
 
-              {/* Ticketing Summary Footer */}
-              <div className="p-4 bg-[#181818] border border-[#2E2E2E] rounded-xl flex items-center justify-between flex-wrap gap-3">
-                <div className="flex items-center gap-4 text-xs">
-                  <div>
-                    <span className="text-[#888888] block">Total Kategori</span>
-                    <span className="font-bold text-white text-sm">{ticketTiers.length} Kategori</span>
-                  </div>
-                  <div className="border-l border-[#333333] pl-4">
-                    <span className="text-[#888888] block">Total Kapasitas Kuota</span>
-                    <span className="font-bold text-[#CFFE06] text-sm">{totalCapacity.toLocaleString('id-ID')} Peserta</span>
-                  </div>
+            {/* Ticketing Summary Footer */}
+            <div className="p-3 bg-[#181818] border border-[#2E2E2E] rounded-lg flex items-center justify-between flex-wrap gap-2.5">
+              <div className="flex items-center gap-3 text-xs">
+                <div>
+                  <span className="text-[#888888] block text-[10px]">Total Kategori</span>
+                  <span className="font-bold text-white text-xs">{ticketTiers.length} Kategori</span>
                 </div>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  icon={<Plus size={14} />}
-                  onClick={handleAddTier}
-                >
-                  Tambah Kategori Lain
-                </Button>
+                <div className="border-l border-[#333333] pl-3">
+                  <span className="text-[#888888] block text-[10px]">Total Kapasitas Kuota</span>
+                  <span className="font-bold text-[#CFFE06] text-xs">{totalCapacity.toLocaleString('id-ID')} Peserta</span>
+                </div>
               </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="!py-1 !px-2.5 !text-xs"
+                icon={<Plus size={13} />}
+                onClick={handleAddTier}
+              >
+                Tambah Kategori Lain
+              </Button>
+            </div>
           </div>
         </section>
 
         {/* ========================================================= */}
         {/* GROUP 6: STATUS PENERBITAN (SAVE TO DRAFT OR PUBLISH) */}
         {/* ========================================================= */}
-        <section className="bg-[#121212] border border-[#2A2A2A] rounded-2xl p-6 sm:p-8 hover:border-[#3D3D3D] transition-colors">
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[#202020]">
-            <div className="w-9 h-9 rounded-xl bg-[#CFFE06]/10 border border-[#CFFE06]/30 flex items-center justify-center text-[#CFFE06] font-bold text-sm">
+        <section className="bg-[#121212] border border-[#2A2A2A] rounded-xl p-3.5 sm:p-4 hover:border-[#3D3D3D] transition-colors">
+          <div className="flex items-center gap-2.5 mb-3.5 pb-2.5 border-b border-[#202020]">
+            <div className="w-7 h-7 rounded-lg bg-[#CFFE06]/10 border border-[#CFFE06]/30 flex items-center justify-center text-[#CFFE06] font-bold text-xs shrink-0">
               6
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white m-0">Visibilitas & Publikasi (Draft / Publish)</h2>
-              <p className="text-xs text-[#9C9C9C] m-0">
+              <h2 className="!text-sm sm:!text-base font-bold !text-white m-0">Visibilitas & Publikasi (Draft / Publish)</h2>
+              <p className="!text-[11px] !text-[#9C9C9C] m-0 !leading-tight">
                 Tentukan aksesibilitas acara sebelum menyimpan draft atau mempublikasikannya langsung.
               </p>
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-3.5">
             {/* Visibility Option */}
             <div>
-              <label className="block text-xs font-bold text-[#E0E0E0] uppercase tracking-wider mb-2">
+              <label className="block text-[11px] font-bold text-[#E0E0E0] uppercase tracking-wider mb-1">
                 Aksesibilitas / Visibilitas
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 <button
                   type="button"
                   onClick={() => setVisibility('public')}
-                  className={`text-left p-4 rounded-xl border transition-all cursor-pointer ${
+                  className={`text-left p-3 rounded-lg border transition-all cursor-pointer ${
                     visibility === 'public'
-                      ? 'bg-[#1e240a] border-[#CFFE06] shadow-[0_0_15px_rgba(207,254,6,0.15)]'
+                      ? 'bg-[#1e240a] border-[#CFFE06] shadow-[0_0_12px_rgba(207,254,6,0.15)]'
                       : 'bg-[#181818] border-[#2A2A2A] hover:border-[#3D3D3D]'
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center justify-between mb-0.5">
                     <span className={`text-xs font-bold ${visibility === 'public' ? 'text-[#CFFE06]' : 'text-white'}`}>
                       Katalog Publik (Public)
                     </span>
-                    {visibility === 'public' && <Check size={16} className="text-[#CFFE06]" />}
+                    {visibility === 'public' && <Check size={14} className="text-[#CFFE06]" />}
                   </div>
-                  <p className="text-[11px] text-[#888888] leading-tight m-0">
+                  <p className="!text-[10px] !text-[#888888] !leading-tight m-0">
                     Dapat dicari di katalog umum Convena, terindeks mesin pencari, dan bebas diakses peserta.
                   </p>
                 </button>
@@ -1093,19 +1098,19 @@ export const CreateEventPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setVisibility('private')}
-                  className={`text-left p-4 rounded-xl border transition-all cursor-pointer ${
+                  className={`text-left p-3 rounded-lg border transition-all cursor-pointer ${
                     visibility === 'private'
-                      ? 'bg-[#1e240a] border-[#CFFE06] shadow-[0_0_15px_rgba(207,254,6,0.15)]'
+                      ? 'bg-[#1e240a] border-[#CFFE06] shadow-[0_0_12px_rgba(207,254,6,0.15)]'
                       : 'bg-[#181818] border-[#2A2A2A] hover:border-[#3D3D3D]'
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center justify-between mb-0.5">
                     <span className={`text-xs font-bold ${visibility === 'private' ? 'text-[#CFFE06]' : 'text-white'}`}>
                       Khusus Tautan (Private)
                     </span>
-                    {visibility === 'private' && <Check size={16} className="text-[#CFFE06]" />}
+                    {visibility === 'private' && <Check size={14} className="text-[#CFFE06]" />}
                   </div>
-                  <p className="text-[11px] text-[#888888] leading-tight m-0">
+                  <p className="!text-[10px] !text-[#888888] !leading-tight m-0">
                     Hanya dapat diakses melalui link langsung. Tidak muncul di beranda atau katalog publik.
                   </p>
                 </button>
@@ -1113,26 +1118,27 @@ export const CreateEventPage: React.FC = () => {
             </div>
 
             {/* Final Action Buttons */}
-            <div className="pt-6 border-t border-[#222222] flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="pt-3.5 border-t border-[#222222] flex flex-col sm:flex-row items-center justify-between gap-3">
               <Button
                 type="button"
                 variant="outline"
-                size="md"
+                size="sm"
+                className="!py-1.5 !px-3 !text-xs"
                 onClick={() => navigate('/dashboard/events')}
                 disabled={isLoading}
               >
                 Batal & Kembali
               </Button>
 
-              <div className="flex items-center gap-3 w-full sm:w-auto">
+              <div className="flex items-center gap-2.5 w-full sm:w-auto">
                 <Button
                   type="button"
                   variant="accent"
-                  size="md"
-                  icon={<Save size={16} />}
+                  size="sm"
+                  className="!py-1.5 !px-3.5 !text-xs flex-1 sm:flex-initial"
+                  icon={<Save size={14} />}
                   onClick={() => handleSave('draft')}
                   disabled={isLoading}
-                  className="flex-1 sm:flex-initial"
                 >
                   {isLoading ? 'Menyimpan...' : 'Simpan sebagai Draft'}
                 </Button>
@@ -1140,11 +1146,11 @@ export const CreateEventPage: React.FC = () => {
                 <Button
                   type="button"
                   variant="outline"
-                  size="md"
-                  icon={<Send size={16} />}
+                  size="sm"
+                  className="!py-1.5 !px-3.5 !text-xs flex-1 sm:flex-initial"
+                  icon={<Send size={14} />}
                   onClick={() => handleSave('published')}
                   disabled={isLoading}
-                  className="flex-1 sm:flex-initial"
                 >
                   {isLoading
                     ? 'Menyimpan...'

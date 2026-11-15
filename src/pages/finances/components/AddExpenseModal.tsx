@@ -216,7 +216,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
           </>
         }
       >
-        <form onSubmit={handleSubmit} noValidate className="space-y-4 font-['Montserrat',sans-serif]">
+        <form onSubmit={handleSubmit} noValidate className="space-y-3 font-['Montserrat',sans-serif]">
           <Input
             label="Nama Transaksi / Pengeluaran *"
             placeholder="Contoh: Cetak Spanduk Promosi Kampus"
@@ -225,7 +225,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             className="!mb-0"
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <Input
               label="Nominal Pengeluaran (Rp) *"
               type="text"
@@ -262,22 +262,22 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
           {/* Live Category Budget Status Banner */}
           {selectedCatPlan && (
             <div
-              className={`p-3.5 rounded-xl border text-xs transition-colors ${
+              className={`p-2.5 rounded-lg border text-xs transition-colors ${
                 isOverBudget
                   ? 'bg-amber-500/10 border-amber-500/50 text-amber-200'
                   : 'bg-[#1a1a1a] border-[#2e2e2e] text-[#9C9C9C]'
               }`}
             >
-              <div className="flex items-center justify-between gap-2 mb-1.5">
+              <div className="flex items-center justify-between gap-2 mb-1">
                 <span className="font-bold text-white flex items-center gap-1.5">
                   {isOverBudget ? (
-                    <AlertTriangle size={14} className="text-amber-400 shrink-0" />
+                    <AlertTriangle size={13} className="text-amber-400 shrink-0" />
                   ) : (
-                    <Info size={14} className="text-[#CFFE06] shrink-0" />
+                    <Info size={13} className="text-[#CFFE06] shrink-0" />
                   )}
                   Status Pos: {selectedCatPlan.label}
                 </span>
-                <span className="font-mono text-[11px] text-[#9C9C9C]">
+                <span className="font-mono text-[10px] text-[#9C9C9C]">
                   Pagu: Rp {plannedAmount.toLocaleString('id-ID')}
                 </span>
               </div>
@@ -304,7 +304,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
               )}
 
               {isOverBudget && confirmedOverBudget && (
-                <p className="m-0 mt-2 text-[11px] text-amber-300 font-semibold">
+                <p className="m-0 mt-1.5 text-[10px] text-amber-300 font-semibold">
                   Konfirmasi diperlukan: Klik tombol &ldquo;Tetap Simpan (Over Budget)&rdquo; di bawah untuk melanjutkan.
                 </p>
               )}
@@ -319,15 +319,15 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
           />
 
           <div>
-            <label className="block font-semibold text-xs text-[#9C9C9C] mb-1.5">
+            <label className="block font-semibold text-xs text-[#9C9C9C] mb-1">
               Keterangan Kuitansi / Bukti Pembayaran
             </label>
             <textarea
-              rows={3}
+              rows={2}
               placeholder="Nomor nota kuitansi, nama toko/rekanan penyedia..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full p-3 bg-[#1c1c1c] border border-[#333333] rounded-xl text-xs font-medium text-white focus:outline-none focus:border-[#CFFE06] transition-all"
+              className="w-full p-2.5 bg-[#1c1c1c] border border-[#333333] rounded-lg text-xs font-medium text-white focus:outline-none focus:border-[#CFFE06] transition-all"
             />
           </div>
         </form>
