@@ -217,7 +217,7 @@ export function Select<T extends string = string>({
             </span>
           )}
           <span
-            className={`truncate font-medium ${
+            className={`break-words whitespace-normal leading-snug font-medium ${
               selectedOption ? 'text-white' : 'text-[#9C9C9C]/70'
             }`}
           >
@@ -308,9 +308,9 @@ export function Select<T extends string = string>({
                         </span>
                       )}
                       <div className="min-w-0 flex-1">
-                        <div className="truncate font-medium">{opt.label}</div>
+                        <div className="break-words whitespace-normal font-medium leading-snug">{opt.label}</div>
                         {opt.description && (
-                          <div className="text-[10px] text-[#888888] truncate mt-0.5">
+                          <div className="text-[10px] text-[#888888] break-words whitespace-normal mt-0.5">
                             {opt.description}
                           </div>
                         )}

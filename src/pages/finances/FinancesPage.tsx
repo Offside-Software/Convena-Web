@@ -442,28 +442,28 @@ export const FinancesPage: React.FC = () => {
       </div>
 
       {/* Event Context Selector Bar */}
-      <div className="p-4 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3 min-w-0">
+      <div className="p-4 bg-[#151515] border border-[#3D3D3D]/60 rounded-xl mb-8 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
           <div className="w-10 h-10 rounded-xl bg-[#202020] border border-[#3D3D3D] flex items-center justify-center text-[#CFFE06] shrink-0">
             <Calendar size={18} />
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#9C9C9C] block">
               Event Aktif Terpilih
             </span>
-            <div className="text-sm sm:text-base font-bold text-white truncate">
+            <div className="text-sm sm:text-base font-bold text-white break-words leading-snug">
               {selectedEvent?.title || 'Pilih Event'}
             </div>
             {selectedEvent && (
-              <div className="text-xs text-[#9C9C9C] truncate">
+              <div className="text-xs text-[#9C9C9C] break-words mt-0.5">
                 {selectedEvent.organizationName} • {selectedEvent.company}
               </div>
             )}
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5 w-full sm:w-auto">
-          <div className="w-full sm:w-96 md:w-[440px] lg:w-[500px]">
+        <div className="flex items-center gap-2.5 w-full lg:w-auto shrink-0">
+          <div className="w-full lg:w-80 xl:w-96">
             <Select
               aria-label="Pilih Event"
               value={selectedEventId}
