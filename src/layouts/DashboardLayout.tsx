@@ -179,7 +179,7 @@ export const DashboardLayout: React.FC = () => {
   }, [userOrgs, myEvents])
 
   const handleLogout = async () => {
-    await authService.logout()
+    authService.logout()
     navigate('/')
   }
 
@@ -265,21 +265,12 @@ export const DashboardLayout: React.FC = () => {
           <div className="flex items-center justify-between pb-4 border-b border-[#202020]">
             <div className="min-w-0 pr-2">
               <BrandLogo />
-              <div
-                className="text-[11px] font-semibold text-[#CFFE06] mt-1 truncate"
-                title={roleSummaryLabel}
-              >
-                {roleSummaryLabel}
-              </div>
             </div>
             <span className="w-2.5 h-2.5 shrink-0 rounded-full bg-[#CFFE06] shadow-[0_0_8px_#CFFE06]" />
           </div>
 
           {/* Nav Items */}
-          <div className="pt-2">
-            <div className="text-[11px] font-bold text-[#9C9C9C] uppercase tracking-wider mb-3 px-3">
-              Menu Sesuai Role
-            </div>
+          <div>
             <nav className="flex flex-col gap-1.5">
               {sidebarLinks.map((item) => {
                 const active = isCurrent(item.path)
@@ -371,7 +362,7 @@ export const DashboardLayout: React.FC = () => {
       {/* Main Workspace Content */}
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Workspace Top Header Bar */}
-        <header className="hidden md:flex items-center justify-between py-4 px-8 bg-[#000000] border-b border-[#202020]">
+        <header className="hidden md:flex items-center justify-between py-2 px-8 bg-[#000000] border-b border-[#202020]">
           <div className="flex items-center gap-3">
             <Link
               to="/"
@@ -384,15 +375,12 @@ export const DashboardLayout: React.FC = () => {
               <p className="text-m font-bold !text-white tracking-tight m-0">
                 Workspace
               </p>
-              <p className="text-xs text-[#9C9C9C] m-0">
-                Pusat kendali kegiatan, sponsorship, dan keuangan organisasi ({roleSummaryLabel})
-              </p>
             </div>
           </div>
         </header>
 
         {/* Content Outlet */}
-        <main className="p-4 sm:p-6 lg:p-8 flex-1 bg-[#000000]">
+        <main className="p-6 flex-1 bg-[#000000]">
           <Outlet />
         </main>
       </div>

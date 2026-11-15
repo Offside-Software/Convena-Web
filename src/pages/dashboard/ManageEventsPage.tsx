@@ -360,7 +360,7 @@ export const ManageEventsPage: React.FC = () => {
         </div>
 
         <Link to="/dashboard/events/create" className="no-underline">
-          <Button variant="accent" size="md" icon={<Plus size={16} />}>
+          <Button variant="accent" size="sm" icon={<Plus size={15} />}>
             Buat Event Baru
           </Button>
         </Link>

@@ -432,8 +432,8 @@ export const FinancesPage: React.FC = () => {
 
         <Button
           variant="accent"
-          size="md"
-          icon={<Plus size={16} />}
+          size="sm"
+          icon={<Plus size={15} />}
           onClick={handleOpenCreateModal}
           disabled={!selectedEventId}
         >

@@ -167,11 +167,11 @@ export const RolesMatrixTab: React.FC<RolesMatrixTabProps> = ({
               size="sm"
               onClick={handleSaveChanges}
               disabled={saving || !hasChanges}
+              icon={<Save size={15} />}
               className={`flex items-center gap-2 ${
                 hasChanges ? '!bg-[#CFFE06] !text-[#000000] font-bold shadow-[0_0_15px_rgba(207,254,6,0.3)]' : ''
               }`}
             >
-              <Save size={15} />
               <span>{saving ? 'Menyimpan...' : 'Simpan Matriks'}</span>
             </Button>
           )}
@@ -180,10 +180,10 @@ export const RolesMatrixTab: React.FC<RolesMatrixTabProps> = ({
             <Button
               variant="outline"
               size="sm"
+              icon={<Plus size={15} />}
               onClick={() => setIsAddRoleOpen(true)}
               className="flex items-center gap-1.5 shrink-0"
             >
-              <Plus size={15} />
               <span>Tambah Role</span>
             </Button>
           )}

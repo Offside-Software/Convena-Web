@@ -108,7 +108,7 @@ export const LocationPreviewMap: React.FC<LocationPreviewMapProps> = ({
         <div ref={containerRef} className="h-64 w-full z-0" />
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-[#1a1a1a] border-[#2a2a2a] px-4 py-3">
         <div className="text-xs text-slate-600">
           <p className="font-semibold text-slate-900">{venueName || 'Lokasi Offline Event'}</p>
           <p className="text-slate-500">
@@ -122,7 +122,7 @@ export const LocationPreviewMap: React.FC<LocationPreviewMapProps> = ({
             href={googleMapsDirectionsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-xs transition hover:bg-indigo-700"
+            className="inline-flex items-center gap-2 rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] hover:bg-indigo-700 text-white px-3.5 py-2 text-xs font-semibold shadow-xs transition"
           >
             <Navigation className="h-3.5 w-3.5" />
             Petunjuk Arah (Google Maps)
@@ -131,7 +131,7 @@ export const LocationPreviewMap: React.FC<LocationPreviewMapProps> = ({
             href={googleMapsPlaceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition hover:bg-slate-100"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] hover:bg-[#CFFE06] hover:!text-black text-white px-3 py-2 text-xs font-medium transition"
           >
             <ExternalLink className="h-3.5 w-3.5" />
             Buka Peta
