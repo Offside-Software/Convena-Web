@@ -15,6 +15,7 @@ import { VerifyPage } from '../pages/verify/VerifyPage.tsx'
 import { LoginPage } from '../pages/auth/LoginPage.tsx'
 import { RegisterPage } from '../pages/auth/RegisterPage.tsx'
 import { NotFoundPage } from '../pages/not-found/NotFoundPage.tsx'
+import { CertificatePage } from '../pages/verify/CertificatePage.tsx'
 
 const TaskManagementPage = lazy(() =>
   import('../pages/dashboard/TaskManagementPage.tsx').then((module) => ({
@@ -54,6 +55,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="/dashboard/sponsorship" element={<SponsorshipPage />} />
         <Route path="/dashboard/finances" element={<FinancesPage />} />
         <Route path="/dashboard/verify" element={<VerifyPage />} />
+        <Route path="/dashboard/certificate" element={<CertificatePage />} />
         <Route path="/dashboard/verify/:code" element={<VerifyPage />} />
       </Route>
 
