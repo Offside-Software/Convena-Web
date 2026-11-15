@@ -110,8 +110,8 @@ export const SponsorshipPage: React.FC = () => {
 
         <Button
           variant="accent"
-          size="md"
-          icon={<Bot size={18} />}
+          size="sm"
+          icon={<Bot size={15} />}
           onClick={() => {
             setIsAiModalOpen(true)
             setAiCompany('PT Telkom Indonesia')
