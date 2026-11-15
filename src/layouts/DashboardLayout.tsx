@@ -157,6 +157,12 @@ export const DashboardLayout: React.FC = () => {
         visible: canAccessFinances,
       },
       {
+        label: 'Design Sertifikat',
+        path: '/dashboard/certificate',
+        icon: <ShieldCheck size={18} />,
+        visible: canAccessCertificates,
+      },
+      {
         label: 'Validasi Sertifikat',
         path: '/dashboard/verify',
         icon: <ShieldCheck size={18} />,
